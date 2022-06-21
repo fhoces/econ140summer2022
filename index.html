@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Economics 140 - Econometrics</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Lecture 1: Econometrics and the Evidence to Policy Link" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Economics 140 - Econometrics
+## A Consumer’s Introduction to Causal Inference for the Social Sciences
+### Lecture 1: Econometrics and the Evidence to Policy Link
+### Fernando Hoces de la Guardia
+
+---
+
+count:true 
+
+# Today's Lecture
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+.font120[
+
+- Syllabus
+
+- Econometrics and the Evidence to Policy Link
+
+]
+
+&lt;style&gt;
+
+.center2 {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+
+pre.sourceCode {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+
+/*
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 4px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: blue;
+}
+*/
+&lt;/style&gt;
+
+
+
+&lt;style type="text/css"&gt;
+# CSS for including pauses in printed PDF output (see bottom of lecture)
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+
+&lt;/style&gt;
+
+
+
+
+---
+class: inverse, center, middle
+count: false
+# .font140[Syllabus]
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=100%&gt;&lt;/html&gt;
+
+---
+count:true 
+
+# About This Course 
+.font140[
+
+
+- The goal of this course is to introduce students to foundational tools to Econometrics, with an emphasis on causality. 
+
+- This course will aim at increasing your skills to critically digest information on policy debates.
+
+- These policies could range from a large number of people (e.g., does the implementation of a universal basic income lead to people spending more on alcohol and cigarettes?) to a few, or single, individuals (e.g., does exposing my kids to two additional hours a week of TV reduce their reading or math skills?). 
+
+- This course will help you to identify such questions and will provide you with language and methods to critically analyze them. 
+
+
+]
+
+
+---
+name: consumer app
+# Why a “Consumer” Approach? 
+- Traditionally this course has been taught with the perspective of turning students into producers of econometrics (“econometricians”). 
+
+- This is a good way to learn this material if you are heavily motivated to pursue this track. However I fear that the heavy reliance on math and lack of real life applications may deter students from using these tools in the future both as consumers and producers of evidence. 
+
+- Thanks to the emergence of new textbooks with this emphasis, in this course we will relegate math to a second seat, losing depth when examining concepts, in order to gain more breath behind the main tools for causal inference. 
+
+- For students who are seeking to further pursue studies in Econometrics, I hope that this course will provide them with a solid intuition, that will help motivate the more detailed methods, theories and proofs that will be developed in subsequent courses (e.g. Ec142, 143, 151, 172, etc). 
+
+--
+
+- ** My primary goal is to equip you with the language and tools for causal analysis. This knowledge will increase your ability to critically digest information on policy debates.**
+
+- ** A close secondary goal is to get you excited about these tools so you can continue to use it for years to come and, maybe, decide to bring your unique perspective to the production of evidence.** 
+
+
+
+---
+background-image: url("Images/mymap.jpg")
+background-size: 40%
+background-position: 90% 50%
+count:true
+# About Me      
+.font120[
+.pull-left[
+- Long last name!
+- He/him
+- Chile - US 
+- Studied Economics, taught Econometrics (this course!) and work in Public Policy in Chile 
+- Migrated permanently to the US in 2013 and studied Public Policy 
+- Interested in bringing more rigor and compassion to policy debates
+- Current Job: Project Scientist at Berkeley Initiative for Transparency in the Social Sciences
+- Why teach EC140?: I like to teach, and want to improve on my knowledge of causal inference.
+]
+]
+---
+# About The Graduate Student Instructos (GSIs)    
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+.font140[
+- Elena Stacy: Sections 106 and 108
+
+- Yige Wang: Sections 102 and 103
+]
+---
+# About You!
+&lt;br&gt;
+.font120[
+- First Years?
+
+- Last Years?
+
+- Transfers?
+
+- California? 
+
+- International?
+
+- Interest in pursuing furthers studies in economics: 
+ - Yes
+ - Maybe 
+ - No
+] 
+ 
+---
+# Textbooks
+.font140[
+- **Required:** Angrist, J. D., &amp; Pischke, J. S. (2014). Mastering 'metrics: The path from cause to effect. Princeton university press.
+    - Two assignments will correspond to short summaries of one chapter. 
+    - In reserve at the Library.
+    - $14 Used on Amazon (click on "other sellers").
+   
+- *Suggested:* Stock, J. H., &amp; Watson, M. W. (2015). Introduction to econometrics 3rd ed.
+    - Do not buy the 4th edition (&gt;$200!). 
+    - $20 for paperback on Amazon.
+]
+
+---
+# Key concepts
+
+.pull-left[
+**Required, to be reinforced**
+
+
+- Expectation/Mean  
+- Standard deviation
+- Law of large number
+- Central limit theorem
+- Conditional expectation
+- Populations/Samples
+- Hypothesis test/P-value
+
+]
+
+.pull-right[
+**New** 
+
+ - Selection Bias
+ - Randomized Control Trials
+ - Potential outcomes
+ - Regression as conditional expectation
+ - Regression as error minimizer
+ - Regression coefficients
+ - Omitted variable bias
+ - Measurement error*
+ - Collinearity*
+ - External validity
+ - Instrumental variables
+ - Regression discontinuity
+ - Difference in Difference
+
+]
+
+*If we start running behind on the schedule, these are the two topics I am willing to sacrifice so we have enough time to cover everything else.
+---
+
+# Office Hours 
+&lt;br&gt;
+.font120[
+
+- Office hours on Mondays from 9:45 - 11:45am and Wednesday from 9:45 - 10:45am at 517 Evans.   
+- You need not have an appointment to talk to me, just stop by my office during that time.
+- Office hours are a time when you can come to ask me for assistance in understanding course material or assignments, or an opportunity to chat with me about the course or how the course relates to current events, college more generally, or anything else you want to talk about with me. 
+- Do not feel like you need to have a "good” question or reason to come to office hours-
+- You can just pop in to say hello if you want! 
+- If you cannot make my office hours because you have a conflict, I'm happy to meet with you at other times, just make an appointment. 
+
+(text adapted from A. Jack, The Privileged Poor 2019).
+
+]
+
+---
+
+# Logistics
+
+## Statistical software
+I will use R in class and I might ask you to play with simulations in Datahub. However, learning R is not a goal of this course. Beware of the shiny new exit phenomenon! 
+
+If you want to use the course to learn R, you can. I will encourage you to submit your homework, or create a version of your class notes using RMarkdown. 
+
+## Clickers
+We will Clickers during the class to improve interactivity. We will not use clickers for graded exercises. Please do not use your phones, or laptops for other purposes during the class. 
+
+##  Covid Policy (or lack thereof)
+
+Unfortunately this course does not count with recordings or captures. If you test positive and have to miss class, you will have to catch up using slides, the book and notes from classmates. I recognize that this is far from ideal, but will work with you to minimize the effect of your class performance. 
+
+
+---
+
+# Requirements  1/2
+
+##Midterms
+ - 2 Midterms. Will cover up to the class before. 
+ 
+##Chapter Summaries
+- Encouraged to write chapter summaries for every chapter of their chosen book. 
+- Required to submit 2 reading reports during the semester. 
+- Each reading report will consist of a summary of a specific chapter of the assigned reading. The summary should be written with the students' own words and should not exceed 300 words. 
+- The summary will be chosen at random and announced 24hrs before submission.
+
+##Problem Sets
+- Posted on bCourses every two weeks, starting tonight
+- Due by 5pm on the dates specified in the calendar.
+- Submit a digital copy of their solutions to Gradescope. Scanned/photographed versions of pen and paper are accepted. Dates are indicated in the calendar below.
+
+---
+# Requirements  2/2
+
+##Final Exam
+ - All the materials covered in the lectures. Similar to the midterms, questions related to the material covered in the last lecture (before review) will be more conceptual and will not expect the student to prepare with any material other than their lecture notes (of the last lecture). 
+
+##Grading
+ - Course grades will be based on: Midterm Exams (30%, 15% each), Book Summaries (20%, 10% each), Final Exam (30%), Problem Sets (20%, 5% each). **No credit will be given for late problem sets**.
+ 
+
+
+
+
+
+---
+class: inverse, center, middle
+count:false
+# .font140[ Econometrics and the Evidence to Policy Link]
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=100%&gt;&lt;/html&gt;
+
+---
+background-image: url("Images/on_bullshit.jpg")
+background-size: 40%
+background-position: 90% 30%
+# .font90[Econometrics can help to improve the rigor of policy debates]
+
+.pull-left[
+    “[a] statement [that] is grounded neither in a belief that it is true nor, as a lie must be, in a belief that it is not true. It is just this lack connection to a concern with truth -this indifference to how things really are- that I regard as the essence of bullshit.” [P33]
+
+"Bullshit is unavoidable whenever circumstances require someone to talk without knowing what he is talking about. Thus the production of bullshit is stimulated whenever a person's obligations or opportunities to speak about some topic exceed his knowledge of the facts that are relevant to that topic. This discrepancy is common in public life, where people are frequently impelled -whether by their own propensities or by the demands of others- to speak extensively about matters of which they are in some degree ignorant)" [P63]
+]
+
+
+---
+background-image: url("Images/paygap_bs.jpg")
+background-size: 40%
+background-position: 90% 30%
+# Example: Debate on the Gender Pay Gap
+
+
+.pull-left[
+
+- Interviewer brings up the point that the gender pay gap in the UK is 9% as evidence that modern society is still primarily dominated by men. Her point is that gender **causes** a wage differential.
+
+
+- Interviewee response:
+
+    - "Multivariate analysis of the pay gap indicates that it doesn't exist"
+
+    - "If you are a social scientist word your salt, you never do a univariate analysis [...]. You break it down by age, by occupation, interest, personality [and the gap disappears]""
+
+- **Good news:** this course will give you the tools to detect where is the BS in his argument.
+
+- **Bad news:** the answer will be completely clear by the last lecture!
+
+]
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+.right[  
+[Video here](https://youtu.be/aMcjxSThD54?t=321)
+]
+
+
+---
+count: false
+background-image: url("Images/pre-cred-ebp.svg")
+background-size: 80%
+background-position: 50% 110%
+
+# .font90[Credibility is Increasing in the Evidence-to-Policy Pipeline]
+.center[
+.font140[**Pre-Credibility** -- Cred. Revo. (1990s) -- Open Science+ (2010s) --&gt;]
+]
+---
+count: true
+background-image: url("Images/pre-open-sci.svg")
+background-size: 80%
+background-position: 50% 110%
+
+# What's wrong with the Evidence-to-Policy Pipeline?
+.center[
+.font140[Pre-Credibility -- **Cred. Revo. (1990s)** -- Open Science+ (2010s) --&gt;]
+]
+
+
+.pull-left[
+Emphasis on empirically testing causal claims with &lt;br&gt;
+clearly defined methods. See David Card’s &lt;br&gt;
+(Ec142) [Nobel lecture](https://doi.org/10.1257/aer.112.6.1773). 
+
+Further from physics, closer &lt;br&gt;
+to medicine &lt;br&gt; ([Chetty’s op ed. on NYT](https://www.nytimes.com/2013/10/21/opinion/yes-economics-is-a-science.html))
+]
+
+---
+count: true
+background-image: url("Images/pre-opa.svg")
+background-size: 80%
+background-position: 50% 110%
+
+# What's wrong with the Evidence-to-Policy Pipeline?
+.center[
+.font140[Pre-Credibility -- Cred. Revo. (1990s) -- **Open Science+ (2010s)** --&gt;]
+]
+
+.pull-left[
+Emphasis on empirically testing causal claims with &lt;br&gt;
+clearly defined methods. See David Card’s &lt;br&gt;
+(Ec142) [Nobel lecture](https://doi.org/10.1257/aer.112.6.1773). 
+
+Further from physics, closer &lt;br&gt;
+to medicine &lt;br&gt; ([Chetty’s op ed. on NYT](https://www.nytimes.com/2013/10/21/opinion/yes-economics-is-a-science.html))
+]
+
+--
+
+.pull-right[
+.right[
+**[MY OPINION:]** Credibility revolution addresses &lt;br&gt; 
+one type of BS, but it completely disregards &lt;br&gt;
+(and maybe reinforces) a second type of BS: &lt;br&gt;
+the belief that we know &lt;br&gt;
+how to use past research to &lt;br&gt;
+inform current policy &lt;br&gt;
+debates &lt;br&gt;
+(aggregation &lt;br&gt;
+and &lt;br&gt;
+extrapolation &lt;br&gt;
+of research)
+]
+
+]
+
+
+---
+# The Goal of EC140
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+.center[
+.font150[
+
+This course will give you the tools to think about causal evidence, to explore further and generate your own causal evidence. And, ideally, to contribute and innovate to the space of connecting evidence with policy. 
+
+]
+]
+
+---
+# The Road Ahead
+
+ - **Week 1:** Stats Review 
+   - Goal is to reinforce concepts that you may have learn already
+   - If you haven't this is the time to ask plenty of questions (in class, OH, GSIs, etc)
+   - Give a first try at PS1 and Finish Intro of MM
+
+ - **Week 2-3:** Stats Review and Foundations of Causality 
+   - Chapter 1 of MM
+ 
+ - **Week 4:** Regression is great!
+  - Chapter 2 MM 
+ 
+ - **Week 5:** Problems with regression for causality
+  - Chapter 2 MM
+  
+ - **Week 6 - 8:** Core tools to measure causality  
+  - Chapter 3, 4, 5, 6 of MM 
+
+
+---
+# Other Quantitative Skills Not Covered in This Course
+&lt;br&gt;&lt;br&gt;
+.font130[
+
+- Many other methods in causal inference: matching, synthetic controls, event study, etc. 
+- Causal graphs (DAGs)
+- Bayesian inference
+- Prediction (ML, DL, etc) 
+- Survey/Research methodology
+- Programming
+- Visualization
+- Data cleaning
+
+]
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
