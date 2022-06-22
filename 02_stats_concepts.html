@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Ec140 - Core Concepts from Statistics</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-06-22" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="libs/datatables-binding/datatables.js"></script>
+    <script src="libs/jquery/jquery-3.6.0.min.js"></script>
+    <link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
+    <link href="libs/crosstalk/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="libs/crosstalk/js/crosstalk.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Ec140 - Core Concepts from Statistics
+### Fernando Hoces la Guardia
+### 06/22/2022
+
+---
+
+
+
+
+
+# Housekeeping 
+
+- Dates for chapter summaries are now on the syllabus. 
+
+- Any troubles accessing the book?
+
+- Any first thoughs on PS 1?
+
+- Font size for people in the back ok?
+
+---
+# Concepts to Review Today
+.font140[
+- Random Variables 
+
+- Probability and Probability Distribution/Density Functions
+
+]
+
+---
+# Random Variables 1/3
+
+Imagine you are meeting with a friend later today and let’s assume of the three following situations can happen: 
+- You have the most wonderful time that you could have had today with your friend.
+- It was ok, but you were kind of expecting to have a better time today. 
+- You had a really bad time, your friend did not stop talking about herself and never checked on you.
+
+--
+
+Roll one Die: 
+
+- If you get a 1 or a 2, the first situation happen
+- If you get a 3 or a 4, the second situation took place
+- 5 or 6 corresponds to the last situation
+
+
+
+--
+
+Each of these situations is what is called an **event** in statistics. Two key characteristics of events are
+  - They must be mutually elusive
+  - The collection of all events (called the event space) must contain all the posible outcomes. 
+
+This events look a bit hard to keep track of...
+
+---
+# Random Variables 2/3
+
+
+Let's assign a number to each event: 
+
+<div id="htmlwidget-50d381133b7a64a70b14" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-50d381133b7a64a70b14">{"x":{"filter":"none","vertical":false,"caption":"<caption>Numbering Events<\/caption>","data":[["You have the most wonderful...","It was ok, but...","You had a really bad time, ..."],[1,2,3]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(Event\\)<\/th>\n      <th>\\(X\\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+
+- This assignment from event to numerical values is what a **random variable** does. 
+
+- For this case, where there is a discrete number events, we called this a  **discrete random variable**
+
+- You might be used to thinking about variables as collections of numbers in a line (or multiple lines). 
+
+
+- A random variable is similar in the sense that it is a collection of numbers, but it is different in the sense that each number represents an event. 
+
+
+---
+# Random Variables 3/3
+
+
+- Another potential source of confusion is that the idea of connecting something with other numbers is similar of the role of a function, not variables. We need random variables first to move from events into numbers.
+
+--
+
+- Random variables can also be continued, but for this we cannot talk of an Event-value mapping, instead we combine the event and value in the same object (the number of the random var.). 
+    - Example: income. In the continuous case, the idea of an event is not so meaningful (what is the likelihood of an income of 33,593.4355?) 
+    - Hence, when working with continuous random variables we will refer to ranges. 
+
+  - Let's go to [Seeing Theory](https://seeing-theory.brown.edu/probability-distributions/index.html#section1) and play a bit with a discrete random variable
+      - For example: think of that event space as a field where you are throwing a ball
+--
+
+Now we have all we need to define a random variable. 
+
+- **Random Variable** is a numerical summary of a random outcome. 
+
+--
+
+- We now know what a random variable is. Notice that we have almost not talk about how likely or unlikely each of these values are, we have not talked about its *proportions in the long run*. 
+
+
+---
+# Probability Distribution Functions  1/2
+
+- "Proportions in the long run", is a bit of a mouthful. Let’s put a name to it, let’s call it **probabilities**. 
+
+- Now we need a mapping from an event (“Most wonderful time that you could have had today with your friend”, or 1) into a probability. 
+
+- This mapping will be described by a function `\(P(X=x)\)` that represents the probability that a random variable `\(X\)`, takes the specific value of `\(x\)` (e.g., 1, or "Most wonderful ...").
+
+<div id="htmlwidget-ac2a93ee20d406c9ea77" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ac2a93ee20d406c9ea77">{"x":{"filter":"none","vertical":false,"caption":"<caption>Events, Random Variables, and Probabilities<\/caption>","data":[["You have the most wonderful...","It was ok, but...","You had a really bad time, ..."],[1,2,3],["1/3","1/3","1/3"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(Event\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(P(X = x)\\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+
+---
+# Probability Distribution Functions  2/2
+
+ - The **probability distribution function** of a discrete random variable is the list of all possible values of a variable and the probability that each value will occur. 
+ 
+ - Notation. Sometimes you will see it express as `\(P(X=x)\)` or as `\(f(x)\)`. The former applies only to discrete PDFs, the latter can be used for both continous or discrete random variables. 
+ 
+ - A closely related concept describes the acumulated probability of a collection of events. How would you write the probability that people in this room had "At least an ok time with their friend"
+ 
+--
+
+- This Cumulative Distribution Function describes the probability that a random variables is less or equal than a particular value. `\(P(X\leq x)\)`
+
+- Lets go to [Seeing Theory](https://seeing-theory.brown.edu/probability-distributions/index.html#section1) again and explore some PDFs and CDFs of discrete random variables. 
+    - Bernoulli: success and failure, 0 and 1. Show how p characterizes the entire distributions. Review ranges and values of PDF and CDF. 
+    - Binomial as example of combining RVs.
+
+
+
+
+---
+# Activity 1 
+.font130[
+
+ - The mythical [Stat 110 team](https://projects.iq.harvard.edu/stat110/home) shows us how the concepts of Discrete Random Variables and Probability Distributions can be used in practice. 
+ - Let's watch [this video](https://youtu.be/ZoIPuTIPviY). Then get together in groups of 3 and discuss:
+    - What is the event space?
+    - What is the random variable?
+    - What is the probability distribution that one person is cured?
+    - How does the Binomial(10, 0.6) relates to that previous distribution?
+]
+
+
+---
+# Probability Density Functions 1/2
+
+- For the case of continuos random variables, lets think of what is the probability of a specific event (e.g., income 34,680.0003). 
+
+--
+
+- For continued random variables we cannot talk about a (specific) probability distribution, we use instead the concepts of density (as in how much is there in any given range). 
+
+- The probability that a continues random variable lies between any given range (of two points) is defined as the area under the **probability density function**  of a continuous random variable. [This is a very abstract concept] 
+
+- The density function is typically denoted by `\(f(x)\)`. 
+
+- Note that any specific value of `\(f(x)\)` should not be interpreted as a probability. 
+
+- The area under the the probability density function, or density, is the cumulative distribution function between two points: 
+
+$$ 
+`\begin{equation}
+P(x_{1} \leq X \leq x_{2}) = \text{area betwen } f(x_{1}) \text{ and } f(x_{2})\\
+\end{equation}`
+$$
+
+---
+
+# Probability Density Functions 2/2
+
+- Lets go to [Seeing Theory](https://seeing-theory.brown.edu/probability-distributions/index.html#section1) again and explore some PDFs and CDFs of continous random variables. 
+    - Uniform: great to represent ignorance.
+    - Normal to show how just two parameters can characterize and entire prob distribution. 
+    - Exponential to show that weird shapes can happen. [Check this video](https://youtu.be/XXjlR2OK1kM) for a great demonstration of how this type of distributions appear in real life.
+    - Beta to show that one distribution can describe many phenomena. Talks about range.
+
+
+## Activity 2
+ - Let's watch [another Stat 110's video](https://youtu.be/UVQs9zikfe0). Then get together in groups of 3 and discuss:
+    - What is the type of random variables are represented by Norma and Randy?
+    - What is Norma's take on how to address the paradox describe by ancient philosophers?
+    - The concept of error tolerance presented in the video correspnds to which concept discuss in previous slides?
+    - The last 2 mins on prediction are outside the scope of our course. 
+]
+
+
+
+
+---
+# Densities of Continuous Random Variables
+
+## Uniform Distribution
+
+The probability density function of a variable uniformly distributed between 0 and 2 is
+
+$$
+f(x) =
+`\begin{cases}
+  \frac{1}{2} &amp; \text{if } 0 \leq x \leq 2 \\
+  0 &amp; \text{if } x &lt; 0 \text{ or } x&gt;2
+\end{cases}`
+$$
+
+&lt;img src="02_stats_concepts_files/figure-html/unif-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# Densities of Continuous Random Variables
+
+## Uniform Distribution
+
+By definition, the area under `\(f(x)\)` is equal to 1.
+
+The .hi[shaded area] illustrates the probability of the event `\(1 \leq X \leq 1.5\)`.
+
+- `\(\mathop{\mathbb{P}}(1 \leq X \leq 1.5) = (1.5-1) \times0.5 = 0.25\)`.
+
+&lt;img src="02_stats_concepts_files/figure-html/unif2-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# Densities of Continuous Random Variables
+
+## Normal Distribution
+
+.hi-purple[The "bell curve."]
+
+- Symmetric: mean and median occur at the same point (_i.e._, no skew).
+
+- Low-probability events in tails; high-probability events near center.
+
+&lt;img src="02_stats_concepts_files/figure-html/norm-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# Continuous Random Variables
+
+## Normal Distribution
+
+The .hi[shaded area] illustrates the probability of the event `\(-2 \leq X \leq 2\)`.
+
+- "Find area under curve" .mono[=] use integral calculus (or, in practice, .mono[R]).
+
+- `\(\mathop{\mathbb{P}}(-2 \leq X \leq 2) \approx 0.95\)`. 
+
+&lt;img src="02_stats_concepts_files/figure-html/norm2-1.svg" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Acknowledgments
+
+- I started this slides on the basis of [Kyle Raze's slides](https://raw.githack.com/kyleraze/EC320_Econometrics/master/Lectures/02-Statistics_Review/02-Statistics_Review.html#34) from University of Oregon.  
+- [Seeing Theory](https://seeing-theory.brown.edu/index.html). 
+- [Stat 110](https://projects.iq.harvard.edu/stat110/home). 
+- Stock and Watson 3e. Chapter 2, P61-65. 
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
