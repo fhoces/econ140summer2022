@@ -23,9 +23,9 @@ output:
 
 -   Office Hours:
 
-    -   FH: M 9:45-11:45 & W 9:45 - 10:45 \@ 517 Evans and Zoom. 
-    -   ES: T & Th from 12:30-1:30pm on Zoom.
-    -   YW: M & W 11:30am to 1:30pm on Zoom.
+    -   FH: M 9:45-11:45 & W 9:45 - 10:45 \@ 517 Evans and Zoom (<https://berkeley.zoom.us/j/3018730303>). 
+    -   ES: T & Th from 12:30-1:30pm \@ 626 and Zoom (https://berkeley.zoom.us/j/3592976499).
+    -   YW: M & W 11:30am to 1:30pm \@ 542 and Zoom (https://berkeley.zoom.us/j/93553122598).
 
 -   Enrollment: Please see the Economics Department Head GSI, John Wieselthier (548 Evans, [headgsi\@econ.berkeley.edu](mailto:headgsi@econ.berkeley.edu)), for ALL questions regarding enrollment.
 
@@ -85,7 +85,7 @@ This semester I will hold office hours on Mondays and Wednesdays from 9:45 - 11:
 I will use R in class and will ask you to play with simulations in Datahub. However, **learning R is not a goal of this course**. If you want to use the course to learn R, you can. I will encourage you to submit your homework, or create a version of your class notes using RMarkdown. 
 
 ## Clickers
-We will Clickers during the class to improve interactivity. We will not use clickers for graded exercises.
+We will Clickers during the class to improve interactivity. We will not use clickers for graded exercises. Please do not use your phones, or laptops for other purposes during the class. 
 
 
 # Covid Policy 
@@ -152,6 +152,7 @@ The GSIs and the Instructors will work on developing a test bank associated with
 - T: Measurement error
 - W: Collinearity
 - Th: External validity
+- **Friday, July 22n, 5pm: Submit Chapter Summary 1**
 
 ## Week 6: July 25th - July 29th  
 - M: Slack
@@ -165,10 +166,12 @@ The GSIs and the Instructors will work on developing a test bank associated with
 - T: Regression discontinuity
 - W: Difference in Differences I
 - Th: Difference in Differences II
+- **Friday, August 5th, 5pm: Submit Chapter Summary 2**
+
 
 ## Week 8: August 8th - August 12th  
 - M: Regression Discontinuity
 - T: Non-standard topics: (i) Aggregation of evidence, and/or (ii) Narrative/exploratory approaches to causal questions (e.g, Desmond, Case & Deaton, Goldin, Sandel). 
 - W: Review 
 - **Th: Final**
-- **Friday, August 12th, 5pm: Submit PS 1**
+- **Friday, August 12th, 5pm: Submit PS 4**

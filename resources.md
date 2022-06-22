@@ -18,3 +18,5 @@ Here you will find a collection of resources used by other instructors from whic
 - [Crowdsource list with resources economics](https://github.com/antontarasenko/awesome-economics)
 
 https://seeing-theory.brown.edu/regression-analysis/index.html#section1
+
+[Eddi Woo's Explanation of Discrete Random Variables](https://www.youtube.com/watch?v=a9vcTvaBqfs)

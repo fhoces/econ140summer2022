@@ -5,7 +5,7 @@ subtitle: "A Consumer’s Introduction to Causal Inference for the Social Scienc
 date:  "Fernando Hoces de la Guardia"
 output: 
   xaringan::moon_reader:
-    footer: "These slides available at https://bitss.github.io/acre-slides-ctree2022/"
+    footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
     css: [default, metropolis, metropolis-fonts] 
     lib_dir: libs
     nature:
@@ -310,7 +310,7 @@ Unfortunately this course does not count with recordings or captures. If you tes
 
 ---
 class: inverse, center, middle
-count:false
+count: true
 # .font140[ Econometrics and the Evidence to Policy Link]
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=100%></html>
@@ -332,6 +332,7 @@ background-position: 90% 30%
 background-image: url("Images/paygap_bs.jpg")
 background-size: 40%
 background-position: 90% 30%
+count:true
 # Example: Debate on the Gender Pay Gap
 
 
@@ -351,14 +352,13 @@ background-position: 90% 30%
 - **Bad news:** the answer will be completely clear by the last lecture!
 
 ]
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 .right[  
 [Video here](https://youtu.be/aMcjxSThD54?t=321)
 ]
 
 
 ---
-count: false
+count: true
 background-image: url("Images/pre-cred-ebp.svg")
 background-size: 80%
 background-position: 50% 110%
@@ -480,6 +480,6 @@ This course will give you the tools to think about causal evidence, to explore f
 
 
 
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 pagedown::chrome_print("01_intro.html", output = "01_intro.pdf")
 ```

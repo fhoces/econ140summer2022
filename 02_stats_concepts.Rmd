@@ -1,0 +1,24 @@
+---
+title: "Ec140 - Core Concepts fors Statistics"
+subtitle: "A Consumer’s Introduction to Causal Inference for the Social Sciences"
+author: "Fernando Hoces de la Guardia"
+date:  "06/22/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Core concepts
+
+- Random Variable 
+
+- Probability Distribution
+
+
+- Samples and Populations
+
+# Acknowledgements and Resources
+
+- Seeing theory
+- MM (Ch1 in appendix)
+- IE (Ch2 )
