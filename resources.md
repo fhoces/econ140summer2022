@@ -20,3 +20,7 @@ Here you will find a collection of resources used by other instructors from whic
 https://seeing-theory.brown.edu/regression-analysis/index.html#section1
 
 [Eddi Woo's Explanation of Discrete Random Variables](https://www.youtube.com/watch?v=a9vcTvaBqfs)
+
+[Eddi Woo's Explanation of Variance](https://www.youtube.com/watch?v=tzKggWvbACc&list=PL5KkMZvBpo5C9nhzyacvNtcWHLh3mvXJE&index=18)
+
+[Stat 110 Expectations](https://youtu.be/sheoa3TrcCI)

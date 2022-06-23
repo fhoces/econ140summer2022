@@ -17,6 +17,14 @@ editor_options:
 ---
 
 
+<style type="text/css">
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+</style>
+
+
 ```{r Setup, include = F}
 options(htmltools.dir.version = FALSE)
 library(pacman)
@@ -79,7 +87,7 @@ theme_empty <- theme_bw() + theme(
 ]
 
 ---
-# Random Variables 1/3
+# Random Variables 1/4
 
 Imagine you are meeting with a friend later today and let’s assume of the three following situations can happen: 
 - You have the most wonderful time that you could have had today with your friend.
@@ -96,17 +104,21 @@ Roll one Die:
 
 
 
---
-
+---
+# Random Variables 2/4
+.pull-left[
 Each of these situations is what is called an **event** in statistics. Two key characteristics of events are
   - They must be mutually elusive
   - The collection of all events (called the event space) must contain all the posible outcomes. 
 
 This events look a bit hard to keep track of...
+]
+--
 
----
-# Random Variables 2/3
 
+
+
+.pull-right[
 
 Let's assign a number to each event: 
 
@@ -126,6 +138,12 @@ colnames(df) <- c("\\(Event\\)", "\\(X\\)")
 
 df %>% DT::datatable(caption = "Numbering Events", options = list(dom = "t", ordering = FALSE, columnDefs = list(list(className = 'dt-center', targets = "_all"))), rownames = FALSE)
 ```
+]
+
+---
+# Random Variables 3/4
+
+.pull-left[
 
 - This assignment from event to numerical values is what a **random variable** does. 
 
@@ -134,11 +152,35 @@ df %>% DT::datatable(caption = "Numbering Events", options = list(dom = "t", ord
 - You might be used to thinking about variables as collections of numbers in a line (or multiple lines). 
 
 
+]
+
+
+.pull-right[
+
+```{r, echo=FALSE, include=TRUE, results="asis"}
+
+# Generate data
+df <- data.frame(
+  event = c(
+    "You have the most wonderful...", 
+    "It was ok, but...", 
+    "You had a really bad time, ..."
+  ),
+  x = c(1, 2, 3) # draw integers
+)
+
+colnames(df) <- c("\\(Event\\)", "\\(X\\)")
+
+df %>% DT::datatable(caption = "Numbering Events", options = list(dom = "t", ordering = FALSE, columnDefs = list(list(className = 'dt-center', targets = "_all"))), rownames = FALSE)
+```
+
 - A random variable is similar in the sense that it is a collection of numbers, but it is different in the sense that each number represents an event. 
+
+]
 
 
 ---
-# Random Variables 3/3
+# Random Variables 4/4
 
 
 - Another potential source of confusion is that the idea of connecting something with other numbers is similar of the role of a function, not variables. We need random variables first to move from events into numbers.
@@ -148,6 +190,10 @@ df %>% DT::datatable(caption = "Numbering Events", options = list(dom = "t", ord
 - Random variables can also be continued, but for this we cannot talk of an Event-value mapping, instead we combine the event and value in the same object (the number of the random var.). 
     - Example: income. In the continuous case, the idea of an event is not so meaningful (what is the likelihood of an income of 33,593.4355?) 
     - Hence, when working with continuous random variables we will refer to ranges. 
+
+---
+
+# Seeing Theory
 
   - Let's go to [Seeing Theory](https://seeing-theory.brown.edu/probability-distributions/index.html#section1) and play a bit with a discrete random variable
       - For example: think of that event space as a field where you are throwing a ball
@@ -163,11 +209,15 @@ Now we have all we need to define a random variable.
 
 
 ---
-# Probability Distribution Functions  1/2
+# Probability Distribution Functions  1/4
 
 - "Proportions in the long run", is a bit of a mouthful. Let’s put a name to it, let’s call it **probabilities**. 
 
 - Now we need a mapping from an event (“Most wonderful time that you could have had today with your friend”, or 1) into a probability. 
+
+---
+# Probability Distribution Functions  2/4
+
 
 - This mapping will be described by a function $P(X=x)$ that represents the probability that a random variable $X$, takes the specific value of $x$ (e.g., 1, or "Most wonderful ...").
 
@@ -190,7 +240,7 @@ df %>% DT::datatable(caption = "Events, Random Variables, and Probabilities", op
 ```
 
 ---
-# Probability Distribution Functions  2/2
+# Probability Distribution Functions  3/4
 
  - The **probability distribution function** of a discrete random variable is the list of all possible values of a variable and the probability that each value will occur. 
  
@@ -198,7 +248,9 @@ df %>% DT::datatable(caption = "Events, Random Variables, and Probabilities", op
  
  - A closely related concept describes the acumulated probability of a collection of events. How would you write the probability that people in this room had "At least an ok time with their friend"
  
---
+ 
+---
+# Probability Distribution Functions  4/4
 
 - This Cumulative Distribution Function describes the probability that a random variables is less or equal than a particular value. $P(X\leq x)$
 
@@ -211,7 +263,7 @@ df %>% DT::datatable(caption = "Events, Random Variables, and Probabilities", op
 
 ---
 # Activity 1 
-.font130[
+
 
  - The mythical [Stat 110 team](https://projects.iq.harvard.edu/stat110/home) shows us how the concepts of Discrete Random Variables and Probability Distributions can be used in practice. 
  - Let's watch [this video](https://youtu.be/ZoIPuTIPviY). Then get together in groups of 3 and discuss:
@@ -219,13 +271,13 @@ df %>% DT::datatable(caption = "Events, Random Variables, and Probabilities", op
     - What is the random variable?
     - What is the probability distribution that one person is cured?
     - How does the Binomial(10, 0.6) relates to that previous distribution?
-]
+
 
 
 ---
 # Probability Density Functions 1/2
 
-- For the case of continuos random variables, lets think of what is the probability of a specific event (e.g., income 34,680.0003). 
+- For the case of continuous random variables, lets think of what is the probability of a specific event (e.g., income 34,680.0003). 
 
 --
 
@@ -234,6 +286,11 @@ df %>% DT::datatable(caption = "Events, Random Variables, and Probabilities", op
 - The probability that a continues random variable lies between any given range (of two points) is defined as the area under the **probability density function**  of a continuous random variable. [This is a very abstract concept] 
 
 - The density function is typically denoted by $f(x)$. 
+
+
+---
+# Probability Density Functions 2/2
+
 
 - Note that any specific value of $f(x)$ should not be interpreted as a probability. 
 
@@ -247,7 +304,7 @@ $$
 
 ---
 
-# Probability Density Functions 2/2
+# Seeing Theory 2
 
 - Lets go to [Seeing Theory](https://seeing-theory.brown.edu/probability-distributions/index.html#section1) again and explore some PDFs and CDFs of continous random variables. 
     - Uniform: great to represent ignorance.
@@ -255,14 +312,15 @@ $$
     - Exponential to show that weird shapes can happen. [Check this video](https://youtu.be/XXjlR2OK1kM) for a great demonstration of how this type of distributions appear in real life.
     - Beta to show that one distribution can describe many phenomena. Talks about range.
 
+---
 
-## Activity 2
+# Activity 2
  - Let's watch [another Stat 110's video](https://youtu.be/UVQs9zikfe0). Then get together in groups of 3 and discuss:
     - What is the type of random variables are represented by Norma and Randy?
     - What is Norma's take on how to address the paradox describe by ancient philosophers?
     - The concept of error tolerance presented in the video correspnds to which concept discuss in previous slides?
     - The last 2 mins on prediction are outside the scope of our course. 
-]
+
 
 
 
@@ -270,6 +328,7 @@ $$
 ---
 # Densities of Continuous Random Variables
 
+.pull-left[
 ## Uniform Distribution
 
 The probability density function of a variable uniformly distributed between 0 and 2 is
@@ -281,8 +340,10 @@ f(x) =
   0 & \text{if } x < 0 \text{ or } x>2
 \end{cases}
 $$
+]
 
-```{R, unif, echo = F, dev = "svg", fig.height = 3.75}
+.pull-right[
+```{R, unif, echo = F, dev = "svg", fig.height = 6}
 x <- seq(-1, 3, 0.01)
 y <- seq(1, 1.5, 0.01)
 z <- seq(0, 2 ,0.01)
@@ -295,10 +356,11 @@ ggplot() +
   ylab("Density") +
   theme_simple
 ```
-
+]
 ---
 # Densities of Continuous Random Variables
 
+.pull-left[
 ## Uniform Distribution
 
 By definition, the area under $f(x)$ is equal to 1.
@@ -306,8 +368,10 @@ By definition, the area under $f(x)$ is equal to 1.
 The .hi[shaded area] illustrates the probability of the event $1 \leq X \leq 1.5$.
 
 - $\mathop{\mathbb{P}}(1 \leq X \leq 1.5) = (1.5-1) \times0.5 = 0.25$.
+]
 
-```{R, unif2, echo = F, dev = "svg", fig.height = 3.75}
+.pull-right[
+```{R, unif2, echo = F, dev = "svg", fig.height = 5}
 x <- seq(-1, 3, 0.01)
 y <- seq(1, 1.5, 0.01)
 z <- seq(0, 2 ,0.01)
@@ -323,10 +387,11 @@ ggplot() +
   ylab("Density") +
   theme_simple
 ```
-
+]
 ---
 # Densities of Continuous Random Variables
 
+.pull-left[
 ## Normal Distribution
 
 .hi-purple[The "bell curve."]
@@ -335,7 +400,11 @@ ggplot() +
 
 - Low-probability events in tails; high-probability events near center.
 
-```{R, norm, echo = F, dev = "svg", fig.height = 3.75}
+]
+
+.pull-right[
+
+```{R, norm, echo = F, dev = "svg", fig.height = 5}
 df <- tibble(x = seq(-4, 4, 0.01), y = dnorm(x)) %>%
   rbind(., tibble(x = seq(4, -4, -0.01), y = 0))
 ggplot() +
@@ -349,10 +418,11 @@ ggplot() +
   xlab(expression(X)) + 
   ylab("Density")
 ```
-
+]
 ---
 # Continuous Random Variables
 
+.pull-left[
 ## Normal Distribution
 
 The .hi[shaded area] illustrates the probability of the event $-2 \leq X \leq 2$.
@@ -361,7 +431,10 @@ The .hi[shaded area] illustrates the probability of the event $-2 \leq X \leq 2$
 
 - $\mathop{\mathbb{P}}(-2 \leq X \leq 2) \approx 0.95$. 
 
-```{R, norm2, echo = F, dev = "svg", fig.height = 3.75}
+]
+
+.pull-right[
+```{R, norm2, echo = F, dev = "svg", fig.height = 5}
 df <- tibble(x = seq(-4, 4, 0.01), y = dnorm(x)) %>%
   rbind(., tibble(x = seq(4, -4, -0.01), y = 0))
 ggplot() +
@@ -376,7 +449,7 @@ ggplot() +
   ylab("Density")
 ```
 
-
+]
 ---
 # Acknowledgments
 
@@ -384,6 +457,7 @@ ggplot() +
 - [Seeing Theory](https://seeing-theory.brown.edu/index.html). 
 - [Stat 110](https://projects.iq.harvard.edu/stat110/home). 
 - Stock and Watson 3e. Chapter 2, P61-65. 
+- [Numberphile!](https://www.numberphile.com)
 
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}

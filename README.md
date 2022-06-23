@@ -121,47 +121,47 @@ The GSIs and the Instructors will work on developing a test bank associated with
 
 # Tentative Schedule
 
-## Week 1: June 20th - 24th  
+## Week 1: June 20th - 24th; Read Introduction of Mastering Metrics (MM)
 - M: Holiday
 - T: Econometrics and the Evidence-to-Policy pipeline
-- W: Populations and samples
+- W: Random variables and probability distribution/density functions
 - Th: Expectation/Mean & Standard deviation/standard error
 
-## Week 2: June 27th - July 1st  
+## Week 2: June 27th - July 1st; Ch 1 of MM 
 - M: Sampling - Law of large numbers and central limit theorem
 - T: Thinking conditionally: Conditional Expectation/Mean
 - W: Selection bias
 - Th: Experimental ideal - Potential outcomes and Randomized Controlled Trials I
 - **Friday, July 1st, 5pm: Submit PS 1**
 
-## Week 3: July 4th - July 8th  
+## Week 3: July 4th - July 8th; Ch 1 of MM  
 - M: Holiday
 - T: Randomized Controlled Trials II
 - W: Hypothesis tests:t-statistic, p-value & p-hacking
 - **Th: Midterm 1**
 
-## Week 4: July 11th - July 15th  
+## Week 4: July 11th - July 15th; Ch 2 of MM
 - M: 45 Min Discussion on midterm + Something fun
 - T: Regression I  - Conditioning
 - W: Regression II - Residuals
 - Th: Regression III- Interpreting coefficients (levels, logs, and binary vars)
 - **Friday, July 15th, 5pm: Submit PS 2**
 
-## Week 5: July 18th - July 22nd  
+## Week 5: July 18th - July 22nd; Ch 2 of MM
 - M: Omitted variable bias
 - T: Measurement error
 - W: Collinearity
 - Th: External validity
 - **Friday, July 22n, 5pm: Submit Chapter Summary 1**
 
-## Week 6: July 25th - July 29th  
+## Week 6: July 25th - July 29th; Ch 3 of MM  
 - M: Slack
 - **T: Midterm 2**
 - W: 45 Min Discussion on midterm + Something fun
 - Th: Instrumental Variables I
 - **Friday, July 29th, 5pm: Submit PS 3**
 
-## Week 7: August 1st - August 5th  
+## Week 7: August 1st - August 5th; Ch 4, 5 and 6 of MM
 - M: Instrumental Variables II
 - T: Regression discontinuity
 - W: Difference in Differences I
@@ -169,8 +169,8 @@ The GSIs and the Instructors will work on developing a test bank associated with
 - **Friday, August 5th, 5pm: Submit Chapter Summary 2**
 
 
-## Week 8: August 8th - August 12th  
-- M: Regression Discontinuity
+## Week 8: August 8th - August 12th; Ch 7 of MM
+- M: Applying all the tools
 - T: Non-standard topics: (i) Aggregation of evidence, and/or (ii) Narrative/exploratory approaches to causal questions (e.g, Desmond, Case & Deaton, Goldin, Sandel). 
 - W: Review 
 - **Th: Final**
