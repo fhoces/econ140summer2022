@@ -55,7 +55,7 @@ Traditionally this course has been taught with the perspective of turning studen
 |                       |                         |
 |-----------------------|-------------------------|
 |  - Expectation/Mean      | - Conditional expectation |
-|  - Standard deviation    | - Populations/Samples     |
+|  - Standard deviation    | - Random variables/Probabilities     |
 |  - Law of large number   | - Hypothesis test/P-value |
 |  - Central limit theorem |                         |
 
