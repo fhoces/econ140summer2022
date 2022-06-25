@@ -104,8 +104,8 @@ Students are encouraged to write chapter summaries for every chapter of their ch
 There will be 4 problem sets. Each problem set will be posted on bCourses every two weeks, starting today, and will be due by 5pm on the dates specified in the calendar. Each student must submit a digital copy of their solutions to Gradescope. Scanned/photographed versions of pen and paper are accepted. Dates are indicated in the calendar below.  
 
  - Problem Set 1 - Friday July 1st - 5pm
- - Problem Set 2 - Friday July 8th - 5pm
- - Problem Set 3 - Friday July 22nd - 5pm
+ - Problem Set 2 - Friday July 15th - 5pm
+ - Problem Set 3 - Friday July 29th - 5pm
  - Problem Set 4 - Friday August 12th - 5pm
 
 ## Final Exam

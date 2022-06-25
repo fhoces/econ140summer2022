@@ -249,7 +249,7 @@ $$
 
 
 ---
-count:true
+count:false
 # Mean: Notation
 
 .font90[
@@ -303,6 +303,65 @@ $$
 $$
 
 ]
+
+
+---
+count:true
+# Mean: Notation
+
+.font90[
+$$
+\begin{equation}
+Average(X) = \frac{ 1 \times `r n_x_var[1]` + 
+                    2 \times `r n_x_var[2]` + 
+                    3 \times `r n_x_var[3]` }{`r sum(n_x_var)`} =
+                    \color{#9370DB}{`r round( sum(1:3 * n_x_var) /
+                    sum(n_x_var) , 2)`}\\
+\end{equation}
+$$
+
+
+$$
+\begin{equation}
+Ave(X) = \color{#FD5F00}{1} \times \color{#007935}{\frac{`r n_x_var[1]`}{`r sum(n_x_var)`}} + 
+         \color{#FD5F00}{2} \times \color{#007935}{\frac{`r n_x_var[2]`}{`r sum(n_x_var)`}} + 
+         \color{#FD5F00}{3} \times \color{#007935}{\frac{`r n_x_var[3]`}{`r sum(n_x_var)`} }  =
+                    \color{#9370DB}{`r round( sum(1:3 * n_x_var) /
+                    sum(n_x_var) , 2)`}\\
+\end{equation}
+$$
+]
+
+.font90[
+$$
+\begin{equation}
+\overline{X}_{n} = \color{#FD5F00}{x_{1}} \times \color{#007935}{proportion(x_{1})} + 
+         \color{#FD5F00}{x_{2}} \times \color{#007935}{proportion(x_{2})} + 
+         \color{#FD5F00}{x_{3}} \times \color{#007935}{proportion(x_{3})}\\ 
+\end{equation}
+$$
+]
+
+
+.font90[
+$$
+\begin{equation}
+\overline{X}_{n} = \text{summing across all } x \left(  \color{#FD5F00}{x} \times \color{#007935}{proportion_{n}(x)} \right)\\ 
+\end{equation}
+$$
+]
+
+
+.font90[
+$$
+\begin{equation}
+\overline{X}_{n} = \sum_{x}  \color{#FD5F00}{x} \times \color{#007935}{prop_{n}(x)}\\ 
+\end{equation}
+$$
+
+]
+
+
 
 ---
 count:false
@@ -490,7 +549,7 @@ And an expectation:
 
 
 $$
-\mathop{\mathbb{E}}(X) = \color{#9370DB}{\sum_{x}} \color{#FD5F00}{g(x)} \color{#007935}{f(x)}
+\mathop{\mathbb{E}}(g(X)) = \color{#9370DB}{\sum_{x}} \color{#FD5F00}{g(x)} \color{#007935}{f(x)}
 $$
 
 The same idea applies in the case of a continues random variable
@@ -603,127 +662,6 @@ $$\color{#9370DB}{g \left( \mathop{\mathbb{E}}(X) \right)} \neq \color{#007935}{
     - How does the random variables becomes continuous?
     - How does linearity help with computations?
 
----
-# Variance
-
-Random variables $\color{#e64173}{X}$ and $\color{#9370DB}{Y}$ share the same population mean, but are distributed differently.
-
-```{R, echo = F, dev = "svg", fig.height = 4}
-df <- tibble(x = seq(-4, 4, 0.01), 
-             y = dnorm(x),
-             z = dnorm(x, sd = 0.4)) %>%
-  rbind(., tibble(x = seq(4, -4, -0.01), y = 0, z = 0))
-ggplot() +
-  scale_x_continuous(limits = c(-4, 4), expand=c(0,0)) +
-  scale_y_continuous(limits = c(0, 1.1), expand=c(0,0), breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1)) +
-  geom_polygon(data = df, aes(x, y), fill = "#e64173", alpha = 0.5) +
-  geom_polygon(data = df, aes(x, z), fill = "#9370DB", alpha = 0.5) +
-  geom_vline(xintercept = 0, size = 1) +
-  #geom_polygon(data = df %>% filter(x <= qnorm(0.5 + 0.475) & x >= qnorm(0.5 - 0.475)), aes(x, y), fill = red_pink) +
-  #geom_vline(xintercept = qnorm(0.5 + 0.475), size = 0.35, linetype = "dashed", color = met_slate) +
-  #geom_vline(xintercept = qnorm(0.5 - 0.475), size = 0.35, linetype = "dashed", color = met_slate) +
-  theme_simple +
-  xlab(paste0(expression(X), " and ", expression(Y))) + 
-  ylab("Density")
-```
-
----
-# Variance
-
-How tightly is a random variable distributed about its mean?
-
-- Let $\mu = \mathop{\mathbb{E}}(X)$. 
-
-- Describe the distance of $X$ from its population mean $\mu$ as the squared difference: $(X - \mu)^2$.
-
---
-
-__Variance__ tells us how far $X$ deviates from $\mu$, _on average_:
-
-$$
-\mathop{\text{Var}}(X) \equiv \mathop{\mathbb{E}}\left( (X - \mu)^2 \right) = \sigma^2
-$$
-
-- $\sigma^2$ is shorthand for variance.
-
-<!-- - Distributing the terms above yields $\sigma^2 = \mathop{\mathbb{E}}(X^2 - 2X \mu + \mu^2) = \mathop{\mathbb{E}}(X^2) - 2 \mu^2 + \mu^2 = \mathop{\mathbb{E}}(X^2) - \mu^2$. -->
-
----
-# Variance
-
-## Rule 1
-
-$\mathop{\text{Var}}(X) = 0 \iff X$ is a constant.
-
-- If a random variable never deviates from its mean, then it has zero variance.
-
-- If a random variable is always equal to its mean, then it's a (not-so-random) constant.
-
----
-# Variance
-
-## Rule 2
-
-For any constants $a$ and $b$, $\mathop{\text{Var}}(aX + b) = a^2\mathop{\text{Var}}(X)$.
-
---
-
-## Example 
-
-Suppose $X$ is the high temperature in degrees Celsius in Eugene during August. If $Y$ is the temperature in degrees Fahrenheit, then $Y = 32 + \frac{9}{5} X$. .hi-purple[What is] $\color{#9370DB}{\mathop{\text{Var}}(Y)}$.hi-purple[?]
-
---
-
-- $\mathop{\text{Var}}(Y) = (\frac{9}{5})^2 \mathop{\text{Var}}(X) = \color{#9370DB}{\frac{81}{25} \mathop{\text{Var}}(X)}$.
-
----
-# Standard Deviation
-
-__Standard deviation__ is the positive square root of the variance:
-
-$$
-\mathop{\text{sd}}(X) = +\sqrt{\mathop{\text{Var}}(X)} = \sigma
-$$
-
-- $\sigma$ is shorthand for standard deviation.
-
----
-# Standard Deviation
-
-## Rule 1
-
-For any constant $c$, $\mathop{\text{sd}}(c) = 0$.
-
---
-
-## Rule 2
-
-For any constants $a$ and $b$, $\mathop{\text{sd}}(aX + b) = \left| a \right|\mathop{\text{sd}}(X)$.
-
----
-# Standardizing a Random Variable
-
-When we're working with a random variable $X$ with an unfamiliar scale, it is useful to __standardize__ it by defining a new variable $Z$:
-
-$$
-Z \equiv \frac{X - \mu}{\sigma}.
-$$
-
---
-
-$Z$ has mean $0$ and standard deviation $1$. How?
-
---
-
-- First, some simple trickery: $Z = aX + b$, where $a \equiv \frac{1}{\sigma}$ and $b \equiv - \frac{\mu}{\sigma}$.
-
---
-
-- $\mathop{\mathbb{E}}(Z) = a \mathop{\mathbb{E}}(X) + b = \mu \frac{1}{\sigma} - \frac{\mu}{\sigma} = 0$.
-
---
-
-- $\text{Var}(Z) = a^2\text{Var}(X) = \frac{1}{\sigma^2} \sigma^2 = 1$.
 
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}

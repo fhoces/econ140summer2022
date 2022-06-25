@@ -17,16 +17,12 @@ Here you will find a collection of resources used by other instructors from whic
 - [Crowdsource list with resources for RAs in economics](https://github.com/Alalalalaki/Guide2EconRA)
 - [Crowdsource list with resources economics](https://github.com/antontarasenko/awesome-economics)
 
-https://seeing-theory.brown.edu/regression-analysis/index.html#section1
+- [Seeing Theory](https://seeing-theory.brown.edu/regression-analysis/index.html#section1)
 
-[Eddie Woo's Explanation of Discrete Random Variables](https://www.youtube.com/watch?v=a9vcTvaBqfs)
+- [Eddie Woo's Explanation of Discrete Random Variables](https://www.youtube.com/watch?v=a9vcTvaBqfs)
 
-[Eddie Woo's Explanation of Variance](https://www.youtube.com/watch?v=tzKggWvbACc&list=PL5KkMZvBpo5C9nhzyacvNtcWHLh3mvXJE&index=18)
+- [Eddie Woo's Explanation of Variance](https://www.youtube.com/watch?v=tzKggWvbACc&list=PL5KkMZvBpo5C9nhzyacvNtcWHLh3mvXJE&index=18)
 
-Expectation https://youtu.be/tF2Kns7RrfQ
-[Stat 110 Expectations](https://youtu.be/sheoa3TrcCI)
+- [Eddie Woo's Explanation of Expectation](https://youtu.be/tF2Kns7RrfQ)
 
-
-[Nick HK on data]
-
-https://www.merriam-webster.com/dictionary/average
+- [Stat 110 Expectations](https://youtu.be/sheoa3TrcCI)
