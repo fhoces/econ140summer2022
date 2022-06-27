@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Ec140 - Core Concepts from Statistics</title>
+    <title>Ec140 - Variance and Sampling</title>
     <meta charset="utf-8" />
     <meta name="author" content="Fernando Hoces la Guardia" />
-    <meta name="date" content="2022-06-23" />
+    <meta name="date" content="2022-06-27" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
@@ -23,9 +23,9 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Ec140 - Core Concepts from Statistics
+# Ec140 - Variance and Sampling
 ### Fernando Hoces la Guardia
-### 06/23/2022
+### 06/27/2022
 
 ---
 
@@ -52,7 +52,16 @@ class: center, middle, inverse, title-slide
 
 
 
+---
+count:true
 
+# Todays Lecture 
+
+- Variance and Standard Deviation
+
+- Expectation and Standard Deviation of the Sample Mean
+
+- Law of Large Numbers, Central Limit Theorem, and Sampling
 
 
 ---
@@ -81,8 +90,8 @@ count:false
 
 .pull-right[
 
-<div id="htmlwidget-8bd80e6cf94fb5bf60ce" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8bd80e6cf94fb5bf60ce">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[90,96,96,97,93,94,93,55]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>Harry Potter Movies (\\(X\\))<\/th>\n      <th>Game of Thrones Seasons (\\(Y\\))<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-97f388381eb4aa12f1f9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-97f388381eb4aa12f1f9">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[90,96,96,97,93,94,93,55]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>Harry Potter Movies (\\(X\\))<\/th>\n      <th>Game of Thrones Seasons (\\(Y\\))<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 
 
 ]
@@ -126,8 +135,8 @@ $$
 
 .pull-right[
 
-<div id="htmlwidget-db19ca4ac284b11df8b1" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-db19ca4ac284b11df8b1">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[90,96,96,97,93,94,93,55]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>Harry Potter Movies (\\(X\\))<\/th>\n      <th>Game of Thrones Seasons (\\(Y\\))<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-1409ad93cb116907b199" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1409ad93cb116907b199">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[90,96,96,97,93,94,93,55]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>Harry Potter Movies (\\(X\\))<\/th>\n      <th>Game of Thrones Seasons (\\(Y\\))<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 
 
 ]
@@ -140,12 +149,31 @@ count:false
 
 # Variance and Standard Deviation 2/N (Sample)
 
+
+.font80[
+.pull-left[
+
+
+
+
+$$
+`\begin{equation}
+\overline{X} = 84.5 \\
+\overline{Y} = 89.2
+\end{equation}`
+$$
+
+
+]
+
+]
+
 .font80[
 
 .pull-right[
 
-<div id="htmlwidget-5cd49d0609472d49d33e" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5cd49d0609472d49d33e">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[90,96,96,97,93,94,93,55]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>Harry Potter Movies (\\(X\\))<\/th>\n      <th>Game of Thrones Seasons (\\(Y\\))<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-be3570752449d055976b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-be3570752449d055976b">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[90,96,96,97,93,94,93,55]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>Harry Potter Movies (\\(X\\))<\/th>\n      <th>Game of Thrones Seasons (\\(Y\\))<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 
 
 ]
@@ -183,8 +211,8 @@ $$
 
 .pull-right[
 
-<div id="htmlwidget-baf2a19243e4bf290bcf" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-baf2a19243e4bf290bcf">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\\(Y - \\overline{Y}\\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-ea79870283293e5567f2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ea79870283293e5567f2">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\\(Y - \\overline{Y}\\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 
 
 
@@ -201,8 +229,8 @@ count:false
 
 .pull-right[
 
-<div id="htmlwidget-19a7151c339a9e8cf6c8" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-19a7151c339a9e8cf6c8">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\\(Y - \\overline{Y}\\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-a4d1d0d31b4b11cb4f96" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a4d1d0d31b4b11cb4f96">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\\(Y - \\overline{Y}\\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 
 
 
@@ -224,7 +252,6 @@ $$
 \overline{Y} = 89.2
 \end{equation}`
 $$
-
 
 
 $$
@@ -250,8 +277,8 @@ count:false
 
 .pull-right[
 
-<div id="htmlwidget-942bd2685ffcf644522f" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-942bd2685ffcf644522f">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\\(Y - \\overline{Y}\\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-68be2212c1b8bc33d095" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-68be2212c1b8bc33d095">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\\(Y - \\overline{Y}\\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 
 
 
@@ -326,8 +353,8 @@ $$
 
 .pull-right[
 
-<div id="htmlwidget-e3c9eff586e9356519b1" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e3c9eff586e9356519b1">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[12.25,2.25,30.25,12.25,42.25,2.25,56.25,132.25],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25],[0.5625,45.5625,45.5625,60.0625,14.0625,22.5625,14.0625,1173.0625]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\n                      \\(Y - \\overline{Y}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-da3fb59dafc5d75dc601" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-da3fb59dafc5d75dc601">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[12.25,2.25,30.25,12.25,42.25,2.25,56.25,132.25],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25],[0.5625,45.5625,45.5625,60.0625,14.0625,22.5625,14.0625,1173.0625]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\n                      \\(Y - \\overline{Y}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 
 
 ]
@@ -384,12 +411,12 @@ $$
 
 .pull-right[
 
-<div id="htmlwidget-76109dbca24e1b748697" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-76109dbca24e1b748697">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[12.25,2.25,30.25,12.25,42.25,2.25,56.25,132.25],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25],[0.5625,45.5625,45.5625,60.0625,14.0625,22.5625,14.0625,1173.0625]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\n                      \\(Y - \\overline{Y}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-19e91ef126c7d0861985" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-19e91ef126c7d0861985">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[12.25,2.25,30.25,12.25,42.25,2.25,56.25,132.25],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25],[0.5625,45.5625,45.5625,60.0625,14.0625,22.5625,14.0625,1173.0625]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\n                      \\(Y - \\overline{Y}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 
 .font150[
 
-- **Conceptually**, these represent the sample variances of HP and GoT ratings
+- These represent the sample variances of HP and GoT ratings
 - But what about the units?
 
 ]
@@ -448,12 +475,12 @@ $$
 
 .pull-right[
 
-<div id="htmlwidget-8bb32cfae3174c2a7bbf" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8bb32cfae3174c2a7bbf">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[12.25,2.25,30.25,12.25,42.25,2.25,56.25,132.25],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25],[0.5625,45.5625,45.5625,60.0625,14.0625,22.5625,14.0625,1173.0625]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\n                      \\(Y - \\overline{Y}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-6923fae442698cde1b2e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6923fae442698cde1b2e">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[12.25,2.25,30.25,12.25,42.25,2.25,56.25,132.25],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25],[0.5625,45.5625,45.5625,60.0625,14.0625,22.5625,14.0625,1173.0625]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\n                      \\(Y - \\overline{Y}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 
 .font150[
 - Due to a minor technicality we divide by `\(N-1\)` instead of `\(N\)` (not relevant for the course).
-- `\(s^{2}_{X}\)` and `\(s_{X}\)` correspond to the sample variance and standard deviation.
+- `\(s^{2}_{X}\)` and `\(s_{X}\)` correspond to the sample variance and sample standard deviation of a random variable `\(X\)`.
 
 ]
 ]
@@ -505,8 +532,8 @@ $$
 
 .pull-right[
 
-<div id="htmlwidget-9916acd1292014ad5b4b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9916acd1292014ad5b4b">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[12.25,2.25,30.25,12.25,42.25,2.25,56.25,132.25],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25],[0.5625,45.5625,45.5625,60.0625,14.0625,22.5625,14.0625,1173.0625]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\n                      \\(Y - \\overline{Y}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-07df4cb93063bc0ac467" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-07df4cb93063bc0ac467">{"x":{"filter":"none","vertical":false,"caption":"<caption>Rotten Tomatos Scores<\/caption>","data":[[1,2,3,4,5,6,7,8],[81,83,90,88,78,83,77,96],[-3.5,-1.5,5.5,3.5,-6.5,-1.5,-7.5,11.5],[12.25,2.25,30.25,12.25,42.25,2.25,56.25,132.25],[90,96,96,97,93,94,93,55],[0.75,6.75,6.75,7.75,3.75,4.75,3.75,-34.25],[0.5625,45.5625,45.5625,60.0625,14.0625,22.5625,14.0625,1173.0625]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(X\\)<\/th>\n      <th>\\(X - \\overline{X}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n      <th>\\(Y\\)<\/th>\n      <th>\n                      \\(Y - \\overline{Y}\\)<\/th>\n      <th>\\( (X - \\overline{X})^2 \\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 
 
 .font150[
@@ -933,7 +960,7 @@ $$
 `\begin{equation}
  \color{#007935}{ 
   \mathop{\mathbb{E}}\left( g(x) \right)  = \\
-  \mathop{\mathbb{E}}\left( (X - E(X))^2 \right) = \sum_{x} (x - E(X))^2 f(x)
+  \mathop{\mathbb{E}}\left( (X - \overline{X})^2 \right) = \sum_{x} (x - E(X))^2 f(x)
   }\\
 \end{equation}`
 $$
@@ -1023,7 +1050,7 @@ $$
 ---
 count:true
 # Variance and Standard Deviation 5/N (Done!)
-You know know what are the variance and standard deviation and where do they come from!
+You now know what are the variance and standard deviation and where do they come from!
 
 .font200[
 
@@ -1091,7 +1118,121 @@ $$
 
 
 ---
+name:sample-mean
+
 # Expectation and Variance of the Sample Mean
+
+- Time for a subtle, but very important change of focus. 
+
+- Until now we have been talking about the expectation and variance of a random variable. Now we are going to focus on the expectation and variance of the **mean of a collection of random variables**. 
+  - Wait? We talk last class that the expectation is like the mean. So basically you want to focus on the mean of the mean? What do that we even mean (!)?
+  
+- A combination of random variables is also a random variable (e.g., remember how a Binomial random variable was a summation of Bernoullis?). In particular, a summation of random variables `\(Y_1, Y_2, Y_3 ..., Y_n\)` is also a random variable, and the sample size is a constant. Hence, `\(\overline{Y}=\frac{ \sum_{n} Y}{n}\)` is also a random variable. 
+
+---
+# Expectation and Variance of the Sample Mean
+
+- This potentially cofusing, as before we would have one random variable X, from which we would sample a collection of values `\(\{x_1, x_2, ... , x_n \}\)`, and with this we could compute the mean `\(\overline{X}\)`. 
+
+- But now we will have to imagine that we do this sampling multiple times. To help with the transition (and because it will also help with future notation), I will use the letter `\(Y_{\text{number } i}\)` to denote random variable number `\(i\)` (where `\(i\)` is used to represent any given number) or `\(Y_{i}\)` for short.
+
+- Hard to imagine if one sample corresponds to one survey that cost millions of dollars and took months or years to carry out, but think about it as a thought exercise. Believing in the multiverse in this case helps with the thought exercise :)
+
+
+
+---
+# Expectation and Variance of the Sample Mean
+
+
+- Before we start combining random variables, we need to make two important assumptions: **independence** and **identically distributed**. 
+
+- **Independence:** Two (or more) random variables are independent when knowing one random variable provides no information about the value of the other. A bit more formally, if two random variables `\(X\)` and `\(Y\)` are independent, then `\(P(X=x \&amp; Y=y) = P(X=x)P(Y=y)\)`. A nice shorthand is to think of "independence as multiplication". 
+
+- **Identically Distributed:** Two (or more) random variables are identically distributed if they have the same probability distribution (or density) function. As a consequence these random variables have the same expected value, let's call it `\(\mu_{Y}\)`, and standard deviation `\(\sigma_{Y}\)`
+
+- A common abbreviation for this two assumption is to say that a collection of random variables is **i.i.d**
+
+
+
+---
+# Expectation of the Sample Mean
+
+- The expected value of the sample mean `\((\overline{Y})\)` is, at first glance, nothing too surprising: 
+
+$$
+`\begin{equation}
+  \mathop{\mathbb{E}}(\overline{Y}) = \frac{1}{n}\sum \mathop{\mathbb{E}}(Y_i)\\
+  \mathop{\mathbb{E}}(\overline{Y}) = \frac{1}{n}\sum \mu_{Y} = \frac{n \mu_{Y}}{n}\\
+  \mathop{\mathbb{E}}(\overline{Y}) = \mu_Y
+\end{equation}`
+$$
+
+(The first equality comes from Rule 2 and 3 of expectation. The second equality comes from identical means, and the third from summing `\(n\)` times the same constant) 
+
+---
+# The Standard Deviation of the Sample Mean
+
+- The formula for variance and standard deviation of the sample mean `\((\overline{Y})\)` is less straight forward: 
+$$
+Var(\overline{Y}) = \frac{\sigma^{2}_{Y}}{n}
+$$
+
+$$
+SD(\overline{Y}) = \frac{ \sigma_{Y}}{\sqrt{n}}
+$$
+
+- Unlike the expectation of the mean its the standard deviation is not the same as the standard deviation of a single random variable. Moreover, it shrinks (to zero) as the sample size increases. 
+
+---
+# Exact v. Approximate Approches
+
+- We just examine the expectation and variance for the sampling mean `\((\overline{Y})\)` using theoretical properties of `\(E()\)` and `\(Var()\)` this results hold true *regardless* of the sample size `\(n\)`. But at the same time answer to a highly hypothetical question (what is the population mean of the sample mean?). 
+
+- In addition to this "exact" derivation. We can also ask what happens with `\(\overline{Y}\)` when its sample size `\((n)\)` increases. This "approximate" approach is refer to as the asymptotic properties `\(\overline{Y}\)` (but either term is fine). 
+
+- In econometrics we make extensive use of the two following approximations:  
+
+---
+# Law of Large Numbers (LLN)
+
+- Under general conditions, of independence (and finite variance), `\(\overline{Y}\)` will be near its expected value `\((\mu_Y)\)` with arbitrary high probability as `\(n\)` is large `\((\overline{Y} \overset{p}{\to} \mu_{Y})\)`  
+
+&lt;!--
+implications for the real world: 
+- counting 
+- surveying hard questions
+--&gt;
+
+&lt;img src="04_sampling_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+
+
+- Let's roll some dice in [Seeing Theory](https://seeing-theory.brown.edu/basic-probability/index.html#section2) to get a better idea. 
+
+
+---
+# Law of Large Numbers (LLN): Observations
+
+- In practical terms `\(n\)` doesn't have to be too large. `\(n=25-35\)` tends to be enought. In social sciences we tend to work with much more that. 
+
+
+
+
+- As `\(n\)` grows the standard deviation of the sample mean drops to zero. In the example above: `\(SD(\overline{Y_{10}}) = 0.14\)`, `\(SD(\overline{Y_{100}}) = 0.05\)`, `\(SD(\overline{Y_{1000}}) = 0.02\)`, `\(SD(\overline{Y_{10000}}) = 0.01\)`.
+
+---
+# Central Limit Theorem (CLT)
+- Under general conditions, of independence (and finite variance), the **distribution** of `\(\overline{Y}\)` is approximately `\(N(\mu_{Y}, \frac{\sigma_{Y}^{2}}{n})\)` as `\(n\)` is large.
+
+- This is true **for any** type of distribution (not only normal) of the underlying `\(Y_{i}\)`. 
+
+- This is very hard to believe, so we are going to spend some significant time in [Seeing Theory](https://seeing-theory.brown.edu/probability-distributions/index.html#section3) simulating different scenarios (and probably over session too). 
+
+- In real life the key assumption is that of independence. If observations are obtained at random, a procedure called *random sampling*,  then independence achieved.
+
+- Random sampling is necessary so the LLN and CLT can be used. 
+
+
+
 
 
     </textarea>

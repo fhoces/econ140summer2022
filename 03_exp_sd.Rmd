@@ -1,5 +1,5 @@
 ---
-title: "Ec140 - Core Concepts from Statistics"
+title: "Ec140 - Mean and Expectation"
 author: "Fernando Hoces la Guardia"
 date: "06/23/2022"
 output: 
@@ -664,6 +664,6 @@ $$\color{#9370DB}{g \left( \mathop{\mathbb{E}}(X) \right)} \neq \color{#007935}{
 
 
 
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
 pagedown::chrome_print("03_exp_sd.html", output = "03_exp_sd.pdf")
 ```

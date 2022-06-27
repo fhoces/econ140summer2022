@@ -1,7 +1,7 @@
 ---
-title: "Ec140 - Core Concepts from Statistics"
+title: "Ec140 - Variance and Sampling"
 author: "Fernando Hoces la Guardia"
-date: "06/23/2022"
+date: "06/27/2022"
 output: 
   xaringan::moon_reader:
     footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
@@ -79,7 +79,16 @@ theme_empty <- theme_bw() + theme(
 
 
 
+---
+count:true
 
+# Todays Lecture 
+
+- Variance and Standard Deviation
+
+- Expectation and Standard Deviation of the Sample Mean
+
+- Law of Large Numbers, Central Limit Theorem, and Sampling
 
 
 ---
@@ -195,6 +204,25 @@ count:false
 
 # Variance and Standard Deviation 2/N (Sample)
 
+
+.font80[
+.pull-left[
+
+
+
+
+$$
+\begin{equation}
+\overline{X} = `r round(mean(df$hp),1) ` \\
+\overline{Y} = `r round(mean(df$got),1) `
+\end{equation}
+$$
+
+
+]
+
+]
+
 .font80[
 
 .pull-right[
@@ -300,11 +328,10 @@ df_tab %>% DT::datatable(caption = "Rotten Tomatos Scores", options = list(dom =
 
 $$
 \begin{equation}
-\overline{X} = `r round(mean(df$hp),1) ` \\
-\overline{Y} = `r round(mean(df$got),1) `
+\overline{X} = `r round(mean(df$hp),1)` \\
+\overline{Y} = `r round(mean(df$got),1)`
 \end{equation}
 $$
-
 
 
 $$
@@ -497,7 +524,7 @@ df_tab %>% DT::datatable(caption = "Rotten Tomatos Scores", options = list(dom =
 
 .font150[
 
-- **Conceptually**, these represent the sample variances of HP and GoT ratings
+- These represent the sample variances of HP and GoT ratings
 - But what about the units?
 
 ]
@@ -569,7 +596,7 @@ df_tab %>% DT::datatable(caption = "Rotten Tomatos Scores", options = list(dom =
 
 .font150[
 - Due to a minor technicality we divide by $N-1$ instead of $N$ (not relevant for the course).
-- $s^{2}_{X}$ and $s_{X}$ correspond to the sample variance and standard deviation.
+- $s^{2}_{X}$ and $s_{X}$ correspond to the sample variance and sample standard deviation of a random variable $X$.
 
 ]
 ]
@@ -1057,7 +1084,7 @@ $$
 \begin{equation}
  \color{#007935}{ 
   \mathop{\mathbb{E}}\left( g(x) \right)  = \\
-  \mathop{\mathbb{E}}\left( (X - E(X))^2 \right) = \sum_{x} (x - E(X))^2 f(x)
+  \mathop{\mathbb{E}}\left( (X - \overline{X})^2 \right) = \sum_{x} (x - E(X))^2 f(x)
   }\\
 \end{equation}
 $$
@@ -1147,7 +1174,7 @@ $$
 ---
 count:true
 # Variance and Standard Deviation 5/N (Done!)
-You know know what are the variance and standard deviation and where do they come from!
+You now know what are the variance and standard deviation and where do they come from!
 
 .font200[
 
@@ -1232,27 +1259,203 @@ $$
 
 
 ---
+name:sample-mean
+
 # Expectation and Variance of the Sample Mean
 
 - Time for a subtle, but very important change of focus. 
 
-- Until now we have been talking about the expectation and variance of a random variable. Now we are going to focus on the expectation and variance of the mean of that random variable. 
-  - Wait? So 
+- Until now we have been talking about the expectation and variance of a random variable. Now we are going to focus on the expectation and variance of the **mean of a collection of random variables**. 
+  - Wait? We talk last class that the expectation is like the mean. So basically you want to focus on the mean of the mean? What do that we even mean (!)?
+  
+- A combination of random variables is also a random variable (e.g., remember how a Binomial random variable was a summation of Bernoullis?). In particular, a summation of random variables $Y_1, Y_2, Y_3 ..., Y_n$ is also a random variable, and the sample size is a constant. Hence, $\overline{Y}=\frac{ \sum_{n} Y}{n}$ is also a random variable. 
+
+---
+# Expectation and Variance of the Sample Mean
+
+- This potentially cofusing, as before we would have one random variable X, from which we would sample a collection of values $\{x_1, x_2, ... , x_n \}$, and with this we could compute the mean $\overline{X}$. 
+
+- But now we will have to imagine that we do this sampling multiple times. To help with the transition (and because it will also help with future notation), I will use the letter $Y_{\text{number } i}$ to denote random variable number $i$ (where $i$ is used to represent any given number) or $Y_{i}$ for short.
+
+- Hard to imagine if one sample corresponds to one survey that cost millions of dollars and took months or years to carry out, but think about it as a thought exercise. Believing in the multiverse in this case helps with the thought exercise :)
+
+
+
+---
+# Expectation and Variance of the Sample Mean
+
+
+- Before we start combining random variables, we need to make two important assumptions: **independence** and **identically distributed**. 
+
+- **Independence:** Two (or more) random variables are independent when knowing one random variable provides no information about the value of the other. A bit more formally, if two random variables $X$ and $Y$ are independent, then $P(X=x \& Y=y) = P(X=x)P(Y=y)$. A nice shorthand is to think of "independence as multiplication". 
+
+- **Identically Distributed:** Two (or more) random variables are identically distributed if they have the same probability distribution (or density) function. As a consequence these random variables have the same expected value, let's call it $\mu_{Y}$, and standard deviation $\sigma_{Y}$
+
+- A common abbreviation for this two assumption is to say that a collection of random variables is **i.i.d**
+
+
+
+---
+# Expectation of the Sample Mean
+
+- The expected value of the sample mean $(\overline{Y})$ is, at first glance, nothing too surprising: 
+
+$$
+\begin{equation}
+  \mathop{\mathbb{E}}(\overline{Y}) = \frac{1}{n}\sum \mathop{\mathbb{E}}(Y_i)\\
+  \mathop{\mathbb{E}}(\overline{Y}) = \frac{1}{n}\sum \mu_{Y} = \frac{n \mu_{Y}}{n}\\
+  \mathop{\mathbb{E}}(\overline{Y}) = \mu_Y
+\end{equation}
+$$
+
+(The first equality comes from Rule 2 and 3 of expectation. The second equality comes from identical means, and the third from summing $n$ times the same constant) 
+
+---
+# The Standard Deviation of the Sample Mean
+
+- The formula for variance and standard deviation of the sample mean $(\overline{Y})$ is less straight forward: 
+$$
+Var(\overline{Y}) = \frac{\sigma^{2}_{Y}}{n}
+$$
+
+$$
+SD(\overline{Y}) = \frac{ \sigma_{Y}}{\sqrt{n}}
+$$
+
+- Unlike the expectation of the mean its the standard deviation is not the same as the standard deviation of a single random variable. Moreover, it shrinks (to zero) as the sample size increases. 
+
+---
+# Exact v. Approximate Approches
+
+- We just examine the expectation and variance for the sampling mean $(\overline{Y})$ using theoretical properties of $E()$ and $Var()$ this results hold true *regardless* of the sample size $n$. But at the same time answer to a highly hypothetical question (what is the population mean of the sample mean?). 
+
+- In addition to this "exact" derivation. We can also ask what happens with $\overline{Y}$ when its sample size $(n)$ increases. This "approximate" approach is refer to as the asymptotic properties $\overline{Y}$ (but either term is fine). 
+
+- In econometrics we make extensive use of the two following approximations:  
+
+---
+# Law of Large Numbers (LLN)
+
+- Under general conditions, of independence (and finite variance), $\overline{Y}$ will be near its expected value $(\mu_Y)$ with arbitrary high probability as $n$ is large $(\overline{Y} \overset{p}{\to} \mu_{Y})$  
+
+<!--
+implications for the real world: 
+- counting 
+- surveying hard questions
+-->
+
+```{r, eval=TRUE, echo=FALSE, fig.height=5}
+library(ggplot2)
+library(scales)
+
+tossCoin = function(n=30, p=0.1) {
+
+  # create a probability distribution, a vector of outcomes (H/T are coded using 0/1)
+  # and their associated probabilities
+  outcomes = c(0,1) # sample space
+  probabilities = c(1-p,p)
+  
+  # create a random sample of n flips; this could also be done with
+  # the rbinom() function, but sample() is perhaps more useful
+  flips = sample(outcomes,n,replace=T,prob=probabilities)
+  
+  # now create a cumulative mean vector
+  cum_sum = cumsum(flips)
+  index = c(1:n)
+  cum_mean = cum_sum / index
   
   
-```{r}
-birthday.prob = function(n.pers, n.sims) {
-# simulate birthdays
-birthdays = matrix(round(runif(n.pers * n.sims,
-                                 1, 365)),
-                      nrow = n.sims, ncol = n.pers)
-  # for each room (row) get unique birthdays
-unique.birthdays = apply(birthdays, 1, function(x)
-length(unique(x)) ) # Indicator with 1 if all are unique birthdays all.different = 1 * (unique.birthdays==n.pers)
-  # Compute average time all have different birthdays
-  result = 1 - mean(all.different)
-return(result)
+  #cum_sumsq = cumsum( (flips - cum_mean)^2 )
+  #cum_sd = 
+  
+  # now combine the index, flips and cum_mean vectors
+  # into a data frame and return it
+  # return(data.frame(index,flips,cum_mean))
+  return(data.frame(index,cum_mean))
 }
-n.pers.p
+
+
+ggplotCoinTosses = function(n=30, p=.1) {
+  # visualize how cumulative average converges on p  
+  # roll the dice n times and calculate means
+  trial1 = tossCoin(n,p)
+  max_y = ceiling(max(trial1$cum_mean))
+  if (max_y < .75) max_y = .75 
+  min_y = floor(min(trial1$cum_mean))
+  if (min_y > .4) min_y = .4
+  
+  # calculate last mean and standard error
+  last_mean = round(trial1$cum_mean[n],9)
+  
+  # plot the results together
+  plot1 = ggplot(trial1, aes(x=index,y=cum_mean)) +
+    geom_line(colour = "blue") +
+    geom_abline(intercept=0.5,slope=0, color = 'red', size=.5) +      
+    theme(plot.title = element_text(size=rel(1.5)),
+          panel.background = element_rect()) +
+    labs(x = "n (number of tosses)", 
+         y = "Cumulative Average") +
+    scale_y_continuous(limits = c(min_y, max_y)) +
+    scale_x_continuous(trans = "log10",
+                       breaks = trans_breaks("log10",function(x) 10^x),
+                       labels = trans_format("log10",math_format(10^.x))) +
+    annotate("text",
+             label=paste("Cumulative mean =", last_mean,
+                         "\nEV =",  p,
+                         "\nSample size =", n), 
+             y=(max_y - .20), 
+             x=10^(log10(n)/2), colour="darkgreen") +
+    annotate("text",
+           label=paste("P(Heads) with Fair Coin = 0.50"), 
+           y=(max_y - .80), 
+           x=10^(log10(n)/2), colour="red")
+
+  return(plot1)
+}  
+# call the function; let's use a fair coin
+ggplotCoinTosses(1e5, .5)
 ```
+
+
+- Let's roll some dice in [Seeing Theory](https://seeing-theory.brown.edu/basic-probability/index.html#section2) to get a better idea. 
+
+
+---
+# Law of Large Numbers (LLN): Observations
+
+- In practical terms $n$ doesn't have to be too large. $n=25-35$ tends to be enought. In social sciences we tend to work with much more that. 
+
+```{r, echo=FALSE}
+#Assume a universe of 1 million coin toses
+universe  <- sample(c(0,1) , size = 1e6, replace = TRUE, prob = c(0.5, 0.5))
+# Simulate 100 samples where each sample has n=10, and compute its standard deviation
+sd_n10    <-  sd(sapply(1:100,  function(x) mean(sample(universe, size = 1e1) )))
+# Simulate 100 samples where each sample has n=100, and compute its standard deviation
+sd_n100   <-  sd(sapply(1:100,  function(x) mean(sample(universe, size = 1e2) )))
+# Simulate 100 samples where each sample has n=1000, and compute its standard deviation
+sd_n1000  <-  sd(sapply(1:100,  function(x) mean(sample(universe, size = 1e3) )))
+# Simulate 100 samples where each sample has n=1000, and compute its standard deviation
+sd_n10000  <-  sd(sapply(1:100,  function(x) mean(sample(universe, size = 1e4) )))
+```
+
+
+- As $n$ grows the standard deviation of the sample mean drops to zero. In the example above: $SD(\overline{Y_{10}}) = `r round(sd_n10,2)`$, $SD(\overline{Y_{100}}) = `r round(sd_n100,2)`$, $SD(\overline{Y_{1000}}) = `r round(sd_n1000,2)`$, $SD(\overline{Y_{10000}}) = `r round(sd_n10000,2)`$.
+
+---
+# Central Limit Theorem (CLT)
+- Under general conditions, of independence (and finite variance), the **distribution** of $\overline{Y}$ is approximately $N(\mu_{Y}, \frac{\sigma_{Y}^{2}}{n})$ as $n$ is large.
+
+- This is true **for any** type of distribution (not only normal) of the underlying $Y_{i}$. 
+
+- This is very hard to believe, so we are going to spend some significant time in [Seeing Theory](https://seeing-theory.brown.edu/probability-distributions/index.html#section3) simulating different scenarios (and probably over session too). 
+
+- In real life the key assumption is that of independence. If observations are obtained at random, a procedure called *random sampling*,  then independence is achieved.
+
+- Random sampling is necessary so the LLN and CLT can be used. 
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+pagedown::chrome_print("04_sampling.html", output = "04_sampling.pdf")
+```
+
 
