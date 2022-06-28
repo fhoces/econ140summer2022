@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Ec140 - Conditional Probability and Expectation</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-06-28" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+    <script src="libs/datatables-binding/datatables.js"></script>
+    <script src="libs/jquery/jquery-3.6.0.min.js"></script>
+    <link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
+    <link href="libs/crosstalk/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="libs/crosstalk/js/crosstalk.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Ec140 - Conditional Probability and Expectation
+### Fernando Hoces la Guardia
+### 06/28/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+# Housekeeping 
+
+- Unofficial Course Capture is now live.  
+
+- This is the last dry-math (without context) lecture! 
+
+- After I hope that we will be able to do a in-depth read of MM. 
+
+
+---
+
+# Today's Lecture
+
+- Conditional Probability
+
+- Conditional Expectation
+
+---
+
+# Conditional Probability: Definition
+
+- The **probability distribution** of a random variable `\(Y\)` given that we observe a the **value** of another random variable `\(X\)`, is the probability that we observe both events, re-scaled by the probability of the event we observe. 
+
+$$
+`\begin{equation}
+  P(Y = y | X = x) = \frac{P(Y = y \text{ and } X = x) }{P(X = x)}
+\end{equation}`
+$$
+
+---
+
+# Conditional Probability: Definition
+
+- The **probability distribution** of a random variable `\(Y\)` given that we observe a the **value** of another random variable `\(X\)`, is the probability that we observe both events, re-scaled by the probability of the event we observe. 
+
+$$
+`\begin{equation}
+  P(Y = y | X = x) = \frac{P(Y = y , X = x) }{P(X = x)}
+\end{equation}`
+$$
+--
+
+- In textbooks, you will probably see this definition in terms of events. Let A and B denote two random events. Then `\(P(A | B) = \frac{P(A , B) }{P(B)}\)`
+
+---
+
+# Conditional Probability: Intuition With Data 1/4
+.pull-left[
+
+.font80[
+Given data on passing status and whether students submitted all their assignments (PS, Readings, Midterms, Exam), you want to know what is the probability of passing **conditional** on submitting everything? (Why does this matter?)
+
+$$
+`\begin{equation}
+  P(Y = y | X = x) = \frac{P(Y = y, X = x) }{P(X = x)}\\
+\end{equation}`
+$$
+
+Let's re-write it using the current random variables: 
+
+
+
+
+]
+]
+
+
+
+.font70[
+
+.pull-right[
+
+<div id="htmlwidget-0aa353f2e8c50200dac5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0aa353f2e8c50200dac5">{"x":{"filter":"none","vertical":false,"data":[[1,2,3,4,5,6,7,8,9,10],[1,1,1,0,1,0,1,1,1,1],[1,0,1,0,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>Passed Course (\\(Pass\\))<\/th>\n      <th>Submited Everything (\\(S\\))<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+
+
+]
+
+]
+
+---
+
+# Conditional Probability: Intuition With Data 1/4
+.pull-left[
+
+.font80[
+Given data on passing status and whether students submitted all their assignments (PS, Readings, Midterms, Exam), you want to know what is the probability of passing **conditional** on submitting everything? (Why does this matter?)
+
+$$
+`\begin{equation}
+P(Y = y | X = x) = \frac{P(Y = y, X = x) }{P(X = x)}\\
+\end{equation}`
+$$
+
+Let's re-write it using the current random variables: 
+
+$$
+`\begin{equation}
+  P(Pass = 1 | S = 1) = \frac{P(Pass = 1, S = 1) }{P(S = 1)}\\
+\end{equation}`
+$$
+
+
+]
+]
+
+
+
+.font70[
+
+.pull-right[
+
+<div id="htmlwidget-d23c38b886c016e6ae1c" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d23c38b886c016e6ae1c">{"x":{"filter":"none","vertical":false,"data":[[1,2,3,4,5,6,7,8,9,10],[1,1,1,0,1,0,1,1,1,1],[1,0,1,0,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>Passed Course (\\(Pass\\))<\/th>\n      <th>Submited Everything (\\(S\\))<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+
+
+]
+
+]
+
+
+---
+
+# Conditional Probability: Intuition With Data 2/4
+
+
+
+.pull-left[
+
+
+
+.font90[
+$$
+`\begin{equation}
+  \color{#FD5F00} {P(Pass = 1 | S = 1)} = \frac{ P(Pass = 1, S = 1) }{P(S = 1)}
+\end{equation}`
+$$
+
+- How would you construct the data for `\(P(Pass = 1 | S = 1)\)`?
+
+  - What do you think about rows `2` and `4`?
+  
+  ]
+]
+
+
+
+.font70[
+
+.pull-right[
+
+<div id="htmlwidget-12404bb860f337e01a6e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-12404bb860f337e01a6e">{"x":{"filter":"none","vertical":false,"data":[[1,2,3,4,5,6,7,8,9,10],[1,1,1,0,1,0,1,1,1,1],[1,0,1,0,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(Pass\\)<\/th>\n      <th>\\(S\\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+
+
+]
+
+]
+
+---
+
+# Conditional Probability: Intuition With Data 2/4 
+
+
+
+
+
+.pull-left[
+
+.font90[
+$$
+`\begin{equation}
+  P(Pass = 1 | S = 1) = \frac{ P(Pass = 1, S = 1) }{P(S = 1)}
+\end{equation}`
+$$
+
+- How would you construct the data for `\(P(Pass = 1 | S = 1)\)`?
+
+  - What do you think about rows `2` and `4`?
+  
+  ]
+]
+
+
+
+.font70[
+
+.pull-right[
+
+<div id="htmlwidget-4a746ed189b58626334d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4a746ed189b58626334d">{"x":{"filter":"none","vertical":false,"data":[[1,2,3,4,5,6,7,8,9,10],[1,1,1,0,1,0,1,1,1,1],[1,0,1,0,1,1,1,1,1,1],["1","NA","1","NA","1","0","1","1","1","1"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(Pass\\)<\/th>\n      <th>\\(S\\)<\/th>\n      <th>\\(Pass | S\\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+
+]
+
+]
+
+
+---
+
+# Conditional Probability: Intuition With Data 2/4
+
+.pull-left[
+
+.font90[
+
+$$
+`\begin{equation}
+  P(Pass = 1 | S = 1) = \frac{ P(Pass = 1, S = 1) }{P(S = 1)}
+\end{equation}`
+$$
+
+- How would you construct the data for `\(P(Pass = 1 | S = 1)\)`?
+
+  - What do you think about rows `2` and `4`?
+
+
+$$
+`\begin{equation}
+P(Pass = 1 | S = 1) = \\
+\frac{
+\sum_{i} \#(pass_{i} = 1 | s_{i} = 1)
+}{
+\color{#FD5F00}{8}
+} = 0.875\\
+\end{equation}`
+$$
+
+- Draw histogram 
+  ]
+
+]
+
+.font70[
+
+.pull-right[
+
+<div id="htmlwidget-0907a4f0a65df2a209e4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0907a4f0a65df2a209e4">{"x":{"filter":"none","vertical":false,"data":[[1,2,3,4,5,6,7,8,9,10],[1,1,1,0,1,0,1,1,1,1],[1,0,1,0,1,1,1,1,1,1],["1","NA","1","NA","1","0","1","1","1","1"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(Pass\\)<\/th>\n      <th>\\(S\\)<\/th>\n      <th>\\(Pass | S\\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+
+
+]
+
+]
+
+
+---
+
+# Conditional Probability: Intuition With Data 3/4
+.pull-left[
+
+
+
+
+
+
+.font90[
+$$
+`\begin{equation}
+  P(Pass = 1 | S = 1) = \color{#FD5F00}{\frac{ P(Pass = 1, S = 1) }{P(S = 1)}}
+\end{equation}`
+$$
+
+- `\(P(Pass = 1, S = 1) = 0.7\)`
+
+- `\(P(S = 1) = 0.8\)`
+
+
+$$
+`\begin{equation}
+  \frac{ P(Pass = 1, S = 1) }{P(S = 1)} = 0.875
+\end{equation}`
+$$
+- Same as `\(\color{#FD5F00}{P(Pass = 1 | S = 1)}\)`
+
+]
+]
+
+
+
+.font70[
+
+.pull-right[
+
+<div id="htmlwidget-e801040ce93ae9e541b5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e801040ce93ae9e541b5">{"x":{"filter":"none","vertical":false,"data":[[1,2,3,4,5,6,7,8,9,10],[1,1,1,0,1,0,1,1,1,1],[1,0,1,0,1,1,1,1,1,1],["1","NA","1","NA","1","0","1","1","1","1"],[1,0,1,0,1,0,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>\\(i\\)<\/th>\n      <th>\\(Pass\\)<\/th>\n      <th>\\(S\\)<\/th>\n      <th>\\(Pass | S\\)<\/th>\n      <th>\\(Pass , S\\)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","ordering":false,"columnDefs":[{"className":"dt-center","targets":"_all"}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+
+
+]
+
+]
+
+---
+# Conditional Probability: Intuition With Data 4/4
+
+- A key step in conditioning is to remember to re-scale the probabilities
+
+- `\(P(Pass = 1) = 0.8\)`, while `\(P(Pass = 1|S =1) = 0.875\)` so knowing about `\(S\)` changed the distribution of `\(P(Pass = 1)\)`, this is the opposite of what concept we discussed last class?
+
+- (You can [see this](https://youtu.be/P7NE4WF8j-Q?t=2104) additional great intuition based on events)
+
+
+---
+# Conditional Probability: Bayes Rule 1/3
+
+$$
+`\begin{equation}
+P(Y = y | X = x) = \frac{P(Y = y, X = x) }{P(X = x)}\\
+\end{equation}`
+$$
+
+- There is a lot of multiplication in this step, so let me replace the notation `\(P(Y = y)\)` with just `\(P(Y)\)`. 
+
+
+$$
+`\begin{equation}
+P(Y | X ) = \frac{P(Y, X) }{P(X)}\\
+\end{equation}`
+$$
+
+
+
+---
+# Conditional Probability: Bayes Rule 2/3
+
+$$
+`\begin{equation}
+P(Y | X ) = \frac{P(Y, X) }{P(X)}\\
+\end{equation}`
+$$
+--
+
+Notice 
+
+$$
+`\begin{equation}
+P(X | Y ) = \frac{P(Y, X) }{P(Y)} \Rightarrow P(X | Y ) P(Y) = P(Y, X) \\
+\end{equation}`
+$$
+
+--
+
+Hence: 
+$$
+`\begin{equation}
+P(Y | X ) = \frac{P(X | Y ) P(Y) }{P(X)}\\
+\end{equation}`
+$$
+
+---
+# Conditional Probability: Bayes Rule 3/3
+
+$$
+`\begin{equation}
+P(Y | X ) = \frac{P(X | Y ) P(Y) }{P(X)}\\
+\end{equation}`
+$$
+.font90[
+
+- One famous problem, to practice the concepts above, it the Monty Hall problem. See this explanation by Berkeley's Lisa Goldberg: [intuition](https://www.youtube.com/watch?v=4Lb-6rxZxx0), [math](https://www.youtube.com/watch?v=ugbWqWCcxrg&amp;t=152s)
+
+- (This equation provides a prescription for rational, open minded thinking. It basically guides us on how to update our beliefs about something `\((Y)\)`, after observing some evidence `\((X)\)`.)
+
+- (Our updated beliefs `\((P(Y | X ))\)` should be equal to our previous beliefs `\((P(Y))\)` times the probability that the evidence we observe `\((X)\)` is consistent with the thing we are interested in `\((P(X|Y))\)`, scaled by the probability of observing the evidence `\((P(X))\)`.) 
+]
+
+---
+# .font90[Conditional Probability: Break Probabilities into Pieces 1/2]
+
+- Draw blob of event B in some event space. Cut it into pieces that don't intersect with each outer (disjoint sets)
+
+- We can compute the probability of `\(B\)` as follows: 
+
+$$
+`\begin{equation}
+P(B) = P(B,A_{1}) + P(B,A_{2})
+\end{equation}`
+$$
+
+---
+# .font90[Conditional Probability: Break Probabilities into Pieces 2/2]
+
+
+$$
+`\begin{equation}
+P(B) = P(B,A_{1}) + P(B,A_{2})
+\end{equation}`
+$$
+
+- But we know have a handy expression for the probability of two events `\((P(Y,X) = P(Y | X )P(X))\)`. Hence: 
+
+
+$$
+`\begin{equation}
+P(B) = P(B|A_{1})P(A_{1}) + P(B|A_{2})P(A_{2})
+\end{equation}`
+$$
+
+- We can do the same with many pieces `\((A_1, A_2, ..., A_J)\)`, so a general expression would be: 
+$$
+`\begin{equation}
+P(B) = \sum_{i}P(B|A_{i})P(A_{i}) 
+\end{equation}`
+$$
+
+- This expression is known as the **law of total probabilities**
+
+
+---
+# Activity 1: 1/3
+
+- Given that this video is more complex that the previous activities, I'll stop in different parts as you about it (It looks pretty innocent but I will need your full attention)
+
+- Watch this video from [Stat 110](). And answer the following questions:
+
+[after "95%"]
+
+  - What are the random variables in this problem? What are they mapping into instead of numbers?
+
+[after "5% misdiagnosis in each case"]
+
+---
+# Activity 1: 2/3
+
+[after "5% misdiagnosis in each case"]
+
+  - Let's use `\(S\)` for sick r.v. (1 = sick, 0 = healthy) and `\(T\)` for test positive r.v. (1 = test positive, 0 = test negative). Write down the two 95% described here as conditional probabilities. 
+  
+--
+
+ - Upper branch: `\(P(T=1|S=1) = 95%\)` and `\(P(T=0|S=1) = 5%\)`, lower branch: `\(P(T=0|S=0) = 95%\)` and `\(P(T=1|S=0) = 5%\)`
+  
+["How sure are you"]
+
+
+---
+# Activity 1: 3/3
+
+["Correctly tested as negatives]
+ 
+ - Where does the 1881 comes from? 
+
+["Falsely tested as negative"]
+ 
+ - Where does the 1 comes from?
+ 
+['After the 16%"]
+
+ - Use bayes rule and the law of total probabilities to obtain the 16%
+
+---
+# Activity 1: 3/3
+
+.font80[
+ - Use bayes rule and the law of total probabilities to obtain the 16%
+
+ - We want to know the probability that Jimmy is sick, given that he tested positive: 
+ 
+$$
+`\begin{equation}
+P(S=1|T=1) = \frac{P(T=1|S=1)P(S=1)}{P(T=1)}
+\end{equation}`
+$$
+We know that the overall probability getting sick is 1%, and that `\(P(T=1|S=1) = 95\%\)`. But we do not know the overall probability of testing positive, for this we can use the law of total probability: 
+
+$$
+`\begin{equation}
+P(T=1) = P(T=1|S=1)P(S=1) + P(T=1|S=0)P(S=0)\\
+ = 0.95\times 0.01 + 0.05\times 0.95 = 0.059 
+\end{equation}`
+$$
+Hence: 
+$$
+`\begin{equation}
+P(S=1|T=1) = \frac{0.95 \times 0.01}{0.059}
+\end{equation}`
+$$
+]
+---
+# Conditional Expectation: Definition
+
+Remember the definition of expected value: 
+
+$$
+`\begin{equation}
+\mathop{\mathbb{E}}(X)  = \sum_{x}xP(X=x)
+\end{equation}`
+$$
+We can do the same for another random variable `\(Y\)`: 
+$$
+`\begin{equation}
+\mathop{\mathbb{E}}(Y)  = \sum_{y}yP(Y=y)
+\end{equation}`
+$$
+
+
+If we want to know the `\(\mathop{\mathbb{E}}(Y|X)\)` we need to use the definition of expectation for `\(Y\)`, but using the appropriate probabilities: 
+
+
+$$
+`\begin{equation}
+\mathop{\mathbb{E}}(Y|X)  = \sum_{\color{#FD5F00}{y}}\color{#FD5F00}{y}P(Y=\color{#FD5F00}{y}|X=x)
+\end{equation}`
+$$
+
+---
+# Conditional Expectation: Definition
+
+- This is the most important expression for the rest of the course. 
+- With it, we will study randomized controlled trials, regression, and everything else!
+
+&lt;br&gt;
+
+.font180[
+$$
+`\begin{equation}
+\mathop{\mathbb{E}}(Y|X)  = \sum_{y}yP(Y=y|X=x)
+\end{equation}`
+$$
+]
+
+
+
+---
+# Conditional Expectation: Activity 2 
+
+[Our Last Stat 110 Video!](https://www.youtube.com/watch?v=_gRQ67i7yL8&amp;list=PLltdM60MtzxNwhL4sg7swFFlUlH7EEy7H&amp;index=3)
+
+- Discuss a plausible explanation for the law of iterated expectations (Adam's Law)
+
+- What is changing when moving the "city's pile"? 
+
+- Discuss an intuition interpretation for the the variance of `\(Y\)` in terms of conditionals of (Eve's Law)
+
+- Where does the 1400 comes from? 
+
+- (for those interested in the fool proof, see [here](https://youtu.be/gjBvCiRt8QA?t=1405))
+
+
+---
+# Acknowledgments
+- Stat 110
+- Nick HK 
+- Numberphile (Lisa Goldberg)
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

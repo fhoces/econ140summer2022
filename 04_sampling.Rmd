@@ -92,7 +92,7 @@ count:true
 
 
 ---
-count:false
+count:true
 
 # Variance and Standard Deviation 1/N (Sample)
 
@@ -200,7 +200,7 @@ df_tab %>% DT::datatable(caption = "Rotten Tomatos Scores", options = list(dom =
 
 
 ---
-count:false
+count:true
 
 # Variance and Standard Deviation 2/N (Sample)
 
@@ -242,7 +242,7 @@ df_tab %>% DT::datatable(caption = "Rotten Tomatos Scores", options = list(dom =
 
 
 ---
-count:false
+count:true
 
 # Variance and Standard Deviation 2/N (Sample)
 
@@ -293,7 +293,7 @@ df_tab %>% DT::datatable(caption = "Rotten Tomatos Scores", options = list(dom =
 
 ]
 ---
-count:false
+count:true
 
 # Variance and Standard Deviation 2/N (Sample)
 
@@ -348,7 +348,7 @@ $$
 
 
 ---
-count:false
+count:true
 
 # Variance and Standard Deviation 2/N (Sample)
 
@@ -604,7 +604,7 @@ df_tab %>% DT::datatable(caption = "Rotten Tomatos Scores", options = list(dom =
 ]
 
 ---
-count: false
+count: true
 # Variance and Standard Deviation 2/N (Sample)
 
 .font80[
@@ -810,7 +810,7 @@ $$
 
 
 ---
-count:false
+count:true
 # Variance and Standard Deviation 4/N (Population)
 
 
@@ -1454,8 +1454,14 @@ sd_n10000  <-  sd(sapply(1:100,  function(x) mean(sample(universe, size = 1e4) )
 - Random sampling is necessary so the LLN and CLT can be used. 
 
 
+---
+# Acknowledgments
+[TO DO]
+
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
 pagedown::chrome_print("04_sampling.html", output = "04_sampling.pdf")
 ```
+
+
 
 

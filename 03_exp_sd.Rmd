@@ -218,7 +218,7 @@ $$
 
 
 ---
-count:false
+count:true
 # Mean: .font80[Notation (Message to me: draw histogram on the board)]
 --
 
@@ -249,7 +249,7 @@ $$
 
 
 ---
-count:false
+count:true
 # Mean: Notation
 
 .font90[
@@ -364,7 +364,7 @@ $$
 
 
 ---
-count:false
+count:true
 
 # Expected Value
 
@@ -466,7 +466,7 @@ ggplot() +
 ]
 
 ---
-count:false
+count:true
 # Expected Value. Definition (Continuous)
 - Compare it to the discrete version
 

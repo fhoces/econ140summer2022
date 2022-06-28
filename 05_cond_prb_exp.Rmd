@@ -1,7 +1,7 @@
 ---
 title: "Ec140 - Conditional Probability and Expectation"
 author: "Fernando Hoces la Guardia"
-date: "06/27/2022"
+date: "06/28/2022"
 output: 
   xaringan::moon_reader:
     footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
@@ -69,12 +69,603 @@ theme_empty <- theme_bw() + theme(
 
 # Housekeeping 
 
-- Updated Syllabus
-  - Fixed dates on PS1. Due this Friday 5pm on gradescope. 
-  
-- Unofficial Course Capture! (second attempt!)
+- Unofficial Course Capture is now live.  
 
-- Finish Ch 1 of MM by the end of the week. 
+- This is the last dry-math (without context) lecture! 
+
+- After I hope that we will be able to do a in-depth read of MM. 
+
+
+---
+
+# Today's Lecture
+
+- Conditional Probability
+
+- Conditional Expectation
+
+---
+
+# Conditional Probability: Definition
+
+- The **probability distribution** of a random variable $Y$ given that we observe a the **value** of another random variable $X$, is the probability that we observe both events, re-scaled by the probability of the event we observe. 
+
+$$
+\begin{equation}
+  P(Y = y | X = x) = \frac{P(Y = y \text{ and } X = x) }{P(X = x)}
+\end{equation}
+$$
+
+---
+
+# Conditional Probability: Definition
+
+- The **probability distribution** of a random variable $Y$ given that we observe a the **value** of another random variable $X$, is the probability that we observe both events, re-scaled by the probability of the event we observe. 
+
+$$
+\begin{equation}
+  P(Y = y | X = x) = \frac{P(Y = y , X = x) }{P(X = x)}
+\end{equation}
+$$
+--
+
+- In textbooks, you will probably see this definition in terms of events. Let A and B denote two random events. Then $P(A | B) = \frac{P(A , B) }{P(B)}$
+
+---
+
+# Conditional Probability: Intuition With Data 1/4
+.pull-left[
+
+.font80[
+Given data on passing status and whether students submitted all their assignments (PS, Readings, Midterms, Exam), you want to know what is the probability of passing **conditional** on submitting everything? (Why does this matter?)
+
+$$
+\begin{equation}
+  P(Y = y | X = x) = \frac{P(Y = y, X = x) }{P(X = x)}\\
+\end{equation}
+$$
+
+Let's re-write it using the current random variables: 
+
+
+```{r, echo=FALSE, include=TRUE, results="asis"}
+
+# Generate data
+df <- data.frame(
+  stude = 1:10,
+  pass   = c(1, 1, 1, 0, 1, 0, 1, 1, 1, 1) ,
+  submit = c(1, 0, 1, 0, 1, 1, 1, 1, 1, 1) 
+)
+
+```
+
+]
+]
+
+
+
+.font70[
+
+.pull-right[
+
+```{r, echo=FALSE, include=TRUE, results="asis"}
+
+df_tab <- df
+colnames(df_tab) <- c("\\(i\\)", "Passed Course (\\(Pass\\))", "Submited Everything (\\(S\\))")
+
+df_tab %>% DT::datatable(options = list(dom = "t", ordering = FALSE, columnDefs = list(list(className = 'dt-center', targets = "_all"))), rownames = FALSE)
+```
+
+
+]
+
+]
+
+---
+
+# Conditional Probability: Intuition With Data 1/4
+.pull-left[
+
+.font80[
+Given data on passing status and whether students submitted all their assignments (PS, Readings, Midterms, Exam), you want to know what is the probability of passing **conditional** on submitting everything? (Why does this matter?)
+
+$$
+\begin{equation}
+P(Y = y | X = x) = \frac{P(Y = y, X = x) }{P(X = x)}\\
+\end{equation}
+$$
+
+Let's re-write it using the current random variables: 
+
+$$
+\begin{equation}
+  P(Pass = 1 | S = 1) = \frac{P(Pass = 1, S = 1) }{P(S = 1)}\\
+\end{equation}
+$$
+
+
+]
+]
+
+
+
+.font70[
+
+.pull-right[
+
+```{r, echo=FALSE, include=TRUE, results="asis"}
+
+df_tab <- df
+colnames(df_tab) <- c("\\(i\\)", "Passed Course (\\(Pass\\))", "Submited Everything (\\(S\\))")
+
+df_tab %>% DT::datatable(options = list(dom = "t", ordering = FALSE, columnDefs = list(list(className = 'dt-center', targets = "_all"))), rownames = FALSE)
+```
+
+
+]
+
+]
+
+
+---
+
+# Conditional Probability: Intuition With Data 2/4
+
+
+
+.pull-left[
+
+
+
+.font90[
+$$
+\begin{equation}
+  \color{#FD5F00} {P(Pass = 1 | S = 1)} = \frac{ P(Pass = 1, S = 1) }{P(S = 1)}
+\end{equation}
+$$
+
+- How would you construct the data for $P(Pass = 1 | S = 1)$?
+
+  - What do you think about rows `2` and `4`?
+  
+  ]
+]
+
+
+
+.font70[
+
+.pull-right[
+
+```{r, echo=FALSE, include=TRUE, results="asis"}
+
+df_tab <- df
+colnames(df_tab) <- c("\\(i\\)", "\\(Pass\\)", "\\(S\\)")
+
+df_tab %>% DT::datatable(options = list(dom = "t", ordering = FALSE, columnDefs = list(list(className = 'dt-center', targets = "_all"))), rownames = FALSE)
+```
+
+
+]
+
+]
+
+---
+
+# Conditional Probability: Intuition With Data 2/4 
+
+
+```{r, echo=FALSE, include=TRUE, results="asis"}
+
+# Generate data
+df <- df %>% mutate(pass_cond_submit = ifelse(submit == 1 ,
+                                              yes = ifelse(pass == 1, "1", "0"), 
+                                              no = "NA") 
+                    )
+
+```
+
+
+.pull-left[
+
+.font90[
+$$
+\begin{equation}
+  P(Pass = 1 | S = 1) = \frac{ P(Pass = 1, S = 1) }{P(S = 1)}
+\end{equation}
+$$
+
+- How would you construct the data for $P(Pass = 1 | S = 1)$?
+
+  - What do you think about rows `2` and `4`?
+  
+  ]
+]
+
+
+
+.font70[
+
+.pull-right[
+
+```{r, echo=FALSE, include=TRUE, results="asis"}
+
+df_tab <- df
+colnames(df_tab) <- c("\\(i\\)", "\\(Pass\\)", "\\(S\\)", "\\(Pass | S\\)")
+
+df_tab %>% DT::datatable(options = list(dom = "t", ordering = FALSE, columnDefs = list(list(className = 'dt-center', targets = "_all"))), rownames = FALSE)
+```
+
+]
+
+]
+
+
+---
+
+# Conditional Probability: Intuition With Data 2/4
+
+.pull-left[
+
+.font90[
+
+$$
+\begin{equation}
+  P(Pass = 1 | S = 1) = \frac{ P(Pass = 1, S = 1) }{P(S = 1)}
+\end{equation}
+$$
+
+- How would you construct the data for $P(Pass = 1 | S = 1)$?
+
+  - What do you think about rows `2` and `4`?
+
+
+$$
+\begin{equation}
+P(Pass = 1 | S = 1) = \\
+\frac{
+\sum_{i} \#(pass_{i} = 1 | s_{i} = 1)
+}{
+\color{#FD5F00}{8}
+} = `r mean(as.numeric(df$pass_cond_submit), na.rm=TRUE)`\\
+\end{equation}
+$$
+
+- Draw histogram 
+  ]
+
+]
+
+.font70[
+
+.pull-right[
+
+```{r, echo=FALSE, include=TRUE, results="asis"}
+
+df_tab <- df
+colnames(df_tab) <- c("\\(i\\)", "\\(Pass\\)", "\\(S\\)",  "\\(Pass | S\\)")
+
+df_tab %>% DT::datatable(options = list(dom = "t", ordering = FALSE, columnDefs = list(list(className = 'dt-center', targets = "_all"))), rownames = FALSE)
+```
+
+
+]
+
+]
+
+
+---
+
+# Conditional Probability: Intuition With Data 3/4
+.pull-left[
+
+
+
+```{r, echo=FALSE, include=TRUE, results="asis"}
+
+# Generate data
+df <- df %>% mutate(pass_and_submit = ifelse(pass == 1 & submit ==1, 1, 0))
+
+```
+
+
+.font90[
+$$
+\begin{equation}
+  P(Pass = 1 | S = 1) = \color{#FD5F00}{\frac{ P(Pass = 1, S = 1) }{P(S = 1)}}
+\end{equation}
+$$
+
+- $P(Pass = 1, S = 1) = `r mean(df$pass_and_submit)`$
+
+- $P(S = 1) = `r mean(df$submit)`$
+
+
+$$
+\begin{equation}
+  \frac{ P(Pass = 1, S = 1) }{P(S = 1)} = `r mean(df$pass_and_submit) / mean(df$submit)`
+\end{equation}
+$$
+- Same as $\color{#FD5F00}{P(Pass = 1 | S = 1)}$
+
+]
+]
+
+
+
+.font70[
+
+.pull-right[
+
+```{r, echo=FALSE, include=TRUE, results="asis"}
+
+df_tab <- df
+colnames(df_tab) <- c("\\(i\\)", "\\(Pass\\)", "\\(S\\)", "\\(Pass | S\\)", "\\(Pass , S\\)")
+
+df_tab %>% DT::datatable(options = list(dom = "t", ordering = FALSE, columnDefs = list(list(className = 'dt-center', targets = "_all"))), rownames = FALSE)
+```
+
+
+]
+
+]
+
+---
+# Conditional Probability: Intuition With Data 4/4
+
+- A key step in conditioning is to remember to re-scale the probabilities
+
+- $P(Pass = 1) = `r mean(df$pass)`$, while $P(Pass = 1|S =1) = `r  mean(as.numeric(df$pass_cond_submit), na.rm=TRUE)`$ so knowing about $S$ changed the distribution of $P(Pass = 1)$, this is the opposite of what concept we discussed last class?
+
+- (You can [see this](https://youtu.be/P7NE4WF8j-Q?t=2104) additional great intuition based on events)
+
+
+---
+# Conditional Probability: Bayes Rule 1/3
+
+$$
+\begin{equation}
+P(Y = y | X = x) = \frac{P(Y = y, X = x) }{P(X = x)}\\
+\end{equation}
+$$
+
+- There is a lot of multiplication in this step, so let me replace the notation $P(Y = y)$ with just $P(Y)$. 
+
+
+$$
+\begin{equation}
+P(Y | X ) = \frac{P(Y, X) }{P(X)}\\
+\end{equation}
+$$
+
+
+
+---
+# Conditional Probability: Bayes Rule 2/3
+
+$$
+\begin{equation}
+P(Y | X ) = \frac{P(Y, X) }{P(X)}\\
+\end{equation}
+$$
+--
+
+Notice 
+
+$$
+\begin{equation}
+P(X | Y ) = \frac{P(Y, X) }{P(Y)} \Rightarrow P(X | Y ) P(Y) = P(Y, X) \\
+\end{equation}
+$$
+
+--
+
+Hence: 
+$$
+\begin{equation}
+P(Y | X ) = \frac{P(X | Y ) P(Y) }{P(X)}\\
+\end{equation}
+$$
+
+---
+# Conditional Probability: Bayes Rule 3/3
+
+$$
+\begin{equation}
+P(Y | X ) = \frac{P(X | Y ) P(Y) }{P(X)}\\
+\end{equation}
+$$
+.font90[
+
+- One famous problem, to practice the concepts above, it the Monty Hall problem. See this explanation by Berkeley's Lisa Goldberg: [intuition](https://www.youtube.com/watch?v=4Lb-6rxZxx0), [math](https://www.youtube.com/watch?v=ugbWqWCcxrg&t=152s)
+
+- (This equation provides a prescription for rational, open minded thinking. It basically guides us on how to update our beliefs about something $(Y)$, after observing some evidence $(X)$.)
+
+- (Our updated beliefs $(P(Y | X ))$ should be equal to our previous beliefs $(P(Y))$ times the probability that the evidence we observe $(X)$ is consistent with the thing we are interested in $(P(X|Y))$, scaled by the probability of observing the evidence $(P(X))$.) 
+]
+
+---
+# .font90[Conditional Probability: Break Probabilities into Pieces 1/2]
+
+- Draw blob of event B in some event space. Cut it into pieces that don't intersect with each outer (disjoint sets)
+
+- We can compute the probability of $B$ as follows: 
+
+$$
+\begin{equation}
+P(B) = P(B,A_{1}) + P(B,A_{2})
+\end{equation}
+$$
+
+---
+# .font90[Conditional Probability: Break Probabilities into Pieces 2/2]
+
+
+$$
+\begin{equation}
+P(B) = P(B,A_{1}) + P(B,A_{2})
+\end{equation}
+$$
+
+- But we know have a handy expression for the probability of two events $(P(Y,X) = P(Y | X )P(X))$. Hence: 
+
+
+$$
+\begin{equation}
+P(B) = P(B|A_{1})P(A_{1}) + P(B|A_{2})P(A_{2})
+\end{equation}
+$$
+
+- We can do the same with many pieces $(A_1, A_2, ..., A_J)$, so a general expression would be: 
+$$
+\begin{equation}
+P(B) = \sum_{i}P(B|A_{i})P(A_{i}) 
+\end{equation}
+$$
+
+- This expression is known as the **law of total probabilities**
+
+
+---
+# Activity 1: 1/3
+
+- Given that this video is more complex that the previous activities, I'll stop in different parts as you about it (It looks pretty innocent but I will need your full attention)
+
+- Watch this video from [Stat 110](). And answer the following questions:
+
+[after "95%"]
+
+  - What are the random variables in this problem? What are they mapping into instead of numbers?
+
+[after "5% misdiagnosis in each case"]
+
+---
+# Activity 1: 2/3
+
+[after "5% misdiagnosis in each case"]
+
+  - Let's use $S$ for sick r.v. (1 = sick, 0 = healthy) and $T$ for test positive r.v. (1 = test positive, 0 = test negative). Write down the two 95% described here as conditional probabilities. 
+  
+--
+
+ - Upper branch: $P(T=1|S=1) = 95%$ and $P(T=0|S=1) = 5%$, lower branch: $P(T=0|S=0) = 95%$ and $P(T=1|S=0) = 5%$
+  
+["How sure are you"]
+
+
+---
+# Activity 1: 3/3
+
+["Correctly tested as negatives]
+ 
+ - Where does the 1881 comes from? 
+
+["Falsely tested as negative"]
+ 
+ - Where does the 1 comes from?
+ 
+['After the 16%"]
+
+ - Use bayes rule and the law of total probabilities to obtain the 16%
+
+---
+# Activity 1: 3/3
+
+.font80[
+ - Use bayes rule and the law of total probabilities to obtain the 16%
+
+ - We want to know the probability that Jimmy is sick, given that he tested positive: 
+ 
+$$
+\begin{equation}
+P(S=1|T=1) = \frac{P(T=1|S=1)P(S=1)}{P(T=1)}
+\end{equation}
+$$
+We know that the overall probability getting sick is 1%, and that $P(T=1|S=1) = 95\%$. But we do not know the overall probability of testing positive, for this we can use the law of total probability: 
+
+$$
+\begin{equation}
+P(T=1) = P(T=1|S=1)P(S=1) + P(T=1|S=0)P(S=0)\\
+ = 0.95\times 0.01 + 0.05\times 0.95 = `r 0.95 * 0.01 + 0.05 * 0.99` 
+\end{equation}
+$$
+Hence: 
+$$
+\begin{equation}
+P(S=1|T=1) = \frac{0.95 \times 0.01}{`r 0.95 * 0.01 + 0.05 * 0.99`}
+\end{equation}
+$$
+]
+---
+# Conditional Expectation: Definition
+
+Remember the definition of expected value: 
+
+$$
+\begin{equation}
+\mathop{\mathbb{E}}(X)  = \sum_{x}xP(X=x)
+\end{equation}
+$$
+We can do the same for another random variable $Y$: 
+$$
+\begin{equation}
+\mathop{\mathbb{E}}(Y)  = \sum_{y}yP(Y=y)
+\end{equation}
+$$
+
+
+If we want to know the $\mathop{\mathbb{E}}(Y|X)$ we need to use the definition of expectation for $Y$, but using the appropriate probabilities: 
+
+
+$$
+\begin{equation}
+\mathop{\mathbb{E}}(Y|X)  = \sum_{\color{#FD5F00}{y}}\color{#FD5F00}{y}P(Y=\color{#FD5F00}{y}|X=x)
+\end{equation}
+$$
+
+---
+# Conditional Expectation: Definition
+
+- This is the most important expression for the rest of the course. 
+- With it, we will study randomized controlled trials, regression, and everything else!
+
+<br>
+
+.font180[
+$$
+\begin{equation}
+\mathop{\mathbb{E}}(Y|X)  = \sum_{y}yP(Y=y|X=x)
+\end{equation}
+$$
+]
+
+
+
+---
+# Conditional Expectation: Activity 2 
+
+[Our Last Stat 110 Video!](https://www.youtube.com/watch?v=_gRQ67i7yL8&list=PLltdM60MtzxNwhL4sg7swFFlUlH7EEy7H&index=3)
+
+- Discuss a plausible explanation for the law of iterated expectations (Adam's Law)
+
+- What is changing when moving the "city's pile"? 
+
+- Discuss an intuition interpretation for the the variance of $Y$ in terms of conditionals of (Eve's Law)
+
+- Where does the 1400 comes from? 
+
+- (for those interested in the fool proof, see [here](https://youtu.be/gjBvCiRt8QA?t=1405))
+
+
+---
+# Acknowledgments
+- Stat 110
+- Nick HK 
+- Numberphile (Lisa Goldberg)
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+pagedown::chrome_print("05_cond_prb_exp.html", output = "05_cond_prb_exp.pdf")
+```
 
 
 
