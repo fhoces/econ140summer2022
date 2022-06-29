@@ -331,7 +331,6 @@ P(Pass = 1 | S = 1) = \\
 \end{equation}
 $$
 
-- Draw histogram 
   ]
 
 ]
@@ -387,6 +386,8 @@ $$
 \end{equation}
 $$
 - Same as $\color{#FD5F00}{P(Pass = 1 | S = 1)}$
+
+- - Draw histogram for $(Pass, S)$
 
 ]
 ]
@@ -531,7 +532,7 @@ $$
 
 - Given that this video is more complex that the previous activities, I'll stop in different parts as you about it (It looks pretty innocent but I will need your full attention)
 
-- Watch this video from [Stat 110](). And answer the following questions:
+- Watch this video from [Stat 110](https://www.youtube.com/watch?v=by3_weGwnMg). And answer the following questions:
 
 [after "95%"]
 
@@ -548,7 +549,7 @@ $$
   
 --
 
- - Upper branch: $P(T=1|S=1) = 95%$ and $P(T=0|S=1) = 5%$, lower branch: $P(T=0|S=0) = 95%$ and $P(T=1|S=0) = 5%$
+ - Upper branch: $P(T=1|S=1) = 95\%$ and $P(T=0|S=1) = 5\%$, lower branch: $P(T=0|S=0) = 95\%$ and $P(T=1|S=0) = 5\%$
   
 ["How sure are you"]
 
@@ -586,13 +587,13 @@ We know that the overall probability getting sick is 1%, and that $P(T=1|S=1) = 
 $$
 \begin{equation}
 P(T=1) = P(T=1|S=1)P(S=1) + P(T=1|S=0)P(S=0)\\
- = 0.95\times 0.01 + 0.05\times 0.95 = `r 0.95 * 0.01 + 0.05 * 0.99` 
+ = 0.95\times 0.01 + 0.05\times 0.99 = `r 0.95 * 0.01 + 0.05 * 0.99` 
 \end{equation}
 $$
 Hence: 
 $$
 \begin{equation}
-P(S=1|T=1) = \frac{0.95 \times 0.01}{`r 0.95 * 0.01 + 0.05 * 0.99`}
+P(S=1|T=1) = \frac{0.95 \times 0.01}{`r 0.95 * 0.01 + 0.05 * 0.99`} =  `r round( (0.95 * 0.01) / (0.95 * 0.01 + 0.05 * 0.99), 3) `
 \end{equation}
 $$
 ]
@@ -642,28 +643,44 @@ $$
 
 
 ---
-# Conditional Expectation: Activity 2 
+# Conditional Expectation: Activity 2 1/2
 
 [Our Last Stat 110 Video!](https://www.youtube.com/watch?v=_gRQ67i7yL8&list=PLltdM60MtzxNwhL4sg7swFFlUlH7EEy7H&index=3)
 
-- Discuss a plausible explanation for the law of iterated expectations (Adam's Law)
+- Discuss a plausible explanation for the law of iterated expectations (Adam's Law): 
+
+$$
+\begin{equation}
+\mathop{\mathbb{E}}(Y)  = \mathop{\mathbb{E_{x}}}(\mathop{\mathbb{E_y}}(Y|X)) = \sum_{x}E(Y|X=x)P(X=x)
+\end{equation}
+$$
+- (for those interested in the full proof, see [here](https://youtu.be/gjBvCiRt8QA?t=1405))
 
 - What is changing when moving the "city's pile"? 
 
-- Discuss an intuition interpretation for the the variance of $Y$ in terms of conditionals of (Eve's Law)
+---
+# Conditional Expectation: Activity 2 2/2
+
+- For the the variance of $Y$ in terms of conditionals of $X$ (Eve's Law). Which term corresponds to the between variation? Which to the within? Between and within what?
+
+$$
+\begin{equation}
+\mathop{\mathbb{V}}(Y)  = \mathop{\mathbb{E}}(\mathop{\mathbb{V}}(Y|X)) + \mathop{\mathbb{V}}(\mathop{\mathbb{E}}(Y|X))  
+\end{equation}
+$$
 
 - Where does the 1400 comes from? 
 
-- (for those interested in the fool proof, see [here](https://youtu.be/gjBvCiRt8QA?t=1405))
 
 
 ---
 # Acknowledgments
+
 - Stat 110
 - Nick HK 
 - Numberphile (Lisa Goldberg)
 
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
 pagedown::chrome_print("05_cond_prb_exp.html", output = "05_cond_prb_exp.pdf")
 ```
 

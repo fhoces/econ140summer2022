@@ -1457,6 +1457,10 @@ sd_n10000  <-  sd(sapply(1:100,  function(x) mean(sample(universe, size = 1e4) )
 ---
 # Acknowledgments
 [TO DO]
+- LLN simulation blog
+- Seeing theory
+
+
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
 pagedown::chrome_print("04_sampling.html", output = "04_sampling.pdf")

@@ -1,0 +1,260 @@
+---
+title: "Mastering Metrics Example - NHIS Interviews"
+author: "Ralf Becker"
+date: "25 August 2018"
+output: 
+    html_document:
+        keep_md: yes
+    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+Here we will replicate some of the results in 
+
+
+# Acknowledgement
+
+First and foremost we thank Joshua D. Angrist and J?rn-Steffen Pischke for writing Mastering Metrics and indeed for making data and STATA code for some of the analysis that appears in their book available via the [http://masteringmetrics.com/](book's website). 
+
+The second thanks goes to Jeffrey Arnold who replicated the STATA work in R and therefore made the production of this much easier. Go to [https://jrnold.github.io/masteringmetrics/index.html](his github page) to see his original work.
+
+
+# Import Data
+
+The data have been provided on the [http://masteringmetrics.com/wp-content/uploads/2015/01/Data.zip](book's website as a STATA file). They come with ".dta" extensions. To import such a file into R we can use the `haven` package (remember, this needs installing first) which contains the `read_dta` function.
+
+```{r DataImport, warning=FALSE, message=FALSE}
+library(haven)
+library(tidyverse)
+
+
+# set the working directory, I assume that the datafile is saved in here
+nhis_data <- read_dta("NHIS2009_clean.dta")
+```
+
+When you look at the data (`head(nhis_data)`) they will look, in the first instance, like a big spreadsheet. and in a way they are as the dataset contains 40 variables and more than 80K observations. But really there is a lot more information hidden in the data. In particular there is information about the 40 variables that goes beyond their name. This information is "hidden" in the variables' attributes. For instance:
+
+```{r Attributes, warning=FALSE, message=FALSE}
+attributes(nhis_data$uninsured)
+table(nhis_data$uninsured)
+```
+
+This reveals that, while there are 6 possible outcomes, the datafile only contains responses "Not covered" and "Covered" (In the attribute `labels` you can find which numerical response has what meaning). You can also see that under the attribute `label` you can find short descriptions of the variable that could be very helpful. The following code extracts this for all 40 variables and displays it next to the variable name. I needed to google ("R extract an attribute from all variables") to fins out how to do that. Don't worry too much about the code.
+
+```{r VarTable}
+library(purrr)
+n <- ncol(nhis_data)
+labels_list <- map(1:n, function(x) attr(nhis_data[[x]], "label") )
+cbind(names(nhis_data),labels_list)
+```
+
+Unfortunately there is not a description (`label`) for every variable.
+
+Another variable which is used below is `hs_hsb1`. "hsb" stands for health seeking bahaviour. The NHIS contains a range of variables that describe bahaviours (check out this [https://nhis.ipums.org/nhis-action/variables/group](page) on which you can explore the available variables - click on "PERSON" and the "HEALTH BAHAVIORS"). The huge range of behaviours have been summarised to a variable called `hs_hsb1` which takes the value on if the respondednt displays good bahaviour overall and 0 otherwise. Note that I have detail on this classification hs been achieved.
+
+Also note that `serial` identifies the household. All observations with the same `serial` number come from the same household. The variable `fml` takes the value 1 if an observation is from a female respondent.
+
+The variable `adltempl` indicates how many adults are employed in the household.
+
+Some important data-cleaning happened already (check the empirical notes to Table 1.1 in Mastering Metrics):
+
+* The dataset only contains observations for adults who are married (to confirm check `marradult` and `marrstat`, both variables only have one outcome).
+
+* The education variable has been constructed to represent approximate years of formal education (e.g. the median value of that variable is 16 years which represents a Backelor's degree).
+
+
+
+# Some data cleaning
+
+To proceed there is an important piece of information that ought to be taken into account. Surveys like the NHIS apply quite complicated sampling scheme such that the selection of people/families/households aren't representative for the population. Such surveys then also supply weight variables (here `perweight` and `hhweight`). Such weights then need to be applied in order to obtain representative summary statistics. In what follows we will use the `perweight` variable as we are looking at a person level analysis (see the respective [https://nhis.ipums.org/nhis/userNotes_weights.shtml](info) om the NHIS website for a more detailed discussion).
+
+Just to make sense of this, let's look at the `perweight` of some survey responses.
+
+```{r warning=FALSE, message=FALSE}
+random_sel <- c(10513,18773,26083)
+
+# some randomly selected values for perweight
+nhis_data$perweight[random_sel]
+
+# summary stats for perweight
+summary(nhis_data$perweight)
+```
+
+As it turns out there are some observations with 0 weights. The definition of the weights is such that the sum of the weights ,`r sum(nhis_data$perweight)`, is meant to be equal to the total US population in 2009 (308 Million). The sum is somewhat smaller here as some observations have already been removed from the datafile.
+
+In what follows we will remove the following observations:
+
+* all unmarried respondents
+* respondents with a value of 0 for `perweight`
+
+We use piping and save the result in a new data structure, `NHIS_temp`.
+
+```{r warning=FALSE, message=FALSE}
+NHIS_temp <- nhis_data %>%
+  filter(marradult == 1, perweight != 0) 
+```
+
+The `hi_hsb1` variable has many missing values. It appears as if typically only one HH member has been asked to answer these questions. Here we assign every household member the same value, namely the average value for `hi_hsb1`. Note, here it is importat to instruct the `mean` function that missing values need to be ignored when calculating the mean (`na.rm = TRUE`)
+
+Talking about missing values, the last line of the following code eliminates observations which have missing health seeking behaviour (`hi_hsb`) or missing health insurance status (`hi`).
+
+```{r warning=FALSE, message=FALSE}
+NHIS_temp <- NHIS_temp %>%
+  group_by(serial) %>%     # group observations by household
+  mutate(hi_hsb = mean(hi_hsb1, na.rm = TRUE)) %>%  # create new variable hi_hsb
+  filter(!is.na(hi_hsb), !is.na(hi))  # remove obs with NA for either hi or hi_hsb
+```
+
+We also want to restrict, for this particular analysis, the sample to households with married husband and wife. To achieve this we will generate an auxilliary (helper) variable, `female` to which we assign the number of females (recall by now we only have married individuals) in a household. Then we keep (`filter`) those observations for which this value takes a value of 1.
+
+```{r warning=FALSE, message=FALSE}
+NHIS_temp <- NHIS_temp %>%
+  group_by(serial) %>%           # group observations by household
+  mutate(female = sum(fml)) %>%  # create helper variable
+  filter(female == 1) %>%        # only keep those with one female
+  select(-female)                # delete helper variable as not needed any longer
+```
+
+We are now left with `r nrow(NHIS_temp)` observations.
+
+In the next step we restrict ourselves to adults with ages between 26 and 59 and households for which at least one adult is in employment (`adltempl >= 1`):
+
+```{r warning=FALSE, message=FALSE}
+NHIS_temp <- NHIS_temp %>%
+  filter(between(age, 26, 59), adltempl >= 1)
+```
+
+Lastly, as per the discussion in Mastering Metrics' empirical notes to Table 1.1, we are restricted to using households with husbands AND wives and hence we only use households for which we have more than one observation:
+
+```{r NHIS2009_single_family}
+NHIS_temp <- NHIS_temp %>%
+  group_by(serial) %>%
+  filter(length(serial) > 1) %>%
+  ungroup()
+```
+
+We are now left with `r nrow(NHIS_temp)` observations which corresponds to the number of observations reported in Table 1.1 (add up the observations for the four groups reported in Table 1.1).
+
+Let's see what the proportion of males and females are that have health insurance. In the following table we also report the sum of the `perweight` variable in each group. 
+
+```{r}
+NHIS_temp %>%
+  group_by(fml) %>%
+  # normalize person weights to match number of observations in each
+  # group
+  mutate(perweight = perweight / sum(perweight) * n()) %>%
+  group_by(fml, hi) %>%
+  summarise(n_wt = sum(perweight)) %>%
+  group_by(fml) %>%
+  mutate(prop = n_wt / sum(n_wt))
+
+```
+
+Compare sample statistics of mean and women, with and without health insurance.
+
+
+To start with we calculate the average age of the four groups (males and females with and without health insurance).
+
+```{r}
+NHIS_temp_diff <- NHIS_temp %>%
+  group_by(fml, hi) %>%
+  summarise(mean = mean(age, na.rm = TRUE)) 
+```
+
+```{r NHIS2009_diff_table2,results='asis'}
+knitr::kable(NHIS_temp_diff, digits = 3)
+```
+
+
+When comparing these stats to Table 1.1 in Mastering Metrics you will be able to detect slight differences. For instance in the published table the average age for husbands who have some HI is 43.98, whereas here it is 44.163.
+
+The reason for that is that the above calculations do not take into account the weighting of the variables but treat each observation with the same weight. Let's re-calculate the Table but now we will compute a mean that uses the variable `perweight` as a weighting variable using the `weighted.mean` function.
+
+```{r}
+NHIS_temp_diff <- NHIS_temp %>%
+  group_by(fml, hi) %>%
+  summarise(wmean = weighted.mean(age,perweight, na.rm = TRUE)) %>%
+  spread(hi,wmean)   # this spreads the hi variable into columns
+
+```
+
+```{r NHIS2009_diff_table3,results='asis'}
+knitr::kable(NHIS_temp_diff, digits = 3)
+```
+
+The labelling is a bit unclear, so let's change that by taking the previous table and adding an additional pipe to change the column names.
+
+```{r}
+NHIS_temp_diff <- NHIS_temp_diff %>%
+  setNames( c("female", "no insurance", "insurance") ) 
+```
+
+```{r ,results='asis'}
+knitr::kable(NHIS_temp_diff, digits = 3)
+```
+
+Now we get the correct mean (i.e. the mean you can find in Mastering Metrics Table 1.1) in the table.
+
+Table 1.1 also calculates the differences between the two groups (insured and not insured) and then performs a hypothesis test to establish whether there are statisticaly significant differences.
+
+
+```{r, message = FALSE, warning=FALSE}
+library(weights)
+
+f1hi1 <- NHIS_temp %>%    # female and health insurance
+          filter(fml == 1, hi == 1) %>%
+          select(age,perweight)
+
+f1hi0 <- NHIS_temp %>%    # female and health insurance
+          filter(fml == 1, hi == 0) %>%
+          select(age,perweight)
+
+f0hi1 <- NHIS_temp %>%    # female and health insurance
+          filter(fml == 0, hi == 1) %>%
+          select(age,perweight)
+
+f0hi0 <- NHIS_temp %>%    # female and health insurance
+          filter(fml == 0, hi == 0) %>%
+          select(age,perweight)
+
+
+wttest <- wtd.t.test(f1hi1$age, f1hi0$age, f1hi1$perweight, f1hi0$perweight,bootse=TRUE)
+wttest
+```
+
+
+The variables we are interested in are defined in the following list:
+
+```{r}
+varlist <- c("hlth", "nwhite", "age", "yedu", "famsize", "empl", "inc")
+```
+
+
+
+
+
+```{r NHIS2009_diff}
+varlist <- c("hlth", "nwhite", "age", "yedu", "famsize", "empl", "inc")
+NHIS_temp_diff <- NHIS_temp %>%
+  # rlang::set_attrs with NULL removes attributes from columns.
+  # this avoids a warning from gather about differing attributes
+  map_dfc(~ rlang::set_attrs(.x, NULL)) %>%
+  select(fml, hi, one_of(varlist)) %>%
+  gather(variable, value, -fml, -hi) %>%
+  group_by(fml, hi, variable) %>%
+  summarise(mean = mean(value, na.rm = TRUE), sd = sd(value, na.rm = TRUE)) %>%
+  gather(stat, value, -fml, -hi, -variable) %>%
+  unite(stat_hi, stat, hi) %>%
+  spread(stat_hi, value) %>%
+  mutate(diff = mean_1 - mean_0)
+```
+
+```{r NHIS2009_diff_table,results='asis'}
+knitr::kable(NHIS_temp_diff, digits = 3)
+```
+
