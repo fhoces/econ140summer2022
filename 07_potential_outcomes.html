@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Ec140 - Selection Bias and Potential Outcomes</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-06-30" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Ec140 - Selection Bias and Potential Outcomes
+### Fernando Hoces la Guardia
+### 06/30/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+
+
+
+
+
+# Housekeeping 
+
+- PS1 due Tomorrow ar 5pm on Gradescope. 
+  - Last question ("Describe how an RCT...") is now optional. 
+  - Aim to submit at 4pm, to avoid any potential problem related with uploading. **Late problem sets will not be graded**. 
+
+
+---
+
+# Today's Lecture
+
+- Selection Bias
+
+- Potential Outcomes Framework
+
+---
+# Selection Bias 
+[Wikipedia Definition](https://en.wikipedia.org/wiki/Selection_bias):
+&gt;Selection bias is the bias introduced by the selection of individuals, groups, or data for analysis in such a way that proper randomization is not achieved, thereby failing to ensure that the sample obtained is representative of the population intended to be analyzed. 
+
+- Econometric textbooks, tend to define selection bias in term of a regression or (as MM) a randomized controlled trial. 
+
+- We will start from this more general definition to connect with the concept of **conditional expectation**. 
+
+- Then we will connect with regression and experiments.  
+
+
+---
+background-image: url("Images/Survivorship-bias.png")
+background-size: contain
+
+
+
+# SB Example 1: Airplanes in World War II
+
+---
+background-image: url("Images/Survivorship-bias.png")
+background-size: 40%
+background-position: 100% 50%
+
+
+# .font80[SB Example 1: Airplanes in World War II. Using Expectation 1/2]
+
+
+.pull-left[
+.font70[
+
+- How would you use conditional expectations to characterize this problem? 
+
+- Let's start by simplifying the problem by assuming that each plane only had two sections. Now define two random variables: binary variables (bernulli) to indicate if the plane received damage in locations one, and two.   `\((DL1:\{\text{No damaged in lct 1, Damaged in lct} 1\} \to \{0,1\}\)`, same for `\(DL2)\)`. 
+
+- We also need to define random variable for that we are conditioning on. In this case, let's use a binary variable for return `\((R:\{\text{Plane didn't return, Plane returned} \}\to\{0,1\})\)`
+
+
+]
+]
+
+---
+background-image: url("Images/Survivorship-bias.png")
+background-size: 40%
+background-position: 100% 50%
+
+# .font80[SB Example 1: Airplanes in World War II. Using Expectation 2/2]
+
+
+.pull-left[
+.font70[
+
+- One way of characterizing the problem would be that the engineers thought they where observing `\(\mathop{\mathbb{E}}(DL1)\)` and `\(\mathop{\mathbb{E}}(DL2)\)` and concluding `\(\mathop{\mathbb{E}}(DL1) &gt; \mathop{\mathbb{E}}(DL2)\)`. 
+
+- But in they were actually observing `\(\mathop{\mathbb{E}}(DL1|R=1)\)` and `\(\mathop{\mathbb{E}}(DL2|R=1)\)` and most likely `\(\mathop{\mathbb{E}}(DL1|R=0) &lt; \mathop{\mathbb{E}}(DL2|R=0)\)` 
+
+- If you don't like the math notation, you can provide the same answer, but in narrative form. 
+
+- This is called [survivorship bias](https://en.wikipedia.org/wiki/Survivorship_bias), and is a type of selection bias. 
+]
+]
+
+
+---
+background-image: url("Images/MMtbl11_health.png")
+background-size: 50%
+background-position: 100% 50%
+# SB Example 2: Health Insurance 1/2
+.font70[
+.pull-left[
+- We can do something similar for our health insurance example. 
+- The "hidden" information could be many things. For example: maybe uninsured people are less have different standards of what constitutes good health, and for the same true health status, uninsured tend to report much higher scores than insured (thanks Andy!). 
+]
+]
+---
+background-image: url("Images/MMtbl11_health.png")
+background-size: 50%
+background-position: 100% 50%
+# SB Example 2: Health Insurance 2/2
+.font70[
+.pull-left[
+- Define a binary random variable that represents if an individual tends to over report good health or not `\((ORep:\{\text{no over report, over reports} \}\to\{0,1\})\)`. In this case the previous comparison translates into: 
+- `\(\mathop{\mathbb{E}}(H|HI=1, \color{#FD5F00}{Orep = 1} )\)`  for column (4), and `\(\mathop{\mathbb{E}}(H|HI=0, \color{#FD5F00}{Orep = 0} )\)`  for column (5).
+- This is a violation of *other things equal* assumption. 
+]
+]
+---
+# .font90[SB Example 3: Country Characterization by Foreign Visitors]
+
+- Characterization of Americans according to foreigners visiting Berkeley. 
+
+- Characterization of Chinese according to foreigner visiting a specific city. 
+
+--
+
+**Implications:**
+
+-&gt; Selection Bias is a key reason to promote diversity equity and inclusion (DEI) 
+
+-&gt; Selection Bias is one of the main reasons it is so important that you ask questions in class. Especially questions like "I didn't understand that last concept, could you please explain it again?"
+ 
+
+
+
+---
+background-image: url("Images/selection_bias_2x.png")
+background-size: contain
+background-position: 90% 50%
+
+# More Examples
+.pull-left[
+- Convention of Statisticians. [XQCD](https://xkcd.wtf/2618/)
+- [Heike Crabs](https://www.youtube.com/watch?v=dIeYPHCJ1B8)
+- Appearance and Intelligence of Movie Stars (From [Causal Inference, The Mixtape](https://mixtape.scunning.com/03-directed_acyclical_graphs#sample-selection-and-collider-bias))
+- Think of at least two examples yourself!
+- ([Hernan Cascicari on Surveys](https://www.youtube.com/watch?v=_wHXjs7PPTw) &lt;br&gt; [in Spanish, and strong language warning])
+]
+
+
+
+---
+class: inverse, middle
+
+# Potential Outcomes Framework 
+
+
+
+
+
+
+---
+# The Potential Outcomes Framework
+
+***Key idea***: Each individual can be exposed to **multiple alternative treatment states**.
+  - smoking cigarrettes, smoking cigars or not smoking,
+  - growing up in a poor vs a middle class neighborhood vs a rich neighborhood,
+  - being in a small or a big class.
+  
+
+
+.pull-left[
+For practicality, let this treatment variable `\(D_i\)` be a binary variable:
+
+$$
+D_i = \begin{cases} 
+                    1 \textrm{ if individual `\(i\)` is treated} \\\\ 
+                    0 \textrm{ if individual `\(i\)` is not treated} 
+      \end{cases}
+$$
+]
+
+
+
+.pull-right[
+
+***Treatment group***  
+all the individuals such that `\(D_i = 1\)`.
+
+***Control group***  
+all the individuals such that `\(D_i = 0\)`.
+]
+
+---
+
+
+# The Potential Outcomes Framework
+
+* In this framework, each individual has two ***potential outcomes***, but only one ***observed outcome*** `\(Y_i\)`:
+  
+  - `\(Y_{1i}\)`: *potential outcome if individual `\(i\)` receives the treatment* `\((D_i = 1)\)`,
+  
+  - `\(Y_{0i}\)`: *potential outcome if individual `\(i\)` does not receive the treatment* `\((D_i = 0)\)`.
+
+--
+
+* In real life we only observe `\(Y_i\)` which can be written as:
+
+`$$Y_i = D_i \times Y_{1i} + (1- D_i) \times Y_{0i}$$`
+
+--
+
+* ***Fundamental Problem of Causal Inference***: for any individual `\(i\)`, we only observe one of either potential outcomes [(Holland, 1986)](http://people.umass.edu/~stanek/pdffiles/causal-holland.pdf).
+
+---
+background-image: url("Images/sliding_doors.jpg")
+background-size: 34%
+background-position: 50% -12%
+
+# Example: Sliding Doors (1998)
+
+
+--
+.pull-left[
+.font180[
+&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; &amp;nbsp; &amp;nbsp; `\(Y_{1i}\)`
+]
+]
+
+.pull-right[
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+.font180[
+&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; `\(Y_{0i}\)`
+]
+]
+
+---
+background-image: url("Images/sliding_doors.jpg")
+background-size: 34%
+background-position: 50% -12%
+
+# Example: Sliding Doors (1998)
+
+
+
+.pull-left[
+.font180[
+&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;  &amp;nbsp; &amp;nbsp; &amp;nbsp; `\(Y_{1i}\)`
+]
+
+&lt;br&gt;&lt;br&gt;
+- Other examples: 
+  - Run Lola Run
+  - Avenger's What If?
+  - Midnight Library
+  - Suggestions?
+]
+
+.pull-right[
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+.font180[
+&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; `\(Y_{0i}\)`
+]
+]
+
+---
+
+# The Potential Outcomes Framework
+
+.font80[
+* The potential outcome that is not observed exists in principle, it is called the ***counterfactual outcome***.
+
+
+
+Group | `\(Y_{1i}\)` | `\(Y_{0i}\)`
+--------|:---------:|:---------:
+Treatment group `\((D_i = 1)\)` &amp;nbsp; &amp;nbsp; | &amp;nbsp; &amp;nbsp; Observable as `\(Y_i\)` &amp;nbsp; &amp;nbsp; | Counterfactual
+Control group `\((D_i = 0)\)` | Counterfactual | &amp;nbsp; &amp;nbsp; Observable as `\(Y_i\)` &amp;nbsp; &amp;nbsp;
+
+
+
+* From these we can define the ***individual treatment effect*** `\(\kappa_i\)`:
+
+`$$\kappa_{i} = Y_{1i} - Y_{0i}$$`
+
+* `\(\kappa_i\)` measures the **causal effect of the treatment `\((D_i)\)`** on outcome `\(Y\)` for individual `\(i\)` (let's read this using the Sliding Doors example).
+
+
+* Since the treatment effect *cannot* be observed at the individual level, we estimate averages across many individuals.
+
+]
+---
+background-image: url("Images/MMtbl12.png")
+background-size: 55%
+background-position: 110% 00%
+
+# Book Example 1/2
+.font80[
+.pull-left[
+- In this ideal scenario, we can observe both worlds: the health and Maria and Khuzdar with and without health insurance. 
+- Here we can compute the individual treatment `\((\kappa_{i})\)` effect for each. For example: 
+- `\(Y_{1,Khuzdar}-Y_{0,Khuzdar}=1\)`  
+- In the real world, Khuzdar has HI, while Maria Doesn't, Hence the comparison between could be of interest: 
+- `\(Y_{Khuzdar}-Y_{Maria}=-1\)`  
+- Can we interpret this difference as causal?
+]
+]
+
+---
+background-image: url("Images/MMtbl12.png")
+background-size: 55%
+background-position: 110% 00%
+
+# Book Example 2/2
+.font80[
+.pull-left[
+- *Other things equal* fails here, because their initial health was different. Let's looks a the simple difference but adding and subtracting Khuzdar health without HI. 
+
+
+- The first parenthesis represents a (individual) causal effect. The second term represent the things that are not equal. 
+
+
+$$
+`\begin{align}
+Y_{Khuzdar} - Y_{Maria} &amp;= Y_{1,Khuzdar} -Y_{0,Maria}\\
+ &amp;= (Y_{1,Khuzdar} + Y_{0,Khuzdar}) + (Y_{0,Maria} - Y_{0,Khuzdar})\\
+ &amp;= (1) + (-2)\\
+\end{align}`
+$$  
+
+]
+]
+--
+.font80[
+.pull-right[
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+- Now let's move into a (slightly) larger data set. 
+]
+]
+---
+
+# Example: Book Example, But with `\(N=10\)` 
+.font80[
+
+.pull-left[
+`\(i\)` | &amp;nbsp; &amp;nbsp; `\(Y^1\)` &amp;nbsp; &amp;nbsp; | &amp;nbsp; &amp;nbsp; `\(Y^0\)` &amp;nbsp; &amp;nbsp; | &amp;nbsp; &amp;nbsp; `\(D\)` &amp;nbsp; &amp;nbsp; | &amp;nbsp; &amp;nbsp; `\(\kappa\)` &amp;nbsp; &amp;nbsp; 
+:-----------|:---------:|:---------:|:---------:|---------:|
+  1 | 5 |   2 |  1 |   3 | 
+  2 | 1 |   4 |  0 |  -3 | 
+  3 | 3 |   1 |  1 |   2 | 
+  4 | 2 |   1 |  1 |   1 | 
+  5 | 4 |   4 |  0 |   0 | 
+  6 | 5 |   4 |  1 |   1 | 
+  7 | 1 |   2 | 1  |  -1 | 
+  8 | 2 |   3 | 0  |  -1 | 
+  9 | 4 |   1 |  0 |   3 | 
+ 10 | 3 |   1 |  0 |   2 | 
+  Average  | 3 | 2.3 | 0.5 |0.7 |
+
+]
+]
+
+.pull-right[
+.font80[
+- Potential outcomes for health of individual with `\((Y_1)\)` and without `\((Y_0)\)` health insurance. 
+
+- Analogous to the individual comparison, we could be interested in the average comparison: 
+
+$$
+`\begin{align}
+Avg_n[Y_{1i} - Y_{0i}] = \frac{1}{n}\sum_{i=1}^{n}(Y_{1i}) - \frac{1}{n}\sum_{i=1}^{n}(Y_{0i}) 
+\end{align}`
+$$ 
+- This mean is the the average causal effect  
+- Can we compute this mean?
+]
+]
+
+---
+
+# Example: Book Example, But with `\(N=10\)` 
+.font80[
+
+.pull-left[
+`\(i\)` | &amp;nbsp; &amp;nbsp; `\(Y^1\)` &amp;nbsp; &amp;nbsp; | &amp;nbsp; &amp;nbsp; `\(Y^0\)` &amp;nbsp; &amp;nbsp; | &amp;nbsp; &amp;nbsp; `\(D\)` &amp;nbsp; &amp;nbsp; | &amp;nbsp; &amp;nbsp; `\(\kappa\)` &amp;nbsp; &amp;nbsp; 
+:-----------|:---------:|:---------:|:---------:|---------:|
+  1 | 5 |   NA |  1 |   3 | 
+  2 | NA |   4 |  0 |  -3 | 
+  3 | 3 |   NA |  1 |   2 | 
+  4 | 2 |   NA |  1 |   1 | 
+  5 | NA |   4 |  0 |   0 | 
+  6 | 5 |   NA |  1 |   1 | 
+  7 | 1 |   NA | 1  |  -1 | 
+  8 | NA |   3 | 0  |  -1 | 
+  9 | NA |   1 |  0 |   3 | 
+ 10 | NA |   1 |  0 |   2 | 
+  Average  | 3 | 2.3 | 0.5 |0.7 |
+
+]
+]
+
+.pull-right[
+.font80[
+- Potential outcomes for health of individual with `\((Y_1)\)` and without `\((Y_0)\)` health insurance. 
+
+- Analogous to the individual comparison, we could be interested in the average comparison: 
+
+$$
+`\begin{align}
+Avg_n[Y_{1i} - Y_{0i}] = \frac{1}{n}\sum_{i=1}^{n}(Y_{1i}) - \frac{1}{n}\sum_{i=1}^{n}(Y_{0i}) 
+\end{align}`
+$$ 
+- This mean is the the average causal effect  
+- Can we compute this mean?
+- **We can't.** 
+]
+]
+
+---
+
+# The Problem of Causal Inference
+
+* From the data, we can compute the *difference-in-group-means*:
+
+$$
+`\begin{align}
+\text{Difference in group means} &amp;= \underbrace{\frac{1}{N_T}\sum_{i=1}^{N_T}(Y_i|D_i=1)}_{Avg_n[Y_i|D_i=1]} - \underbrace{\frac{1}{N_C}\sum_{i=1}^{N_C}(Y_i|D_i=0)}_{Avg_n[Y_i|D_i=0]}
+\end{align}`
+$$ 
+
+- Is `\(\color{#e64173}{\mathop{Avg}\left( y_i\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_i\mid D_i =0 \right)}\)` a *good* estimator for the average causal effect?
+
+---
+# Estimating Causal Effects
+
+**Assumption:** Let `\(\kappa_i = \kappa\)` for all `\(i\)`.
+
+- The treatment effect is equal (constant) across all individuals `\(i\)`.
+
+--
+
+**Note:** We defined
+
+$$
+`\begin{align}
+  \kappa_i = \kappa = \color{#e64173}{y_{1,i}} - \color{#9370DB}{y_{0,i}}
+\end{align}`
+$$
+
+which implies
+
+$$
+`\begin{align}
+   \color{#e64173}{y_{1,i}} = \color{#9370DB}{y_{0,i}} + \kappa
+\end{align}`
+$$
+
+---
+# Simple Difference in Group Means
+
+
+Is `\(\color{#e64173}{\mathop{Avg}\left( y_i\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_i\mid D_i =0 \right)}\)` a *good* estimator for the average causal?
+
+
+$$
+`\begin{aligned}
+\text{Difference in group means} &amp;=  \color{#e64173}{\mathop{Avg}\left( \color{#000000}{y_i}\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( \color{#000000}{y_i}\mid D_i =0 \right)} \\
+&amp;=  \color{#e64173}{\mathop{Avg}\left( y_{1,i}\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_{0,i}\mid D_i =0 \right)}\\
+&amp;= \color{#e64173}{\mathop{Avg}\left( \color{#000000}{\kappa \: +} \: \color{#9370DB}{y_{0,i}} \mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_{0,i}\mid D_i =0 \right)}\\
+&amp;=  \kappa + \color{#e64173}{\mathop{Avg}\left(\color{#9370DB}{y_{0,i}} \mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_{0,i}\mid D_i =0 \right)}\\
+&amp;=  \text{Average causal effect} + \color{#FD5F00}{\text{Selection bias}}\\
+\end{aligned}`
+$$
+
+Our proposed difference-in-means estimator gives us the sum of: 
+
+1. `\(\kappa\)`, the average causal effect that we want.
+2. **Selection bias** How much treatment and control groups differ, on average.
+
+---
+
+# Let's Bring Expectations Back!
+We previously defined expectations as the population version of the mean. Hence, we can use expectation to represent this problem at the population level: 
+$$
+`\begin{align}
+  \mathop{\mathbb{E}}(\text{Difference in group means}) &amp;= \kappa + \underbrace{\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) - \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)}_\text{Selection bias} 
+\end{align}`
+$$
+
+- Looking at the expectations formulation of selection bias, it becomes clear that our problems would be solved if we could make `\(Y_{i0}\)` independent of `\(D\)`.  
+
+
+---
+# Note: On Name of The Problem
+
+- In addition to ***The Fundamental Problem of Causal Inference***, this problem is usually referred with the following terms:
+
+- We are **missing data** on all the potential outcomes for which the treatment status did not happen in real world. Hence this is also referred as a missing data problem. 
+
+- This is also called a **identification** problem (as in: we cannot identify the average treatment effect). 
+
+- In this course, you will not be asked to memorize the different names, just be aware of the different teminolgy when consulting references. 
+
+
+---
+class: title-slide-final
+background-image: url("Images/correlation.png")
+background-size: 60%
+background-position: 50% 100%
+
+# Acknowledgments
+
+.pull-left[
+- [Kyle Raze's Undergraduate Econometrics 1](https://github.com/kyleraze/EC320_Econometrics)
+- [ScPoEconometrics](https://raw.githack.com/ScPoEcon/ScPoEconometrics-Slides/master/chapter_causality/chapter_causality.html#1)
+- XQCD
+- MM
+]
+.pull-right[
+- [Matt Hollian](http://mattholian.blogspot.com/2015/01/econometrics-and-kung-fu.html#more) 
+- Causal Mixtape (Also Hanna Fry)
+- Wikipedia (Survivorship Bias)
+- MM [bookdown](https://jrnold.github.io/masteringmetrics/rand-health-insurance-experiment-hie.html) and MM [blog post](file:///Users/fhoces/Desktop/sandbox/econ140summer2022/NHIS.html) on chapter 1
+]
+
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

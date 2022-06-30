@@ -1,7 +1,7 @@
 ---
-title: "Ec140 - Causality and Selection Bias"
+title: "Ec140 - Selection Bias and Potential Outcomes"
 author: "Fernando Hoces la Guardia"
-date: "06/29/2022"
+date: "06/30/2022"
 output: 
   xaringan::moon_reader:
     footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
@@ -142,25 +142,146 @@ theme_empty <- theme_bw() + theme(
   legend.position = "none"
 )
 
-df_nhis <- read_dta("NHIS2009_clean.dta")
+#df_nhis <- read_dta("NHIS2009_clean.dta")
 
 ```
 
+
+
 # Housekeeping 
 
-- 
+- PS1 due Tomorrow ar 5pm on Gradescope. 
+  - Last question ("Describe how an RCT...") is now optional. 
+  - Aim to submit at 4pm, to avoid any potential problem related with uploading. **Late problem sets will not be graded**. 
 
 
 ---
 
 # Today's Lecture
 
-- Motivation: Our First Causal Question in Real Life
-      - Causality
-      - Correlation v. Causation
-      - Other things equal 
-
 - Selection Bias
+
+- Potential Outcomes Framework
+
+---
+# Selection Bias 
+[Wikipedia Definition](https://en.wikipedia.org/wiki/Selection_bias):
+>Selection bias is the bias introduced by the selection of individuals, groups, or data for analysis in such a way that proper randomization is not achieved, thereby failing to ensure that the sample obtained is representative of the population intended to be analyzed. 
+
+- Econometric textbooks, tend to define selection bias in term of a regression or (as MM) a randomized controlled trial. 
+
+- We will start from this more general definition to connect with the concept of **conditional expectation**. 
+
+- Then we will connect with regression and experiments.  
+
+
+---
+background-image: url("Images/Survivorship-bias.png")
+background-size: contain
+
+
+
+# SB Example 1: Airplanes in World War II
+
+---
+background-image: url("Images/Survivorship-bias.png")
+background-size: 40%
+background-position: 100% 50%
+
+
+# .font80[SB Example 1: Airplanes in World War II. Using Expectation 1/2]
+
+
+.pull-left[
+.font70[
+
+- How would you use conditional expectations to characterize this problem? 
+
+- Let's start by simplifying the problem by assuming that each plane only had two sections. Now define two random variables: binary variables (bernulli) to indicate if the plane received damage in locations one, and two.   $(DL1:\{\text{No damaged in lct 1, Damaged in lct} 1\} \to \{0,1\}$, same for $DL2)$. 
+
+- We also need to define random variable for that we are conditioning on. In this case, let's use a binary variable for return $(R:\{\text{Plane didn't return, Plane returned} \}\to\{0,1\})$
+
+
+]
+]
+
+---
+background-image: url("Images/Survivorship-bias.png")
+background-size: 40%
+background-position: 100% 50%
+
+# .font80[SB Example 1: Airplanes in World War II. Using Expectation 2/2]
+
+
+.pull-left[
+.font70[
+
+- One way of characterizing the problem would be that the engineers thought they where observing $\mathop{\mathbb{E}}(DL1)$ and $\mathop{\mathbb{E}}(DL2)$ and concluding $\mathop{\mathbb{E}}(DL1) > \mathop{\mathbb{E}}(DL2)$. 
+
+- But in they were actually observing $\mathop{\mathbb{E}}(DL1|R=1)$ and $\mathop{\mathbb{E}}(DL2|R=1)$ and most likely $\mathop{\mathbb{E}}(DL1|R=0) < \mathop{\mathbb{E}}(DL2|R=0)$ 
+
+- If you don't like the math notation, you can provide the same answer, but in narrative form. 
+
+- This is called [survivorship bias](https://en.wikipedia.org/wiki/Survivorship_bias), and is a type of selection bias. 
+]
+]
+
+
+---
+background-image: url("Images/MMtbl11_health.png")
+background-size: 50%
+background-position: 100% 50%
+# SB Example 2: Health Insurance 1/2
+.font70[
+.pull-left[
+- We can do something similar for our health insurance example. 
+- The "hidden" information could be many things. For example: maybe uninsured people are less have different standards of what constitutes good health, and for the same true health status, uninsured tend to report much higher scores than insured (thanks Andy!). 
+]
+]
+---
+background-image: url("Images/MMtbl11_health.png")
+background-size: 50%
+background-position: 100% 50%
+# SB Example 2: Health Insurance 2/2
+.font70[
+.pull-left[
+- Define a binary random variable that represents if an individual tends to over report good health or not $(ORep:\{\text{no over report, over reports} \}\to\{0,1\})$. In this case the previous comparison translates into: 
+- $\mathop{\mathbb{E}}(H|HI=1, \color{#FD5F00}{Orep = 1} )$  for column (4), and $\mathop{\mathbb{E}}(H|HI=0, \color{#FD5F00}{Orep = 0} )$  for column (5).
+- This is a violation of *other things equal* assumption. 
+]
+]
+---
+# .font90[SB Example 3: Country Characterization by Foreign Visitors]
+
+- Characterization of Americans according to foreigners visiting Berkeley. 
+
+- Characterization of Chinese according to foreigner visiting a specific city. 
+
+--
+
+**Implications:**
+
+-> Selection Bias is a key reason to promote diversity equity and inclusion (DEI) 
+
+-> Selection Bias is one of the main reasons it is so important that you ask questions in class. Especially questions like "I didn't understand that last concept, could you please explain it again?"
+ 
+
+
+
+---
+background-image: url("Images/selection_bias_2x.png")
+background-size: contain
+background-position: 90% 50%
+
+# More Examples
+.pull-left[
+- Convention of Statisticians. [XQCD](https://xkcd.wtf/2618/)
+- [Heike Crabs](https://www.youtube.com/watch?v=dIeYPHCJ1B8)
+- Appearance and Intelligence of Movie Stars (From [Causal Inference, The Mixtape](https://mixtape.scunning.com/03-directed_acyclical_graphs#sample-selection-and-collider-bias))
+- Think of at least two examples yourself!
+- ([Hernan Cascicari on Surveys](https://www.youtube.com/watch?v=_wHXjs7PPTw) <br> [in Spanish, and strong language warning])
+]
+
 
 
 ---
@@ -168,282 +289,20 @@ class: inverse, middle
 
 # Potential Outcomes Framework 
 
----
-# Causal Identification
 
 
-## Goal 
 
-Identify the effect of a .hi[treatment] on an .hi[outcome].
 
---
-
-## Ideal data
-
-Ideally, we could calculate the .hi[treatment effect] *for each individual* as
-
-$$Y_{1,i} - Y_{0,i}$$ 
-
-- $Y_{1,i}$ is the outcome for person $i$ when she receives the treatment.
-- $Y_{0,i}$ is the outcome for person $i$ when she does not receive the treatment.
-- Known as .pink[potential outcomes].
 
 ---
-# Causal Identification
-
-## Ideal data
-
-.pull-left[
-The *ideal* data for 10 people
-```{R, ideal_data, echo = F}
-set.seed(3)
-ideal_df <- data.frame(
-  i = 1:10,
-  trt = rep(c(1, 0), each = 5),
-  y1i = c(runif(10, 4, 10) %>% round(2)),
-  y0i = c(runif(10, 0, 5) %>% round(2))
-)
-ideal_df
-```
-]
-
---
-
-.pull-right[
-Calculate the causal effect of treatment.
-$$
-\begin{align}
-  \tau_i = y_{1,i} -  y_{0,i}
-\end{align}
-$$
-for each individual $i$.
-]
----
-count: false
-# Causal Identification
-
-## Ideal data
-
-.pull-left[
-The *ideal* data for 10 people
-```{R, ideal_data_trt, echo = F}
-ideal_df %>% mutate(effect_i = y1i - y0i)
-```
-]
-
-.pull-right[
-Calculate the causal effect of treatment.
-$$
-\begin{align}
-  \tau_i = y_{1,i} -  y_{0,i}
-\end{align}
-$$
-for each individual $i$.
-]
----
-count: false
-# Causal Identification
-
-## Ideal data
-
-.pull-left[
-The *ideal* data for 10 people
-```{R, ideal_data_trt2, echo = F}
-ideal_df %>% mutate(effect_i = y1i - y0i)
-```
-]
-
-.pull-right[
-Calculate the causal effect of treatment.
-$$
-\begin{align}
-  \tau_i = y_{1,i} -  y_{0,i}
-\end{align}
-$$
-for each individual $i$.
-
-The mean of $\tau_i$ is the<br>.hi[average treatment effect] (.pink[ATE]).
-
-Thus, $\color{#e64173}{\overline{\tau} = `r transmute(ideal_df, effect_i = y1i - y0i) %>% unlist %>% mean %>% round(2)`}$
-]
-
----
-# Fundamental Problem of Econometrics
-
-## Ideal comparison
-$$
-\begin{align}
-  \tau_i = \color{#e64173}{y_{1,i}} &- \color{#9370DB}{y_{0,i}}
-\end{align}
-$$
-
-Highlights the fundamental problem of econometrics.
-
---
-
-## The problem
-
-- If we observe $\color{#e64173}{y_{1,i}}$, then we cannot observe $\color{#9370DB}{y_{0,i}}$.
-
-- If we observe $\color{#9370DB}{y_{0,i}}$, then we cannot observe $\color{#e64173}{y_{1,i}}$.
-
-- Can only observe what actually happened; cannot observe the **counterfactual**.
-
----
-# Fundamental Problem of Econometrics
-
-A dataset that we can observe for 10 people looks something like
-.pull-left[
-```{R, ideal_data_obs, echo = F}
-obs_df <- ideal_df
-obs_df$y0i[1:5] <- NA
-obs_df$y1i[6:10] <- NA
-obs_df
-```
-]
-
---
-
-.pull-right[
-We can't observe $\color{#e64173}{y_{1,i}}$ and $\color{#9370DB}{y_{0,i}}$.
-
-But, we do observe
-- $\color{#e64173}{y_{1,i}}$ for $i$ in 1, 2, 3, 4, 5
-- $\color{#9370DB}{y_{0,j}}$ for $j$ in 6, 7, 8, 9, 10
-
-]
-
---
-
-**Q:** How do we "fill in" the `NA`s and estimate $\overline{\tau}$?
-
----
-# Estimating Causal Effects
-
-**Notation:** $D_i$ is a binary indicator variable such that
-
-- $\color{#e64173}{D_i=1}$ .pink[if individual] $\color{#e64173}{i}$ .pink[is treated].
-- $\color{#9370DB}{D_i=0}$ .purple[if individual] $\color{#9370DB}{i}$ .purple[is not treated (*control* group).]
-
---
-
-Then, rephrasing the previous slide,
-
-- We only observe $\color{#e64173}{y_{1,i}}$ when $\color{#e64173}{D_{i}=1}$.
-- We only observe $\color{#9370DB}{y_{0,i}}$ when $\color{#9370DB}{D_{i}=0}$.
-
---
-
-**Q:** How can we estimate $\overline{\tau}$ using only $\left(\color{#e64173}{y_{1,i}|D_i=1}\right)$ and $\left(\color{#9370DB}{y_{0,i}|D_i=0}\right)$?
-
----
-# Estimating Causal Effects
-
-**Q:** How can we estimate $\overline{\tau}$ using only $\left(\color{#e64173}{y_{1,i}|D_i=1}\right)$ and $\left(\color{#9370DB}{y_{0,i}|D_i=0}\right)$?
-
---
-
-**Idea:** What if we compare the groups' means? _I.e._,
-$$
-\begin{align}
-  \color{#e64173}{\mathop{Avg}\left( y_i\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_i\mid D_i =0 \right)}
-\end{align}
-$$
-
---
-
-**Q:** When does a simple difference-in-means provide information on the .hi-slate[causal effect] of the treatment?
-
---
-
-**Q.sub[2.0]:** Is $\color{#e64173}{\mathop{Avg}\left( y_i\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_i\mid D_i =0 \right)}$ a *good* estimator for $\overline{\tau}$?
-
----
-# Estimating Causal Effects
-
-**Assumption:** Let $\tau_i = \tau$ for all $i$.
-
-- The treatment effect is equal (constant) across all individuals $i$.
-
---
-
-**Note:** We defined
-
-$$
-\begin{align}
-  \tau_i = \tau = \color{#e64173}{y_{1,i}} - \color{#9370DB}{y_{0,i}}
-\end{align}
-$$
-
-which implies
-
-$$
-\begin{align}
-   \color{#e64173}{y_{1,i}} = \color{#9370DB}{y_{0,i}} + \tau
-\end{align}
-$$
-
----
-class: clear-slide
-
-**Q:** Is $\color{#e64173}{\mathop{Avg}\left( y_i\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_i\mid D_i =0 \right)}$ a *good* estimator for $\tau$?
-
---
-
-Difference-in-means
---
-<br> $\quad \color{#ffffff}{\Bigg|}=\color{#e64173}{\mathop{Avg}\left( y_i\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_i\mid D_i =0 \right)}$
---
-<br> $\quad \color{#ffffff}{\Bigg|}=\color{#e64173}{\mathop{Avg}\left( y_{1,i}\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_{0,i}\mid D_i =0 \right)}$
---
-<br> $\quad \color{#ffffff}{\Bigg|}=\color{#e64173}{\mathop{Avg}\left( \color{#000000}{\tau \: +} \: \color{#9370DB}{y_{0,i}} \mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_{0,i}\mid D_i =0 \right)}$
---
-<br> $\quad \color{#ffffff}{\Bigg|}=\tau + \color{#e64173}{\mathop{Avg}\left(\color{#9370DB}{y_{0,i}} \mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_{0,i}\mid D_i =0 \right)}$
---
-<br> $\quad \color{#ffffff}{\Bigg|}= \text{Average causal effect} + \color{#FD5F00}{\text{Selection bias}}$
-
---
-
-Our proposed difference-in-means estimator gives us the sum of
-
-1. $\tau$, the .hi-slate[causal, average treatment effect] that we want.
-2. .hi-orange[Selection bias:] How much treatment and control groups differ, on average.
-
----
-class: inverse, middle
-
-# Randomized Control Trials 
-
----
-# Selection Bias
-
-**Problem:** Existence of selection bias precludes *all else equal* comparisons.
-
-- To make valid comparisons that yield causal effects, we need to shut down the bias term.
-
---
-
-**Potential solution:** Conduct an experiment.
-
-- How? .hi[Random assignment of treatment].
-
-- Hence the name, .hi[*randomized* control trial] (RCT).
-
-
----
-
-# OTHER CLASS The Potential Outcomes Framework
-
-Often called the **Rubin Causal Model** in honor of statistician **Donald Rubin** who generalised and formalized this model in the 1970's.
-
---
+# The Potential Outcomes Framework
 
 ***Key idea***: Each individual can be exposed to **multiple alternative treatment states**.
   - smoking cigarrettes, smoking cigars or not smoking,
   - growing up in a poor vs a middle class neighborhood vs a rich neighborhood,
   - being in a small or a big class.
   
---
+
 
 .pull-left[
 For practicality, let this treatment variable $D_i$ be a binary variable:
@@ -456,7 +315,7 @@ D_i = \begin{cases}
 $$
 ]
 
---
+
 
 .pull-right[
 
@@ -474,412 +333,336 @@ all the individuals such that $D_i = 0$.
 
 * In this framework, each individual has two ***potential outcomes***, but only one ***observed outcome*** $Y_i$:
   
-  - $Y_i^1$: *potential outcome if individual $i$ receives the treatment* $(D_i = 1)$,
+  - $Y_{1i}$: *potential outcome if individual $i$ receives the treatment* $(D_i = 1)$,
   
-  - $Y_i^0$: *potential outcome if individual $i$ does not receive the treatment* $(D_i = 0)$.
+  - $Y_{0i}$: *potential outcome if individual $i$ does not receive the treatment* $(D_i = 0)$.
 
 --
 
 * In real life we only observe $Y_i$ which can be written as:
 
-$$Y_i = D_i \times Y_i^1 + (1- D_i) \times Y_i^0$$
+$$Y_i = D_i \times Y_{1i} + (1- D_i) \times Y_{0i}$$
 
 --
 
 * ***Fundamental Problem of Causal Inference***: for any individual $i$, we only observe one of either potential outcomes [(Holland, 1986)](http://people.umass.edu/~stanek/pdffiles/causal-holland.pdf).
 
 ---
+background-image: url("Images/sliding_doors.jpg")
+background-size: 34%
+background-position: 50% -12%
+
+# Example: Sliding Doors (1998)
+
+
+--
+.pull-left[
+.font180[
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; $Y_{1i}$
+]
+]
+
+.pull-right[
+<br><br><br><br><br><br><br><br><br>
+.font180[
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $Y_{0i}$
+]
+]
+
+---
+background-image: url("Images/sliding_doors.jpg")
+background-size: 34%
+background-position: 50% -12%
+
+# Example: Sliding Doors (1998)
+
+
+
+.pull-left[
+.font180[
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; $Y_{1i}$
+]
+
+<br><br>
+- Other examples: 
+  - Run Lola Run
+  - Avenger's What If?
+  - Midnight Library
+  - Suggestions?
+]
+
+.pull-right[
+<br><br><br><br><br><br><br><br><br>
+.font180[
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $Y_{0i}$
+]
+]
+
+---
 
 # The Potential Outcomes Framework
 
+.font80[
 * The potential outcome that is not observed exists in principle, it is called the ***counterfactual outcome***.
 
---
 
-Group | $Y_i^1$ | $Y_i^0$
+
+Group | $Y_{1i}$ | $Y_{0i}$
 --------|:---------:|:---------:
 Treatment group $(D_i = 1)$ &nbsp; &nbsp; | &nbsp; &nbsp; Observable as $Y_i$ &nbsp; &nbsp; | Counterfactual
 Control group $(D_i = 0)$ | Counterfactual | &nbsp; &nbsp; Observable as $Y_i$ &nbsp; &nbsp;
 
---
 
-* From these we can define the ***individual treatment effect*** $\delta_i$:
 
-$$ \delta_i = Y_i^1 - Y_i^0$$
+* From these we can define the ***individual treatment effect*** $\kappa_i$:
 
-* $\delta_i$ measures the **causal effect of the treatment $(D_i)$** on outcome $Y$ for individual $i$.
+$$\kappa_{i} = Y_{1i} - Y_{0i}$$
 
---
+* $\kappa_i$ measures the **causal effect of the treatment $(D_i)$** on outcome $Y$ for individual $i$ (let's read this using the Sliding Doors example).
 
-* Since the treatment effect *cannot* be observed at the individual level, we estimate population averages.
 
----
-
-# Sidenote: Expectation and Conditional Expectation
-
-Let's say you have a fair die and you roll it an infinite number of times. What is the average number rolled?
-
-* If $X$ is a random variable containing the number rolled, we write:
-
-$$
-\mathop{\mathbb{E}}(X) = \frac{1}{6} \times 1 + \frac{1}{6} \times 2 + \frac{1}{6} \times 3 + \frac{1}{6} \times 4 + \frac{1}{6} \times 5 + \frac{1}{6} \times 6 = 3.5
-$$
-
-* The $\mathop{\mathbb{E}}(.)$ operator stands for **expectation** or *population mean*.
-
-* The $\mathop{\mathbb{E}}(.)$ operator is linear, in other words, $\mathop{\mathbb{E}}(X+Y) = \mathop{\mathbb{E}}(X) + \mathop{\mathbb{E}}(Y)$ with $X$ and $Y$ being two random variables.
-
----
-
-# Sidenote: Expectation and Conditional Expectation
-
-Now, let's say you have two fair dice and you roll them an infinite number of times. What is the average sum of numbers rolled, conditional on one of them being always equal to 5?
-
-* If $X$ is a random variable containing the number rolled of die 1 and $Y$ a random variable containing the number rolled of die 2, we write:
-
-$$
-\begin{align}
-\mathop{\mathbb{E}}(X+Y|Y = 5) &= \mathop{\mathbb{E}}(X|Y = 5) + \mathop{\mathbb{E}}(Y|Y = 5) \\
-&= \mathop{\mathbb{E}}(X) + 5 \\
-&= 3.5 + 5 \\
-&= 8.5
-\end{align}
-$$
-
-* The $\mathop{\mathbb{E}}(.|D = x)$ operator stands for **conditional expectation**. It refers to the expectation over a subcategory of the entire population, namely people who satisfy the condition $D = x$.
-
----
-
-name: ate
-
-# Average Treatment Effect (ATE)
-
-Broadest possible average effect:
-
-\begin{align}
-ATE &= \mathop{\mathbb{E}}(\delta_i) \\
-    &= \mathop{\mathbb{E}}(Y_i^1 - Y_i^0) \\ 
-    &= \mathop{\mathbb{E}}(Y_i^1) - \mathop{\mathbb{E}}(Y_i^0)
-\end{align}
-  
-* The ATE simply measures the ***average of individual treatment effects over the whole population***.
-
-([*Appendix:*](#attandatu) Average Treatment on the Treated and Average Treatment on the Untreated)
-
----
-
-# Example: Small vs. Large Class
-
-Potential outcomes for students of being in a small $(Y^1)$ or large class $(Y^0)$ on GPA (0-10):
-
-.pull-left[
-Student | &nbsp; &nbsp; $Y^1$ &nbsp; &nbsp; | &nbsp; &nbsp; $Y^0$ &nbsp; &nbsp; | &nbsp; &nbsp; $\delta$ &nbsp; &nbsp; 
------------|:---------:|:---------:|:---------:|
-1 | 5 | 2 | 3
-2 | 6 | 4 | 2
-3 | 3 | 6 | -3
-4 | 5 | 4 | 1
-5 | 10 | 8 | 2
-6 | 2 | 4 | -2
-7 | 5 | 2 | 3
-8 | 6 | 4 | 2
-9 | 2 | 9 | -7
-10 | 8 | 2 | 6
-Average | 5.2 | 4.5 | 0.7
+* Since the treatment effect *cannot* be observed at the individual level, we estimate averages across many individuals.
 
 ]
+---
+background-image: url("Images/MMtbl12.png")
+background-size: 55%
+background-position: 110% 00%
 
---
+# Book Example 1/2
+.font80[
+.pull-left[
+- In this ideal scenario, we can observe both worlds: the health and Maria and Khuzdar with and without health insurance. 
+- Here we can compute the individual treatment $(\kappa_{i})$ effect for each. For example: 
+- $Y_{1,Khuzdar}-Y_{0,Khuzdar}=1$  
+- In the real world, Khuzdar has HI, while Maria Doesn't, Hence the comparison between could be of interest: 
+- $Y_{Khuzdar}-Y_{Maria}=-1$  
+- Can we interpret this difference as causal?
+]
+]
 
-.pull-right[
+---
+background-image: url("Images/MMtbl12.png")
+background-size: 55%
+background-position: 110% 00%
+
+# Book Example 2/2
+.font80[
+.pull-left[
+- *Other things equal* fails here, because their initial health was different. Let's looks a the simple difference but adding and subtracting Khuzdar health without HI. 
+
+
+- The first parenthesis represents a (individual) causal effect. The second term represent the things that are not equal. 
+
 
 $$
 \begin{align}
-\color{#d90502}{\text{ATE}} &= \mathbb{E}(\delta) \\
-&=\mathbb{E}(Y^1) - \mathbb{E}(Y^0) \\
-&= 5.2 - 4.5 \\
-&= 0.7
+Y_{Khuzdar} - Y_{Maria} &= Y_{1,Khuzdar} -Y_{0,Maria}\\
+ &= (Y_{1,Khuzdar} + Y_{0,Khuzdar}) + (Y_{0,Maria} - Y_{0,Khuzdar})\\
+ &= (1) + (-2)\\
 \end{align}
+$$  
+
+]
+]
+--
+.font80[
+.pull-right[
+<br><br><br><br><br><br><br><br><br><br><br>
+- Now let's move into a (slightly) larger data set. 
+]
+]
+---
+
+# Example: Book Example, But with $N=10$ 
+.font80[
+
+.pull-left[
+$i$ | &nbsp; &nbsp; $Y^1$ &nbsp; &nbsp; | &nbsp; &nbsp; $Y^0$ &nbsp; &nbsp; | &nbsp; &nbsp; $D$ &nbsp; &nbsp; | &nbsp; &nbsp; $\kappa$ &nbsp; &nbsp; 
+:-----------|:---------:|:---------:|:---------:|---------:|
+  1 | 5 |   2 |  1 |   3 | 
+  2 | 1 |   4 |  0 |  -3 | 
+  3 | 3 |   1 |  1 |   2 | 
+  4 | 2 |   1 |  1 |   1 | 
+  5 | 4 |   4 |  0 |   0 | 
+  6 | 5 |   4 |  1 |   1 | 
+  7 | 1 |   2 | 1  |  -1 | 
+  8 | 2 |   3 | 0  |  -1 | 
+  9 | 4 |   1 |  0 |   3 | 
+ 10 | 3 |   1 |  0 |   2 | 
+  Average  | 3 | 2.3 | 0.5 |0.7 |
+
+]
+]
+
+.pull-right[
+.font80[
+- Potential outcomes for health of individual with $(Y_1)$ and without $(Y_0)$ health insurance. 
+
+- Analogous to the individual comparison, we could be interested in the average comparison: 
+
 $$
+\begin{align}
+Avg_n[Y_{1i} - Y_{0i}] = \frac{1}{n}\sum_{i=1}^{n}(Y_{1i}) - \frac{1}{n}\sum_{i=1}^{n}(Y_{0i}) 
+\end{align}
+$$ 
+- This mean is the the average causal effect  
+- Can we compute this mean?
+]
+]
 
-$\rightarrow$ the ***average*** causal effect of being in small relative to large class on GPA is 0.7 points.
+---
 
-`r emo::ji("warning")` not all students benefited equally from the treatment!
+# Example: Book Example, But with $N=10$ 
+.font80[
 
+.pull-left[
+$i$ | &nbsp; &nbsp; $Y^1$ &nbsp; &nbsp; | &nbsp; &nbsp; $Y^0$ &nbsp; &nbsp; | &nbsp; &nbsp; $D$ &nbsp; &nbsp; | &nbsp; &nbsp; $\kappa$ &nbsp; &nbsp; 
+:-----------|:---------:|:---------:|:---------:|---------:|
+  1 | 5 |   NA |  1 |   3 | 
+  2 | NA |   4 |  0 |  -3 | 
+  3 | 3 |   NA |  1 |   2 | 
+  4 | 2 |   NA |  1 |   1 | 
+  5 | NA |   4 |  0 |   0 | 
+  6 | 5 |   NA |  1 |   1 | 
+  7 | 1 |   NA | 1  |  -1 | 
+  8 | NA |   3 | 0  |  -1 | 
+  9 | NA |   1 |  0 |   3 | 
+ 10 | NA |   1 |  0 |   2 | 
+  Average  | 3 | 2.3 | 0.5 |0.7 |
+
+]
+]
+
+.pull-right[
+.font80[
+- Potential outcomes for health of individual with $(Y_1)$ and without $(Y_0)$ health insurance. 
+
+- Analogous to the individual comparison, we could be interested in the average comparison: 
+
+$$
+\begin{align}
+Avg_n[Y_{1i} - Y_{0i}] = \frac{1}{n}\sum_{i=1}^{n}(Y_{1i}) - \frac{1}{n}\sum_{i=1}^{n}(Y_{0i}) 
+\end{align}
+$$ 
+- This mean is the the average causal effect  
+- Can we compute this mean?
+- **We can't.** 
+]
 ]
 
 ---
 
 # The Problem of Causal Inference
 
-* In practice, we have the same **missing data problem** for computing the ATE as we did for $\delta_i$. Either $Y_i^1$ or $Y_i^0$ is missing for each $i$.
-
---
-
-* From the data, we can compute the **S**imple **D**ifference in mean **O**utcomes (***SDO***) for both groups:
+* From the data, we can compute the *difference-in-group-means*:
 
 $$
 \begin{align}
-SDO &= \mathop{\mathbb{E}}(Y_i^1|D_i=1) - \mathop{\mathbb{E}}(Y_i^0|D_i=0) \\
-&= \underbrace{\frac{1}{N_T}\sum_{i=1}^{N_T}(Y_i|D_i=1)}_{\text{average outcome of treatment group}} - \underbrace{\frac{1}{N_C}\sum_{i=1}^{N_C}(Y_i|D_i=0)}_{\text{average outcome of control group}}
+\text{Difference in group means} &= \underbrace{\frac{1}{N_T}\sum_{i=1}^{N_T}(Y_i|D_i=1)}_{Avg_n[Y_i|D_i=1]} - \underbrace{\frac{1}{N_C}\sum_{i=1}^{N_C}(Y_i|D_i=0)}_{Avg_n[Y_i|D_i=0]}
 \end{align}
 $$ 
 
+- Is $\color{#e64173}{\mathop{Avg}\left( y_i\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_i\mid D_i =0 \right)}$ a *good* estimator for the average causal effect?
+
 ---
+# Estimating Causal Effects
 
-# Simple Difference in Mean Outcomes: With An Example
+**Assumption:** Let $\kappa_i = \kappa$ for all $i$.
 
-Now, imagine a benevolent and omniscient school director assigns students to the treatment that maximizes their GPA
+- The treatment effect is equal (constant) across all individuals $i$.
 
 --
 
-Student | &nbsp; &nbsp; $Y^1$ &nbsp; &nbsp; | &nbsp; &nbsp; $Y^0$ &nbsp; &nbsp; | &nbsp; &nbsp; $\delta$ &nbsp; | &nbsp; &nbsp; &nbsp; $Y$ &nbsp; &nbsp; | &nbsp; &nbsp; $D$ &nbsp; &nbsp;
------------|:---------:|:---------:|:---------:|:-----------:|:---------:|:---------:
-1 | 5 | 2 | 3 |  | 
-2 | 6 | 4 | 2 |  | 
-3 | 3 | 6 | -3 |  | 
-4 | 5 | 4 | 1 |  | 
-5 | 10 | 8 | 2 |  | 
-6 | 2 | 4 | -2 |  |
-7 | 5 | 2 | 3 |  | 
-8 | 6 | 4 | 2 |  | 
-9 | 2 | 9 | -7 |  | 
-10 | 8 | 2 | 6 |  | 
+**Note:** We defined
+
+$$
+\begin{align}
+  \kappa_i = \kappa = \color{#e64173}{y_{1,i}} - \color{#9370DB}{y_{0,i}}
+\end{align}
+$$
+
+which implies
+
+$$
+\begin{align}
+   \color{#e64173}{y_{1,i}} = \color{#9370DB}{y_{0,i}} + \kappa
+\end{align}
+$$
+
+---
+# Simple Difference in Group Means
+
+
+Is $\color{#e64173}{\mathop{Avg}\left( y_i\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_i\mid D_i =0 \right)}$ a *good* estimator for the average causal?
+
+
+$$
+\begin{aligned}
+\text{Difference in group means} &=  \color{#e64173}{\mathop{Avg}\left( \color{#000000}{y_i}\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( \color{#000000}{y_i}\mid D_i =0 \right)} \\
+&=  \color{#e64173}{\mathop{Avg}\left( y_{1,i}\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_{0,i}\mid D_i =0 \right)}\\
+&= \color{#e64173}{\mathop{Avg}\left( \color{#000000}{\kappa \: +} \: \color{#9370DB}{y_{0,i}} \mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_{0,i}\mid D_i =0 \right)}\\
+&=  \kappa + \color{#e64173}{\mathop{Avg}\left(\color{#9370DB}{y_{0,i}} \mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_{0,i}\mid D_i =0 \right)}\\
+&=  \text{Average causal effect} + \color{#FD5F00}{\text{Selection bias}}\\
+\end{aligned}
+$$
+
+Our proposed difference-in-means estimator gives us the sum of: 
+
+1. $\kappa$, the average causal effect that we want.
+2. **Selection bias** How much treatment and control groups differ, on average.
 
 ---
 
-# Simple Difference in Mean Outcomes: With An Example
+# Let's Bring Expectations Back!
+We previously defined expectations as the population version of the mean. Hence, we can use expectation to represent this problem at the population level: 
+$$
+\begin{align}
+  \mathop{\mathbb{E}}(\text{Difference in group means}) &= \kappa + \underbrace{\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) - \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)}_\text{Selection bias} 
+\end{align}
+$$
 
-Now, imagine a benevolent and omniscient school director assigns students to the treatment that maximizes their GPA
+- Looking at the expectations formulation of selection bias, it becomes clear that our problems would be solved if we could make $Y_{i0}$ independent of $D$.  
 
-Student | &nbsp; &nbsp; $Y^1$ &nbsp; &nbsp; | &nbsp; &nbsp; $Y^0$ &nbsp; &nbsp; | &nbsp; &nbsp; $\delta$ &nbsp; | &nbsp; &nbsp; &nbsp; $Y$ &nbsp; &nbsp; | &nbsp; &nbsp; $D$ &nbsp; &nbsp;
------------|:---------:|:---------:|:---------:|:-----------:|:---------:|:---------:
-1 | 5 | 2 | 3 | 5 | 1
-2 | 6 | 4 | 2 | 6 | 1
-3 | 3 | 6 | -3 | 6 | 0
-4 | 5 | 4 | 1 | 5 | 1
-5 | 10 | 8 | 2 | 10 | 1
-6 | 2 | 4 | -2 | 4 | 0
-7 | 5 | 2 | 3 | 5 | 1
-8 | 6 | 4 | 2 | 6 | 1
-9 | 2 | 9 | -7 | 9 | 0
-10 | 8 | 2 | 6 | 8 | 1
 
 ---
+# Note: On Name of The Problem
 
-# Simple Difference in Mean Outcomes: With An Example
+- In addition to ***The Fundamental Problem of Causal Inference***, this problem is usually referred with the following terms:
+
+- We are **missing data** on all the potential outcomes for which the treatment status did not happen in real world. Hence this is also referred as a missing data problem. 
+
+- This is also called a **identification** problem (as in: we cannot identify the average treatment effect). 
+
+- In this course, you will not be asked to memorize the different names, just be aware of the different teminolgy when consulting references. 
+
+
+---
+class: title-slide-final
+background-image: url("Images/correlation.png")
+background-size: 60%
+background-position: 50% 100%
+
+# Acknowledgments
 
 .pull-left[
-Student | &nbsp; &nbsp; $Y$ &nbsp; &nbsp; | &nbsp; &nbsp; $D$ &nbsp; &nbsp; | &nbsp; &nbsp; $\delta$&nbsp; &nbsp;
------------|:---------:|:---------:|:---------:
-1 | 5 | 1 | 3
-2 | 6 | 1 | 2
-3 | 6 | 0 | -3
-4 | 5 | 1 | 1
-5 | 10 | 1 | 2
-6 | 4 | 0 | -2
-7 | 5 | 1 | 3
-8 | 6 | 1 | 2
-9 | 9 | 0 | -7
-10 | 8 | 1 | 6
-Average |  |  | 0.7
+- [Kyle Raze's Undergraduate Econometrics 1](https://github.com/kyleraze/EC320_Econometrics)
+- [ScPoEconometrics](https://raw.githack.com/ScPoEcon/ScPoEconometrics-Slides/master/chapter_causality/chapter_causality.html#1)
+- XQCD
+- MM
 ]
-
 .pull-right[
-The simple difference in mean outcomes:
-
-$$
-\begin{align}
-SDO &= \frac{5+6+5+10+5+6+8}{7} - \frac{6+4+9}{3} \\
-&\approx 6.43 - 6.33 \approx 0.1
-\end{align}
-$$
-
-* The SDO is much smaller than the ATE!
-
-* Such a difference **will (almost always) fail to capture the causal treatment effect**
-
-* Notice that this kind "naive" comparison is often done by journalists, politicians, badly trained scientists (but not you now! `r emo::ji("wink")`)
+- [Matt Hollian](http://mattholian.blogspot.com/2015/01/econometrics-and-kung-fu.html#more) 
+- Causal Mixtape (Also Hanna Fry)
+- Wikipedia (Survivorship Bias)
+- MM [bookdown](https://jrnold.github.io/masteringmetrics/rand-health-insurance-experiment-hie.html) and MM [blog post](file:///Users/fhoces/Desktop/sandbox/econ140summer2022/NHIS.html) on chapter 1
 ]
 
----
-
-name: naive_comp
-
-# Problems with Naive Comparisons
-
-Let's rewrite the SDO to make the individual treatment effect $(\delta_i)$ appear in the equation. 
-
-\begin{align}
-  SDO &= \mathop{\mathbb{E}}(Y_i^1|D_i=1) - \mathop{\mathbb{E}}(Y_i^0|D_i=0) \\ &= \mathop{\mathbb{E}}(Y_i^0 + \delta_i | D_i = 1) - \mathop{\mathbb{E}}(Y_i^0 | D_i = 0)
-\end{align}
-
---
-
-For simplicity, suppose **treatment effect is constant** across people: for all $i, \delta_i = \delta$.
-
---
-
-Then,
-
-$$
-  SDO = \delta + \mathop{\mathbb{E}}(Y_i^0 | D_i = 1) - \mathop{\mathbb{E}}(Y_i^0 | D_i = 0)
-$$
-
-And because $ATE = \mathop{\mathbb{E}}(\delta_i) = \mathop{\mathbb{E}}(\delta) = \delta$ (by assumption), we get: 
 
 
-\begin{equation}
-  SDO = ATE + \underbrace{\mathop{\mathbb{E}}(Y_i^0 | D_i = 1) - \mathop{\mathbb{E}}(Y_i^0 | D_i = 0)}_\text{Selection bias}
-\end{equation}
 
-([*Appendix*](#naive_comp_extended): when constant treatment assumption is relaxed another bias term appears.)
 
----
 
-class:inverse
-
-# Task 1: SDO, ATE and Randomization
-
-`r countdown(minutes = 10, top = 0)`
-
-Let's compute these various quantities and biases with data we generated ourselves.
-
-```{r, echo = FALSE, eval = FALSE}
-set.seed(1)
-id = 1:10000
-group = sample(c("treatment","control"), replace = T, size = 10000)
-Y0 = sample(c(1:10), replace = T, size = 10000) + ifelse(group == "treatment",1,0)
-delta = sample(c(1:3), replace = T, size = 10000) + 0.2*ifelse(group == "treatment",1,0)
-cor(Y0, ifelse(group == "treatment",1,0))
-cor(delta, ifelse(group == "treatment",1,0))
-Y1 = Y0 + delta
-set.seed(3)
-group_random = sample(c("treatment","control"), replace = T, size = 10000)
-cor(Y0, ifelse(group_random == "treatment",1,0))
-cor(delta, ifelse(group_random == "treatment",1,0))
-
-toy_data = data.frame(id, group, Y0, Y1)
-toy_data <- toy_data %>%
-  mutate(group_dummy = ifelse(group == "treatment", 1, 0)) %>%
-  select(id, group, group_dummy, Y0, Y1)
-toy_data_random = data.frame(id, group_random, Y0, Y1)
-toy_data_random <- toy_data_random %>%
-  mutate(group_random_dummy = ifelse(group_random == "treatment", 1, 0)) %>%
-  select(id, group_random, group_random_dummy, Y0, Y1)
-
-# fwrite(toy_data, here::here("../ScPoEconometrics/introduction/pierre_gustave/toy_data_2.csv"))
-# fwrite(toy_data_random, here::here("../ScPoEconometrics/introduction/pierre_gustave/toy_data_random.csv"))
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+pagedown::chrome_print("07_potential_outcomes.html", output = "07_potential_outcomes.pdf")
 ```
-
-1. Load the data [here](https://www.dropbox.com/s/oqc3vq1m9eyp1d6/toy_data_2.csv?dl=1) using `read.csv`. The `group` variable corresponds to whether the individual has been treated or not, `Y0` to the potential outcome if the individual does not receive the treatment $(Y_i^0)$ while `Y1` to the potential outcome if the individual receives the treatment $(Y_i^1)$. Create a new variable containing the observed outcome $(Y_i)$ and the individual treatment effect $(\delta_i)$. Recall $Y_i = D_i \times Y_i^1 + (1 - D_i) \times Y_i^0$, $\delta_i = Y_i^1 - Y_i^0$.
-
-1. Compute the ***ATE*** and the ***SDO***. Is there is any *bias*? Is it large in magnitude?
-
-1. In this new [dataset](https://www.dropbox.com/s/0qfsonzz1t9gkxi/toy_data_random.csv?dl=1) we've randomly assigned the same individuals to the treatment and control groups. Compute the ***SDO under randomization***. Remember that you need to recompute $Y_i$ because the assignment is not the same anymore. If you got it right, the bias should be very close to 0. Why is it not exactly 0? 
-
-1. *Optional*:  Compute the ***selection bias*** and the ***heterogeneous treatment effect bias*** and check that $SDO = ATE + \text{selection bias} + \text{heterogenous treatment effect bias}$
-
-
-
-
----
-
-layout: false
-class: title-slide-section-red, middle
-
-# Appendix
-
----
-
-layout: true
-
-<div class="my-footer"><img src="../img/logo/ScPo-shield.png" style="height: 60px;"/></div> 
-
----
-
-name: attandatu
-
-# Average Treatment on the Treated and on the Untreated
-
-Other ***conditional*** average treatment effects may be of interest:
-
-.pull-left[
-**A**verage **T**reatment on the **T**reated (***ATT***)
-
-\begin{align}
- ATT &= \mathop{\mathbb{E}}(\delta_i | D_i = 1) \\
-     &= \mathop{\mathbb{E}}(Y_i^1 - Y_i^0 | D_i = 1) \\
-     &= \mathop{\mathbb{E}}(Y_i^1 | D_i = 1) - \mathop{\mathbb{E}}(Y_i^0 | D_i = 1)
-\end{align}
-
-The ATT measures the ***average treatment effect conditional on being in the treatment group***.
-
-*Example:* the effect of participating in a training program (*treatment*) for those who participated (*treatment group*).
-]
-
-.pull-right[
-**A**verage **T**reatment on the **U**ntreated (***ATU***)
-
-\begin{align}
- ATU &= \mathop{\mathbb{E}}(\delta_i | D_i = 0) \\
-     &= \mathop{\mathbb{E}}(Y_i^1 - Y_i^0 | D_i = 0) \\
-     &= \mathop{\mathbb{E}}(Y_i^1 | D_i = 0) - \mathop{\mathbb{E}}(Y_i^0 | D_i = 0)
-\end{align}
-
-The ATU measures the ***average treatment effect conditional on being in the control group***.
-
-*Example:* the effect of attending a private school (*treatment*) for students from a public school (*control group*).
-]
-
-*Note:* In the majority of cases, ATE $\neq$ ATT $\neq$ ATU! <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> [*back*](#ate)
-
----
-
-name: naive_comp_extended
-
-# Problems with Naive Comparisons
-
-Let's now relax the assumption that the treatment effect is constant among all individuals.
-
-After [some tedious calculations](https://mixtape.scunning.com/potential-outcomes.html#simple-difference-in-means-decomposition) that we skip, the SDO can now be decomposed as: 
-
-\begin{align}
-  SDO &= ATE + \underbrace{\mathop{\mathbb{E}}(Y_i^0 | D_i = 1) - \mathop{\mathbb{E}}(Y_i^0 | D_i = 0)}_\text{Selection bias} \\
-  & \quad \quad  \quad \quad + \underbrace{(1-\pi)(ATT - ATU)}_\text{Heterogenous treatment effect bias}
-\end{align}
-
-where $1 - \pi$ denotes the share of people in the control group.
-
-So there is a novel source of bias that comes from the potential ***heterogeneity in the individual treatment effect*** $\delta_i$.
-
-* ***Selection bias***: those who attend university are likely to have higher baseline cognitive skills (regardless of whether they actually attend college).
-* ***Heterogeneous treatment effect bias***: those who attend university may improve their cognitive skills more at university because they are more motivated. <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> [back](#naive_comp)
-
-
-
----
-
-# Correlation vs Causation: Other Examples
-
-> Why might the observed correlation between ***years of education*** and ***income*** not reflect the causal effect of education?
-
---
-
-*Individuals who choose to get more education likely differ from those who don't: maybe they have higher innate ability, they enjoy schooling and are good at it* $\rightarrow$ ***self-selection***
-
---
-
-> Why might the observed correlation between the ***employment rate*** and the ***minimum wage*** level not reflect the causal effect of the minimum wage?
-
---
-
-*Policymakers may increase the minimum wage in times when the employment rate is high* $\rightarrow$ ***reverse causality / simultaneity***
-
---
-
-> Why might the observed correlation between ***economic growth*** and ***financial development*** not reflect the causal effect of the financial sector?
-
---
-
-*Again, maybe economic growth leads to financial development and not the other way around* $\rightarrow$ ***reverse causality / simultaneity***
