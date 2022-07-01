@@ -347,8 +347,8 @@ background-position: 110% 00%
 
 $$
 `\begin{align}
-Y_{Khuzdar} - Y_{Maria} &amp;= Y_{1,Khuzdar} -Y_{0,Maria}\\
- &amp;= (Y_{1,Khuzdar} + Y_{0,Khuzdar}) + (Y_{0,Maria} - Y_{0,Khuzdar})\\
+Y_{Khuzdar} - Y_{Maria} &amp;= Y_{1,Khuzdar} - Y_{0,Maria}\\
+ &amp;= (Y_{1,Khuzdar} - Y_{0,Khuzdar}) + (Y_{0,Khuzdar} - Y_{0,Maria})\\
  &amp;= (1) + (-2)\\
 \end{align}`
 $$  
@@ -453,7 +453,7 @@ $$
 \end{align}`
 $$ 
 
-- Is `\(\color{#e64173}{\mathop{Avg}\left( y_i\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_i\mid D_i =0 \right)}\)` a *good* estimator for the average causal effect?
+- Is `\(\color{#e64173}{\mathop{Avg}\left( Y_i\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( Y_i\mid D_i =0 \right)}\)` a *good* estimator for the average causal effect?
 
 ---
 # Estimating Causal Effects
@@ -468,7 +468,7 @@ $$
 
 $$
 `\begin{align}
-  \kappa_i = \kappa = \color{#e64173}{y_{1,i}} - \color{#9370DB}{y_{0,i}}
+  \kappa_i = \kappa = \color{#e64173}{Y_{1,i}} - \color{#9370DB}{Y_{0,i}}
 \end{align}`
 $$
 
@@ -476,7 +476,7 @@ which implies
 
 $$
 `\begin{align}
-   \color{#e64173}{y_{1,i}} = \color{#9370DB}{y_{0,i}} + \kappa
+   \color{#e64173}{Y_{1,i}} = \color{#9370DB}{Y_{0,i}} + \kappa
 \end{align}`
 $$
 
@@ -484,15 +484,15 @@ $$
 # Simple Difference in Group Means
 
 
-Is `\(\color{#e64173}{\mathop{Avg}\left( y_i\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_i\mid D_i =0 \right)}\)` a *good* estimator for the average causal?
+Is `\(\color{#e64173}{\mathop{Avg}\left( Y_i\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( Y_i\mid D_i =0 \right)}\)` a *good* estimator for the average causal?
 
 
 $$
 `\begin{aligned}
-\text{Difference in group means} &amp;=  \color{#e64173}{\mathop{Avg}\left( \color{#000000}{y_i}\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( \color{#000000}{y_i}\mid D_i =0 \right)} \\
-&amp;=  \color{#e64173}{\mathop{Avg}\left( y_{1,i}\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_{0,i}\mid D_i =0 \right)}\\
-&amp;= \color{#e64173}{\mathop{Avg}\left( \color{#000000}{\kappa \: +} \: \color{#9370DB}{y_{0,i}} \mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_{0,i}\mid D_i =0 \right)}\\
-&amp;=  \kappa + \color{#e64173}{\mathop{Avg}\left(\color{#9370DB}{y_{0,i}} \mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( y_{0,i}\mid D_i =0 \right)}\\
+\text{Difference in group means} &amp;=  \color{#e64173}{\mathop{Avg}\left( \color{#000000}{Y_i}\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( \color{#000000}{Y_i}\mid D_i =0 \right)} \\
+&amp;=  \color{#e64173}{\mathop{Avg}\left( Y_{1,i}\mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( Y_{0,i}\mid D_i =0 \right)}\\
+&amp;= \color{#e64173}{\mathop{Avg}\left( \color{#000000}{\kappa \: +} \: \color{#9370DB}{Y_{0,i}} \mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( Y_{0,i}\mid D_i =0 \right)}\\
+&amp;=  \kappa + \underbrace{\color{#e64173}{\mathop{Avg}\left(\color{#9370DB}{Y_{0,i}} \mid D_i = 1 \right)} - \color{#9370DB}{\mathop{Avg}\left( Y_{0,i}\mid D_i =0 \right)} }_{\text{Selection bias}}\\
 &amp;=  \text{Average causal effect} + \color{#FD5F00}{\text{Selection bias}}\\
 \end{aligned}`
 $$
