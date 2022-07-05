@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Ec140 - Randomized Controlled Trials</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-07-05" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Ec140 - Randomized Controlled Trials
+### Fernando Hoces la Guardia
+### 07/05/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+
+
+
+
+
+# Housekeeping 
+
+- Midterm this Thursday at class time (8:10) in the this classroom. DSP accommodations at Evans ... 
+  - Material covered up to tomorrow. But questions on hypothesis testing will only measure general understanding of class material. 
+  - Everything else follow the practice test as a (very) close example of questions you will see in the midterm (and exam). 
+  
+- Address question on how to interpret `\(Avg(Y_{0,i}|D_i=1)\)`. 
+  
+---
+# Selection Bias in Simple Difference of Groups
+
+$$
+`\begin{align}
+  \mathop{\mathbb{E}}(\text{Difference in group means}) &amp;= \kappa + \underbrace{\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) - \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)}_\text{Selection bias} 
+\end{align}`
+$$
+
+- Selection bias represents how all other things `\((Y_{0,i})\)` differ between treatment `\((D_i = 1)\)` and control  `\((D_i = 0)\)` 
+- We can only observe the left hand side of the equality. 
+- Selection bias is **unobservable:**  we cannot separate the causal effect  `\((\kappa)\)` from the selection bias term (if we could, problem is solved by subtracting!).
+- But we can measure some of the *other things* that should be *equal.* These should be similar, or **balanced**, between treatment and control as long as they happened *before* the intervention
+- Let's take a look at again at the NHIS data. 
+
+
+---
+count:false
+background-image: url("Images/MMtbl11.png")
+background-size: 40%
+background-position: 50% 50%
+
+# National Health Interview Survey, 2009 (MM, Ch1)
+
+---
+count:false
+background-image: url("Images/MMtbl11_charc1.jpg")
+background-size: 40%
+background-position: 50% 50%
+
+# National Health Interview Survey, 2009 (MM, Ch1)
+
+
+---
+background-image: url("Images/MMtbl11_charc2.jpg")
+background-size: 70%
+background-position: 50% 50%
+
+# National Health Interview Survey, 2009 (MM, Ch1)
+
+---
+background-image: url("Images/MMtbl11.png")
+background-size: 40%
+background-position: 100% 50%
+
+# Selection Bias in NHIS
+
+.pull-left[
+- Insured and Uninsured groups are different in pre-treatment characteristics. 
+
+- Uninsured seemed to be systematically worse off in different socio-economic indicators
+
+- Lack of balance in simple difference in groups characteristics suggest the presence of selection bias
+
+]
+
+
+---
+count:false
+# Selection Bias in Simple Difference of Groups
+
+$$
+`\begin{align}
+  \mathop{\mathbb{E}}(\text{Difference in group means}) &amp;= \kappa + \underbrace{\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) - \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)}_\text{Selection bias} 
+\end{align}`
+$$
+
+- How can we make selection bias disapear?
+
+- How can we `\(\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) = \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)\)`
+
+--
+
+- What is the definition of independence we are using in this class?
+
+
+
+---
+# Selection Bias in Simple Difference of Groups
+
+$$
+`\begin{align}
+  \mathop{\mathbb{E}}(\text{Difference in group means}) &amp;= \kappa + \underbrace{\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) - \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)}_\text{Selection bias} 
+\end{align}`
+$$
+
+- How can we make selection bias disapear?
+
+- How can we make `\(\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) = \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)\)`?
+
+
+- We need `\(D\)` to be independent of the potential outcomes `\((Y_{0}\)` and `\(Y_{1})\)`. 
+
+- We achieve this by randomly assigning intervention `\((D)\)`.
+
+---
+
+# Randomized Experiments 1/2
+
+- Often called **R**andomized **C**ontrolled **T**rials (RCT).
+
+- The first known RCTs happen in 1731! Then mainly conducted in Medicine (18th and 19th century). 
+
+- In the beginning of the 20th century they were popularized by famous statisticians like **J. Neyman** or **R.A. Fisher**. 
+
+- Since then they have had a growing influence and have progressively become a reliable tool for public policy evaluation. 
+
+- As for economics, the **2019 Nobel Price in Economics** was awarded to three exponents of RCTs, [Abhijit Banerjee, Esther Duflo and Michael Kremer](https://www.economist.com/finance-and-economics/2019/10/17/a-nobel-economics-prize-goes-to-pioneers-in-understanding-poverty), "for their experimental approach to alleviating global poverty".
+
+---
+
+# Randomized Experiments 2/2
+
+- First **research design** tool that we use in class to measure causality (one of what MM calls the Furious Five) 
+- Simple in logic, very challenging in logistics
+- Illustrate with three examples
+
+---
+
+# Example 1: RAND Health Insurance Experiment (HIE)
+
+
+- One of the first, and most influential, RCTs in social science. 
+- Intervention: different types of health insurance with varying degrees of generosity.
+- Designed to measure how responsive is health care use to health care costs (aka elasticity of demand for healthcare).
+- 1974 - 1982.
+- N = ~4000 (3,958).
+- Population between 14 - 61, non medicare, non medicaid, non military.
+- 6 areas of the US. 
+
+---
+
+# The Importance of Logistics in the HIE
+- Very expensive (Over $300 million in today dollars). 
+- Overly complex types of intervention threatend the validity of the study (14 type intervention). 
+- Control group: 95% coinsurance (individual pays 95%, insurance pays 5%) hits a limit of $1000 dollars (~4000 in today dollars). 
+- Understanding the control group is key when thinking about policies regarding the treatment and the population of interest (more on this in our external validity class). 
+- Not-so random assignment.
+- Differential attrition between treatments and controls.
+- With all these caveats, we can still see the power of randomization at work. 
+
+
+---
+background-image: url("Images/MMtbl13.png")
+background-size: 35%
+background-position: 50% 50%
+
+# Looking for Balance in HIE
+
+
+
+---
+background-image: url("Images/MMtbl13_A.jpg")
+background-size: 60%
+background-position: 50% 50%
+
+# Looking for Balance in HIE
+
+
+---
+background-image: url("Images/MMtbl13_B.jpg")
+background-size: 60%
+background-position: 50% 50%
+
+# Looking for Balance in HIE
+
+
+---
+background-image: url("Images/MMtbl13.png")
+background-size: 35%
+background-position: 80% 00%
+
+# Looking for Balance in HIE
+
+.font70[
+
+.pull-left[
+- Differences are smaller in magnitude than NHIS.
+- They are also non-systematic. 
+- But how can we tell more precisely when the differences between two groups are due to sample variation or true underlying differences? 
+  - We need statistical inference for this. Will do a brief review of the starting point of statistical inference, hypothesis testing, next class. 
+- For now let’s just go with the -dangerous but commonly used- rule of thumb of the difference being greater than 2 times their standard errors (will explain its rationale and dangers next class). 
+
+]
+]
+
+
+---
+# Why Are This Other Things (Roughly) Equal? 
+
+- What is driving this property of other things (roughly) equal? 
+
+- The Law of Large Numbers
+
+- We saw the LLN in the context of one sample of a population, the key variation here is that we are comparing *two* (or more) samples of the *same* underlying population. 
+
+- Let’s do a small experiment in class to fix ideas. 
+
+---
+count:false
+# Example #2: Balancing Observables and Unobservables
+
+.font90[
+- Let’s first split the class into two groups, front of the class (F) and back of the class (B). 
+- Now let’s look at some demographics: gender (1 female, 0 non-female). From CA, not from CA (including international).
+- Now each of you draw a die, two groups: "3 or less" and the "4 or more". Check for the same demographics. 
+]
+--
+.font90[
+- The LLN applies to **all** variables, observable and unobservable. 
+- For example I could ask which fraction of each group hates this class. I do not know that fraction (as I do not know much of the other things that I would like to be equal, represented by `\(Y_0\)` ). 
+- What I do know, is that this fraction is the same in each group (as `\(n\)` grows large). 
+]
+--
+.font90[
+- Two reasons why this might not work:
+]
+
+
+---
+# Example #2: Balancing Observables and Unobservables
+
+.font90[
+- Let’s first split the class into two groups, front of the class (F) and back of the class (B). 
+- Now let’s look at some demographics: gender (1 female, 0 non-female). From CA, not from CA (including international).
+- Now each of you draw a die, two groups: "3 or less" and the "4 or more". Check for the same demographics. 
+]
+--
+.font90[
+- The LLN applies to **all** variables, observable and unobservable. 
+- For example I could ask which fraction of each group hates this class. I do not know that fraction (as I do not know much of the other things that I would like to be equal, represented by `\(Y_0\)` ). 
+- What I do know, is that this fraction is the same in each group (as `\(n\)` grows large). 
+]
+
+.font90[
+- Two reasons why this might not work: (1) Small `\(n\)`, or (2) students seat in an “almost random fashion”
+]
+
+---
+background-image: url("Images/MMtbl14.png")
+background-size: 35%
+background-position: 50% 50%
+
+#  Back to the Results of the HIE
+
+
+---
+background-image: url("Images/MMtbl14_A.jpg")
+background-size: 60%
+background-position: 50% 50%
+
+#  Back to the Results of the HIE
+
+
+---
+background-image: url("Images/MMtbl14_B.jpg")
+background-size: 60%
+background-position: 50% 50%
+
+# Back to the Results of the HIE
+
+
+---
+background-image: url("Images/MMtbl14.png")
+background-size: 35%
+background-position: 80% 00%
+
+# Back to the Results of the HIE
+
+.pull-left[
+- Read results: show how increasing coverage increases expenses. Link back to definition of conditional expectations. 
+- Explain how evidence shows that expenses went up, in a consistent way with our intuitions: cheaper healthcare led to more consumption of it, and response was bigger among outpatients than inpatient.
+- The HIE provides credible evidence that highly subsidized HI leads to more utilization but not to better health...
+]
+
+
+
+
+
+---
+background-image: url("Images/MMtbl14.png")
+background-size: 40%
+background-position: 100% 00%
+
+# Back to the Results of the HIE (Notes)
+
+.font60[
+.pull-left[
+- Increasing coverage increases expenses. Link back to definition of conditional expectations. 
+- Evidence shows that expenses went up, in a consistent way with our intuitions: cheaper healthcare led to more consumption of it, and response was bigger among outpatients than inpatient.
+- The HIE provides credible evidence that highly subsidized HI leads to more utilization but not to better health *in a population representative of Americans 14-61, mostly not poor, not military, in the early 80s, that do have catastrophic health insurance, between 3-5 years after enrollment.*
+- Ideally today we could measure the effects of HI over a much better health indicator, like life expectancy, unfortunately the follow up records were destroyed after a few years, due to an agreement with the survey company (NORC) probably related to issues of confidentiality. This again highlights the importance of logistics in an RCT (they forgot to think about 40 years in the future in 1979!)
+- **Today’s uninsured (in the US) are younger, less educated, poorer, and less likely to be working than the population of the HIE.**
+
+]
+]
+
+
+
+---
+
+# Example #3: Orengon Health Plan (OHP) RCT 1/2
+
+- How about a population that is more relevant to current policy debates (in the US)? 
+- Expanding Medicaid leads to less costs? Does it improve health? 
+- Oregon implemented an RCT unintentionally when they decided to expand Medicaid to a broader population. 
+- This expansion of the Oregon Health Plan (OHP) was later studied to learn about use of medical services and health outcomes. 
+
+---
+
+# Example #3: Orengon Health Plan (OHP) RCT 2/2
+
+- Year: 2008
+- Population:
+  - Residents of Oregon 
+  - Under the poverty line and not eligible for Medicaid (non-disabled, non-children, non-pregnant)
+  - `\(n=75,000\)`; `\(30,000\)` into an “invitation” treatment. 
+
+
+
+---
+background-image: url("Images/MMtbl15.png")
+background-size: 40%
+background-position: 50% 50%
+# Results from the OHP RCT 
+
+
+
+---
+background-image: url("Images/MMtbl16.png")
+background-size: 40%
+background-position: 50% 50%
+# Results from the OHP RCT 
+
+
+
+---
+background-image: url("Images/MMtbl16.png")
+background-size: 40%
+background-position: 100% 50%
+# Results from the OHP RCT (Notes)
+
+.font50[
+.pull-left[
+- First: not all who won the lottery got insurance. So the first thing to look at is the effect of winning the lottery on getting insurance (Medicaid). 
+- Second, the results show higher utilization of healthcare ss. Problematically, one of the most expensive ones, like emergency visits. After a couple of years since the invitation. It also shows improvements on health, particularly on mental health. 
+- Both the HIE and OHP suggest no causal effect of HI on physical health in the short run. Both show more utilization. OHP shows improvements on mental health and financial stability (also in the short run). Two, or more, studies finding similar results are much more persuasive than any single study showing a particular result. 
+- One final issue with the second RCT is that not everybody who was invited ended up receiving the most relevant treatment (HI). Hence the effect of winning on utilization and health are basically pooling a bunch of zeros for those invited that did not get HI, and a larger effect (both in emergency use and in mental health) over those invited that did receive the health insurance treatment. We will learn how to separate these two effects once we study Regression and Instrumental Variables. 
+
+]
+]
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

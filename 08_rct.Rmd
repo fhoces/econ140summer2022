@@ -1,0 +1,515 @@
+---
+title: "Ec140 - Randomized Controlled Trials"
+author: "Fernando Hoces la Guardia"
+date: "07/05/2022"
+output: 
+  xaringan::moon_reader:
+    footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
+    css: [default, metropolis, metropolis-fonts] 
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css">
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+</style>
+
+```{r , include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, viridis, knitr, extrafont, tidyverse, magrittr, latex2exp, 
+       parallel, Ecdat, wooldridge, dslabs, ggforce, emo, png, grid, pander, 
+       countdown, emoGG, haven)
+
+
+options(htmltools.dir.version = FALSE)
+
+# define vars
+om = par("mar")
+lowtop = c(om[1],om[2],0.1,om[4])
+
+overwrite = FALSE
+
+
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#23373b" # metropolis font color
+# Notes directory
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  message = FALSE,
+  warning = FALSE,
+  dev = "svg",
+  cache = TRUE
+  #fig.width = 11,
+  #fig.height = 5
+)
+
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 14),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  legend.position = "none"
+)
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+
+# countdown style
+countdown(
+  color_border              = "#d90502",
+  color_text                = "black",
+  color_running_background  = "#d90502",
+  color_running_text        = "white",
+  color_finished_background = "white",
+  color_finished_text       = "#d90502",
+  color_finished_border     = "#d90502"
+)
+
+
+
+```
+
+
+
+```{r Setup, include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, viridis, knitr, extrafont, tidyverse, magrittr, latex2exp, parallel, Ecdat, wooldridge, dslabs, ggforce)
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#23373b" # metropolis font color
+# Notes directory
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  warning = F,
+  message = F
+)  
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 14),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  legend.position = "none"
+)
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+
+#df_nhis <- read_dta("NHIS2009_clean.dta")
+
+```
+
+
+
+# Housekeeping 
+
+- Midterm this Thursday at class time (8:10) in the this classroom. DSP accommodations at Evans ... 
+  - Material covered up to tomorrow. But questions on hypothesis testing will only measure general understanding of class material. 
+  - Everything else follow the practice test as a (very) close example of questions you will see in the midterm (and exam). 
+  
+- Address question on how to interpret $Avg(Y_{0,i}|D_i=1)$. 
+  
+---
+# Selection Bias in Simple Difference of Groups
+
+$$
+\begin{align}
+  \mathop{\mathbb{E}}(\text{Difference in group means}) &= \kappa + \underbrace{\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) - \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)}_\text{Selection bias} 
+\end{align}
+$$
+
+- Selection bias represents how all other things $(Y_{0,i})$ differ between treatment $(D_i = 1)$ and control  $(D_i = 0)$ 
+- We can only observe the left hand side of the equality. 
+- Selection bias is **unobservable:**  we cannot separate the causal effect  $(\kappa)$ from the selection bias term (if we could, problem is solved by subtracting!).
+- But we can measure some of the *other things* that should be *equal.* These should be similar, or **balanced**, between treatment and control as long as they happened *before* the intervention
+- Let's take a look at again at the NHIS data. 
+
+
+---
+count:false
+background-image: url("Images/MMtbl11.png")
+background-size: 40%
+background-position: 50% 50%
+
+# National Health Interview Survey, 2009 (MM, Ch1)
+
+---
+count:false
+background-image: url("Images/MMtbl11_charc1.jpg")
+background-size: 40%
+background-position: 50% 50%
+
+# National Health Interview Survey, 2009 (MM, Ch1)
+
+
+---
+background-image: url("Images/MMtbl11_charc2.jpg")
+background-size: 70%
+background-position: 50% 50%
+
+# National Health Interview Survey, 2009 (MM, Ch1)
+
+---
+background-image: url("Images/MMtbl11.png")
+background-size: 40%
+background-position: 100% 50%
+
+# Selection Bias in NHIS
+
+.pull-left[
+- Insured and Uninsured groups are different in pre-treatment characteristics. 
+
+- Uninsured seemed to be systematically worse off in different socio-economic indicators
+
+- Lack of balance in simple difference in groups characteristics suggest the presence of selection bias
+
+]
+
+
+---
+count:false
+# Selection Bias in Simple Difference of Groups
+
+$$
+\begin{align}
+  \mathop{\mathbb{E}}(\text{Difference in group means}) &= \kappa + \underbrace{\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) - \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)}_\text{Selection bias} 
+\end{align}
+$$
+
+- How can we make selection bias disapear?
+
+- How can we $\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) = \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)$
+
+--
+
+- What is the definition of independence we are using in this class?
+
+
+
+---
+# Selection Bias in Simple Difference of Groups
+
+$$
+\begin{align}
+  \mathop{\mathbb{E}}(\text{Difference in group means}) &= \kappa + \underbrace{\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) - \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)}_\text{Selection bias} 
+\end{align}
+$$
+
+- How can we make selection bias disapear?
+
+- How can we make $\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) = \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)$?
+
+
+- We need $D$ to be independent of the potential outcomes $(Y_{0}$ and $Y_{1})$. 
+
+- We achieve this by randomly assigning intervention $(D)$.
+
+---
+
+# Randomized Experiments 1/2
+
+- Often called **R**andomized **C**ontrolled **T**rials (RCT).
+
+- The first known RCTs happen in 1731! Then mainly conducted in Medicine (18th and 19th century). 
+
+- In the beginning of the 20th century they were popularized by famous statisticians like **J. Neyman** or **R.A. Fisher**. 
+
+- Since then they have had a growing influence and have progressively become a reliable tool for public policy evaluation. 
+
+- As for economics, the **2019 Nobel Price in Economics** was awarded to three exponents of RCTs, [Abhijit Banerjee, Esther Duflo and Michael Kremer](https://www.economist.com/finance-and-economics/2019/10/17/a-nobel-economics-prize-goes-to-pioneers-in-understanding-poverty), "for their experimental approach to alleviating global poverty".
+
+---
+
+# Randomized Experiments 2/2
+
+- First **research design** tool that we use in class to measure causality (one of what MM calls the Furious Five) 
+- Simple in logic, very challenging in logistics
+- Illustrate with three examples
+
+---
+
+# Example 1: RAND Health Insurance Experiment (HIE)
+
+
+- One of the first, and most influential, RCTs in social science. 
+- Intervention: different types of health insurance with varying degrees of generosity.
+- Designed to measure how responsive is health care use to health care costs (aka elasticity of demand for healthcare).
+- 1974 - 1982.
+- N = ~4000 (3,958).
+- Population between 14 - 61, non medicare, non medicaid, non military.
+- 6 areas of the US. 
+
+---
+
+# The Importance of Logistics in the HIE
+- Very expensive (Over $300 million in today dollars). 
+- Overly complex types of intervention threatend the validity of the study (14 type intervention). 
+- Control group: 95% coinsurance (individual pays 95%, insurance pays 5%) hits a limit of $1000 dollars (~4000 in today dollars). 
+- Understanding the control group is key when thinking about policies regarding the treatment and the population of interest (more on this in our external validity class). 
+- Not-so random assignment.
+- Differential attrition between treatments and controls.
+- With all these caveats, we can still see the power of randomization at work. 
+
+
+---
+background-image: url("Images/MMtbl13.png")
+background-size: 35%
+background-position: 50% 50%
+
+# Looking for Balance in HIE
+
+
+
+---
+background-image: url("Images/MMtbl13_A.jpg")
+background-size: 60%
+background-position: 50% 50%
+
+# Looking for Balance in HIE
+
+
+---
+background-image: url("Images/MMtbl13_B.jpg")
+background-size: 60%
+background-position: 50% 50%
+
+# Looking for Balance in HIE
+
+
+---
+background-image: url("Images/MMtbl13.png")
+background-size: 35%
+background-position: 80% 00%
+
+# Looking for Balance in HIE
+
+.font70[
+
+.pull-left[
+- Differences are smaller in magnitude than NHIS.
+- They are also non-systematic. 
+- But how can we tell more precisely when the differences between two groups are due to sample variation or true underlying differences? 
+  - We need statistical inference for this. Will do a brief review of the starting point of statistical inference, hypothesis testing, next class. 
+- For now let’s just go with the -dangerous but commonly used- rule of thumb of the difference being greater than 2 times their standard errors (will explain its rationale and dangers next class). 
+
+]
+]
+
+
+---
+# Why Are This Other Things (Roughly) Equal? 
+
+- What is driving this property of other things (roughly) equal? 
+
+- The Law of Large Numbers
+
+- We saw the LLN in the context of one sample of a population, the key variation here is that we are comparing *two* (or more) samples of the *same* underlying population. 
+
+- Let’s do a small experiment in class to fix ideas. 
+
+---
+count:false
+# Example #2: Balancing Observables and Unobservables
+
+.font90[
+- Let’s first split the class into two groups, front of the class (F) and back of the class (B). 
+- Now let’s look at some demographics: gender (1 female, 0 non-female). From CA, not from CA (including international).
+- Now each of you draw a die, two groups: "3 or less" and the "4 or more". Check for the same demographics. 
+]
+--
+.font90[
+- The LLN applies to **all** variables, observable and unobservable. 
+- For example I could ask which fraction of each group hates this class. I do not know that fraction (as I do not know much of the other things that I would like to be equal, represented by $Y_0$ ). 
+- What I do know, is that this fraction is the same in each group (as $n$ grows large). 
+]
+--
+.font90[
+- Two reasons why this might not work:
+]
+
+
+---
+# Example #2: Balancing Observables and Unobservables
+
+.font90[
+- Let’s first split the class into two groups, front of the class (F) and back of the class (B). 
+- Now let’s look at some demographics: gender (1 female, 0 non-female). From CA, not from CA (including international).
+- Now each of you draw a die, two groups: "3 or less" and the "4 or more". Check for the same demographics. 
+]
+--
+.font90[
+- The LLN applies to **all** variables, observable and unobservable. 
+- For example I could ask which fraction of each group hates this class. I do not know that fraction (as I do not know much of the other things that I would like to be equal, represented by $Y_0$ ). 
+- What I do know, is that this fraction is the same in each group (as $n$ grows large). 
+]
+
+.font90[
+- Two reasons why this might not work: (1) Small $n$, or (2) students seat in an “almost random fashion”
+]
+
+---
+background-image: url("Images/MMtbl14.png")
+background-size: 35%
+background-position: 50% 50%
+
+#  Back to the Results of the HIE
+
+
+---
+background-image: url("Images/MMtbl14_A.jpg")
+background-size: 60%
+background-position: 50% 50%
+
+#  Back to the Results of the HIE
+
+
+---
+background-image: url("Images/MMtbl14_B.jpg")
+background-size: 60%
+background-position: 50% 50%
+
+# Back to the Results of the HIE
+
+
+---
+background-image: url("Images/MMtbl14.png")
+background-size: 35%
+background-position: 80% 00%
+
+# Back to the Results of the HIE
+
+.pull-left[
+- Read results: show how increasing coverage increases expenses. Link back to definition of conditional expectations. 
+- Explain how evidence shows that expenses went up, in a consistent way with our intuitions: cheaper healthcare led to more consumption of it, and response was bigger among outpatients than inpatient.
+- The HIE provides credible evidence that highly subsidized HI leads to more utilization but not to better health...
+]
+
+
+
+
+
+---
+background-image: url("Images/MMtbl14.png")
+background-size: 40%
+background-position: 100% 00%
+
+# Back to the Results of the HIE (Notes)
+
+.font60[
+.pull-left[
+- Increasing coverage increases expenses. Link back to definition of conditional expectations. 
+- Evidence shows that expenses went up, in a consistent way with our intuitions: cheaper healthcare led to more consumption of it, and response was bigger among outpatients than inpatient.
+- The HIE provides credible evidence that highly subsidized HI leads to more utilization but not to better health *in a population representative of Americans 14-61, mostly not poor, not military, in the early 80s, that do have catastrophic health insurance, between 3-5 years after enrollment.*
+- Ideally today we could measure the effects of HI over a much better health indicator, like life expectancy, unfortunately the follow up records were destroyed after a few years, due to an agreement with the survey company (NORC) probably related to issues of confidentiality. This again highlights the importance of logistics in an RCT (they forgot to think about 40 years in the future in 1979!)
+- **Today’s uninsured (in the US) are younger, less educated, poorer, and less likely to be working than the population of the HIE.**
+
+]
+]
+
+
+
+---
+
+# Example #3: Orengon Health Plan (OHP) RCT 1/2
+
+- How about a population that is more relevant to current policy debates (in the US)? 
+- Expanding Medicaid leads to less costs? Does it improve health? 
+- Oregon implemented an RCT unintentionally when they decided to expand Medicaid to a broader population. 
+- This expansion of the Oregon Health Plan (OHP) was later studied to learn about use of medical services and health outcomes. 
+
+---
+
+# Example #3: Orengon Health Plan (OHP) RCT 2/2
+
+- Year: 2008
+- Population:
+  - Residents of Oregon 
+  - Under the poverty line and not eligible for Medicaid (non-disabled, non-children, non-pregnant)
+  - $n=75,000$; $30,000$ into an “invitation” treatment. 
+
+
+
+---
+background-image: url("Images/MMtbl15.png")
+background-size: 40%
+background-position: 50% 50%
+# Results from the OHP RCT 
+
+
+
+---
+background-image: url("Images/MMtbl16.png")
+background-size: 40%
+background-position: 50% 50%
+# Results from the OHP RCT 
+
+
+
+---
+background-image: url("Images/MMtbl16.png")
+background-size: 40%
+background-position: 100% 50%
+# Results from the OHP RCT (Notes)
+
+.font50[
+.pull-left[
+- First: not all who won the lottery got insurance. So the first thing to look at is the effect of winning the lottery on getting insurance (Medicaid). 
+- Second, the results show higher utilization of healthcare ss. Problematically, one of the most expensive ones, like emergency visits. After a couple of years since the invitation. It also shows improvements on health, particularly on mental health. 
+- Both the HIE and OHP suggest no causal effect of HI on physical health in the short run. Both show more utilization. OHP shows improvements on mental health and financial stability (also in the short run). Two, or more, studies finding similar results are much more persuasive than any single study showing a particular result. 
+- One final issue with the second RCT is that not everybody who was invited ended up receiving the most relevant treatment (HI). Hence the effect of winning on utilization and health are basically pooling a bunch of zeros for those invited that did not get HI, and a larger effect (both in emergency use and in mental health) over those invited that did receive the health insurance treatment. We will learn how to separate these two effects once we study Regression and Instrumental Variables. 
+
+]
+]
+
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+pagedown::chrome_print("08_rct.html", output = "08_rct.pdf")
+```
