@@ -247,7 +247,7 @@ $$
 - How can we make $\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) = \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)$?
 
 
-- We need $D$ to be independent of the potential outcomes $(Y_{0}$ and $Y_{1})$. 
+- We need $D$ to be independent of the potential outcome without treatment $(Y_{0})$. 
 
 - We achieve this by randomly assigning intervention $(D)$.
 
@@ -426,8 +426,8 @@ background-position: 80% 00%
 # Back to the Results of the HIE
 
 .pull-left[
-- Read results: show how increasing coverage increases expenses. Link back to definition of conditional expectations. 
-- Explain how evidence shows that expenses went up, in a consistent way with our intuitions: cheaper healthcare led to more consumption of it, and response was bigger among outpatients than inpatient.
+- Increasing coverage increases expenses. Link back to definition of conditional expectations. 
+- Evidence shows that expenses went up, in a consistent way with our intuitions: cheaper healthcare led to more consumption of it, and response was bigger among outpatients than inpatient.
 - The HIE provides credible evidence that highly subsidized HI leads to more utilization but not to better health...
 ]
 

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Ec140 - Randomized Controlled Trials and Statistical Inference</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-07-06" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Ec140 - Randomized Controlled Trials and Statistical Inference
+### Fernando Hoces la Guardia
+### 07/06/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+
+
+
+
+
+# Today's Lecture
+
+- Finish RCTs
+
+- Review of Statistical Inference
+  - Standard deviation of the sample mean
+  - Distribution of the sample mean
+  - Distribution for the difference in means
+  - Hypothesis testing
+    - P-values
+    - Confidence intervals
+    - P-hacking
+
+  
+---
+
+# Example #3: Orengon Health Plan (OHP) RCT 1/2
+
+- How about a population that is more relevant to current policy debates (in the US)? 
+- Expanding Medicaid leads to less costs? Does it improve health? 
+- Oregon implemented an RCT unintentionally when they decided to expand Medicaid to a broader population. 
+- This expansion of the Oregon Health Plan (OHP) was later studied to learn about use of medical services and health outcomes. 
+
+---
+
+# Example #3: Orengon Health Plan (OHP) RCT 2/2
+
+- Year: 2008
+- Population:
+  - Residents of Oregon 
+  - Under the poverty line and not eligible for Medicaid (non-disabled, non-children, non-pregnant)
+  - `\(n=75,000\)`; `\(30,000\)` into an “invitation” treatment. 
+
+
+
+---
+background-image: url("Images/MMtbl15.png")
+background-size: 40%
+background-position: 50% 50%
+# Results from the OHP RCT 
+
+
+
+---
+background-image: url("Images/MMtbl16.png")
+background-size: 40%
+background-position: 50% 50%
+# Results from the OHP RCT 
+
+
+
+---
+background-image: url("Images/MMtbl16.png")
+background-size: 40%
+background-position: 100% 50%
+# Results from the OHP RCT (Notes)
+
+.font50[
+.pull-left[
+- First: not all who won the lottery got insurance. So the first thing to look at is the effect of winning the lottery on getting insurance (Medicaid). 
+- Second, the results show higher utilization of healthcare ss. Problematically, one of the most expensive ones, like emergency visits. After a couple of years since the invitation. It also shows improvements on health, particularly on mental health. 
+- Both the HIE and OHP suggest no causal effect of HI on physical health in the short run. Both show more utilization. OHP shows improvements on mental health and financial stability (also in the short run). Two, or more, studies finding similar results are much more persuasive than any single study showing a particular result. 
+- One final issue with the second RCT is that not everybody who was invited ended up receiving the most relevant treatment (HI). Hence the effect of winning on utilization and health are basically pooling a bunch of zeros for those invited that did not get HI, and a larger effect (both in emergency use and in mental health) over those invited that did receive the health insurance treatment. We will learn how to separate these two effects once we study Regression and Instrumental Variables. 
+
+]
+]
+---
+# RCTs: Final Considerations
+
+- Sometimes impractical
+
+- Sometimes unethical. The role of informed consent and freedom of participants. 
+
+- Sometimes the most ethical option.
+
+- Always a good frame of reference to think about other research designs. 
+
+
+
+---
+class: inverse, middle
+
+# Review of Statistical Inference
+
+
+
+---
+background-image: url("Images/MMtbl14_A_1.png")
+background-size: 50%
+background-position: 100% 50%
+
+# Let's Go Back To Some of the Difference in the HIE
+.pull-left[
+- How can we tell if this difference of $198 is due to some observations that happen to appear in our random sample? 
+- For example: maybe the HIE happen to sample individuals from the general population that are very high spenders, and maybe, just due to chance, those individuals were assigned into the treatment group. 
+] 
+
+
+---
+
+# .font80[Summarizing Variability Due to Random Sampling: Standard Errors 1/6]
+
+.font90[
+
+- Reminder: a random variable `\(Y_i\)` has a sample variance `\((S^2(Y_i))\)`: 
+$$
+`\begin{equation}
+s^{2}_{Y} = \frac{ \sum_{i = 1}^{n}\left( y_i - \overline{Y} \right)^2 }{n} 
+\end{equation}`
+$$
+
+- Intuition for sample variance: average of squared deviations from its mean.
+- The population variance, or just variance `\((V(Y_i))\)`: 
+
+$$
+`\begin{equation}
+Var(Y_i)  = \sigma^2 = \mathop{\mathbb{E}}\left( ( Y_i - \mu )^2 \right) \\
+\end{equation}`
+$$
+  
+- Where `\(\mu\)` is defined as the population mean `\((E(Y_i))\)`. 
+
+- Both `\(\mu\)` and `\(\sigma^2\)` represent fixed numbers (not variables).
+
+- Remember that variance has units that are hard to interpret, for this reason its square is usually presented: the standard deviation `\(\sigma\)`. 
+
+]
+
+---
+# .font80[Summarizing Variability Due to Random Sampling: Standard Errors 2/6]
+
+
+- We want to use statistical inference to say something about the sample mean `\((\overline{Y})\)`, which is itself a random variable that sums a collection of random variables and divides them by the population size. 
+
+- Let’s start by giving it a name: the sampling variance. 
+
+- Using independence, we can now derive formula for sampling variance. 
+
+
+$$
+`\begin{aligned}
+Var(\overline{Y})  &amp;= Var\left(\frac{ \sum_{i = 1}^{n}Y_i}{n}\right) \\
+&amp;= \frac{1}{n^2} \sum_{i = 1}^{n}\sigma^2 = \frac{n \sigma^2}{n^2}= \frac{ \sigma^2}{n}
+\end{aligned}`
+$$
+
+---
+# .font80[Summarizing Variability Due to Random Sampling: Standard Errors 3/6]
+
+- Hence, the sampling variance (the variance of the sample mean) is equal to the variance of the underlying data `\((\sigma^2)\)`, divided by sample size `\((n)\)`. 
+
+- To distinguish between the standard deviation of the sample mean `\((\frac{ \sigma}{\sqrt{n}})\)`, and the standard deviation of the underlying data `\((\sigma)\)`, we call the standard deviation of the sample mean the standard error 
+
+- In addition to sample mean, we will call standard error, any standard deviation of a statistic that aggregates data. 
+
+---
+background-image: url("Images/MMtbl11.png")
+background-size: 50%
+background-position: 100% 50%
+
+# .font80[Summarizing Variability Due to Random Sampling: Standard Errors 4/6]
+
+.font90[
+.pull-left[
+
+- **Important:** I was wrong when implying that MM gets confused about this, calling the standard deviation of some statistics “standard error” in the tables of Ch1, and “standard deviation”  other statistics. 
+
+- For example, let's look at Table 1.1. The standard deviation of square brackets refers to the variation in the underlying data. The standard deviations in  parentheses refer to variation in sample means. 
+
+]
+]
+
+---
+background-image: url("Images/MMtbl11.png")
+background-size: 50%
+background-position: 100% 50%
+
+# .font80[Summarizing Variability Due to Random Sampling: Standard Errors 5/6]
+
+.font90[
+.pull-left[
+
+- To make things clearer: they could have also reported on the standard error of the first sample mean. To do this we just needed to take the standard deviation of the underlying data (e.g., .93 for column 1) and divide it by the square roof of its sample size `\((\frac{0.93}{\sqrt(8,114)}) = 0.01\)`.
+
+- Notice that the standard error goes to zero as `\(n\)` grows, but not the standard deviation of the underlying data
+
+]
+]
+
+---
+# .font80[Summarizing Variability Due to Random Sampling: Standard Errors 6/6]
+
+
+.font80[
+- Standard errors may be complicated but the idea is simple: they summarize variability in an estimate due to sampling variability. 
+
+- The standard error needs to be estimated, hence its estimated version is called… Estimated Standard Errors
+
+- Usually we forget to say the “estimated part” but that is what we are measuring.  
+
+- Beyond the names and their eternal confusions, the key idea that I want you to take away is that when looking the sample mean (and other statistics later on) we need to remember that there are two types of standard deviations in them: the standard deviation of the underlying data `\((\sigma)\)` and the standard deviation of the sample mean, or any statistic that aggregates this data, called standard errors `\((\frac{ \sigma}{\sqrt{n}})\)`. One does not shrink to zero as we have more information, the other does. 
+
+
+- We have learned about the mean and standard deviation of the sample mean. But What about its distribution? 
+]
+
+
+---
+# .font80[Summarizing Variability Due to Random Sampling: Distribution 1/2]
+
+- By the CLT, we know that the distribution of the sample mean `\((\overline{Y})\)` is normal with mean `\(\mu\)` and standard deviation `\(\sigma/\sqrt{n}\)`. Denoted as `\(N(\mu, \sigma/\sqrt{n})\)`
+- Let’s look again at the normal distribution in [Seeing Theory](https://seeing-theory.brown.edu/probability-distributions/index.html#section2). Particularly, how to move from any `\(N(\mu, \sigma/\sqrt{n})\)` to a `\(N(0, 1)\)`. 
+
+- Hence, if we take the random variable `\(\overline{Y}\)` and substract its population mean, and divide by its standard deviation, we have a `\(N(0, 1)\)`: 
+
+$$
+`\begin{equation}
+Z  = \frac{\overline{Y} -  \mu}{\sigma/\sqrt{n})} \sim N(0,1)
+\end{equation}`
+$$
+
+
+---
+# .font80[Summarizing Variability Due to Random Sampling: Distribution 2/2]
+
+- The reason we standarize, is that we know a lot about `\(N(0,1)\)`:
+ - Most of its mass (probability) is between -1 and 1: ~70%
+ - Between -2 and 2: ~95%
+ - Between -3 and 3: ~99%.
+
+- The probability of observing any value in outside the range -2 to -2 is 5% (or 1 in 20). 
+- The probability of observing a "3-sigma" event is 1%. 
+
+
+
+---
+# Now For the Difference in Means 1/3
+.font90[
+- Everything we have done when characterizing `\(\overline{Y}\)` we can do to a difference of two sample means: `\(\overline{Y_1} - \overline{Y_0}\)`
+- First, define its population mean as `\(\mu\)`. 
+- Compute its variance: 
+
+$$
+`\begin{aligned}
+Var(\overline{Y_1} - \overline{Y_0})  &amp;= Var(\overline{Y_1}) + Var(\overline{Y_0}) \\
+&amp;=  \frac{ \sigma_{Y}^2}{n_1} + \frac{ \sigma_{Y}^2}{n_0}  = \sigma_{Y}^2\left(\frac{ 1}{n_1} + \frac{ 1}{n_0}\right) 
+\end{aligned}`
+$$
+- With its corresponding standard error (SE): 
+$$
+`\begin{aligned}
+SE(\overline{Y_1} - \overline{Y_0})  &amp;= \sigma_{Y}\sqrt{\left(\frac{ 1}{n_1} + \frac{ 1}{n_0}\right) }
+\end{aligned}`
+$$
+]
+---
+
+# Now For the Difference in Means 2/3
+
+- Analogous to the single sample mean, the SE can be estimated using the estimate for the underlying standard deviation: 
+
+$$
+`\begin{aligned}
+\hat{SE}(\overline{Y_1} - \overline{Y_0})  &amp;= S(Y_i)\sqrt{\left(\frac{ 1}{n_1} + \frac{ 1}{n_0}\right) }
+\end{aligned}`
+$$
+
+- Where `\(S(Y_i)\)` is the standard deviation of all the underlying data (pooling `\(Y_1\)` and `\(Y_0\)` )
+
+- This difference in mean is also an average of (underlying) independent random variables, so CLT applies and we have: 
+$$
+`\begin{equation}
+(\overline{Y_1} -  \overline{Y_0})  \sim N(\mu,SE(\overline{Y_1} - \overline{Y_0}) )
+\end{equation}`
+$$
+---
+
+# Now For the Difference in Means 3/3
+
+- This distribution can also be standardized to obtain: 
+$$
+`\begin{equation}
+Z  = \frac{(\overline{Y_1} -  \overline{Y_0})-  \mu}{SE(\overline{Y_1} - \overline{Y_0})} \sim N(0,1)
+\end{equation}`
+$$
+
+- And again, this `\(N(0,1)\)` has the same properties as above. 
+---
+# Hypothesis Testing: Main Idea
+
+- We want to ask if the statistic we observe ( `\(\overline{Y}\)` or `\((\overline{Y_1} -  \overline{Y_0})\)` ) is consistent with some underlying truth, represented by a theoretical distribution. 
+
+- Our working hypothesis, or null hypothesis, is that this statistic does come from such truth. Let's define the population mean of that theoretical distribution, as `\(\mu_0\)`. 
+
+- Assuming that our hypothesis is true, we can again standardize the statistic: 
+$$
+`\begin{equation}
+\frac{(\overline{Y_1} -  \overline{Y_0})-  \mu_0}{SE(\overline{Y_1} - \overline{Y_0})} = t(\mu_0)\sim N(0,1)
+\end{equation}`
+$$
+
+- This is called the t-statistic for the null hypothesis `\(\mu_0\)` (given that in small samples as a t-distribution, but in large sample is normal). 
+
+---
+# Hypothesis Testing: P-value 1/2
+
+
+
+
+.font80[
+.pull-left[
+- One of the most common null hypothesis is that of no effect `\((\mu_0 = 0)\)`, in this case the t-statistic becomes the ratio of the estimate by its standard error. 
+
+- Remember that this statistic is distributed `\(N(0,1)\)`, now assume that we observe `\(t= -0.15\)` what is the probability of observing this statistic or something larger (in absolute value), assuming that the null is true. 
+
+
+
+(Check out this [great explanation on hypothesis testing by Nick Huntington-Klein](https://youtu.be/MsB46s7VqDM))
+
+]
+]
+
+.pull-right[
+&lt;img src="09_rct_ht_files/figure-html/norm21-1.svg" style="display: block; margin: auto;" /&gt;
+
+.font80[
+The **p-value** is the probability of observing a t-statistic at least as extreme as the one we observe, given that the hypothesis is true, is `\(p = 0.88\)`. So the statistic that we observe seems to be consistent with our null hypothesis. More formally, we cannot reject the null hypothesis of `\(\mu_0 = 0\)`. 
+]
+]
+
+
+
+---
+# Hypothesis Testing: P-value 2/2
+
+
+
+
+.font80[
+.pull-left[
+- But when does a t-statistic, and its corresponding p-value, stops being consistent with the null hypothesis?
+
+- A **convention** is that if the p-value should be less than 0.05, then it is said to be statistically significant.
+
+- This corresponds to a t-statistic of around 2 in absolute value. Hence the rule of thumb of dividing the estimate by its standard error anc checking if its bigger than 2 in absolute value. 
+
+
+
+]
+]
+
+.pull-right[
+&lt;img src="09_rct_ht_files/figure-html/norm22-1.svg" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
