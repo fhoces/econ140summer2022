@@ -509,7 +509,6 @@ background-position: 100% 50%
 ]
 
 
-
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
 pagedown::chrome_print("08_rct.html", output = "08_rct.pdf")
 ```

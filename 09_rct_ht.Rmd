@@ -549,6 +549,6 @@ ggplot() +
 
 
 
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
 pagedown::chrome_print("09_rct_ht.html", output = "09_rct_ht.pdf")
 ```
