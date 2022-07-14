@@ -1,0 +1,769 @@
+---
+title: "Ec140 - Regression as Line Fitting and Conditional Expectation"
+subtitle: "(Part I)"
+author: "Fernando Hoces la Guardia"
+date: "07/14/2022"
+output: 
+  xaringan::moon_reader:
+    footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
+    css: [default, metropolis, metropolis-fonts, "my-css.css"] 
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css">
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+</style>
+
+```{r , include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, viridis, knitr, extrafont, tidyverse, magrittr, latex2exp, 
+       parallel, Ecdat, wooldridge, dslabs, ggforce, emo, png, grid, pander, 
+       countdown, emoGG, haven, broom)
+
+options(htmltools.dir.version = FALSE)
+
+# define vars
+om = par("mar")
+lowtop = c(om[1],om[2],0.1,om[4])
+
+overwrite = FALSE
+
+
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#23373b" # metropolis font color
+# Notes directory
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  message = FALSE,
+  warning = FALSE,
+  dev = "svg",
+  cache = TRUE
+  #fig.width = 11,
+  #fig.height = 5
+)
+
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 14),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  legend.position = "none"
+)
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+
+# countdown style
+countdown(
+  color_border              = "#d90502",
+  color_text                = "black",
+  color_running_background  = "#d90502",
+  color_running_text        = "white",
+  color_finished_background = "white",
+  color_finished_text       = "#d90502",
+  color_finished_border     = "#d90502"
+)
+
+
+
+```
+
+
+# Regression Journey
+
+- Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
+
+- Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix + [SoPo Econometrics](https://github.com/ScPoEcon/ScPoEconometrics-Slides). (Part I today) 
+
+- Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79. 
+
+- Regression Inference, Binary Variables and Logarithms. Ch2 of MM, Appendix + others. 
+
+---
+# Regression Journey
+
+- Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
+
+- **Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix + [SoPo Econometrics](https://github.com/ScPoEcon/ScPoEconometrics-Slides). (Part I today)** 
+
+- Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79. 
+
+- Regression Inference, Binary Variables and Logarithms. Ch2 of MM, Appendix + others. 
+
+
+
+---
+class: inverse, middle
+
+# Regression as Line Fitting and Conditional Expectation
+
+---
+# Regression as Line Fitting: Today's Goal
+.font90[
+- The goals of today's class are two: 
+  1. Provide an explanation to what regression does when "it generate fitted values" (or "it fits a line"), and
+  2. Provide some insight to a useful formula that represents the main coefficient of interest $(\beta)$. 
+
+- Today's class will be a bit more technical than previous classes. 
+
+- For this reason it is important to always keep in mind what the goal is. 
+
+- Even if you end up completely lost about today's material, these explanations are not essential for you to do well in class. 
+
+- They are meant to solidify your intuition, not to discourage you from continuing the exploration of learning causal inference.
+
+]
+
+---
+# Regression as Line Fitting
+
+```{r, echo=FALSE}
+# import data
+grades = read_dta(file = "grade5.dta")
+```
+
+- Example: Class size and student performance (Slides adapted from [SciencePo Econometrics](https://github.com/ScPoEcon/ScPoEconometrics-Slides) course, and [data from Raj Chetty and Greg Bruich's course](https://opportunityinsights.org/course/))
+
+
+```{r, echo=FALSE,fig.height=4.75, fig.width = 8}
+grades_avg_cs <- grades %>%
+  group_by(classize) %>%
+  summarise(avgmath_cs = mean(avgmath),
+            avgverb_cs = mean(avgverb))
+
+g_math_cs = ggplot(grades_avg_cs, aes(x = classize, y = avgmath_cs)) + 
+    geom_point(size = 2) +
+    xlim(0,45) +
+    ylim(0, 100) +
+    labs(
+      x = "Class size",
+      y = "Average score",
+      title = "Mathematics") +
+    theme_bw(base_size = 20)
+g_math_cs +
+    ylim(50, 80) +
+    theme_bw(base_size = 14)
+```
+
+---
+
+# Class size and student performance: Regression line
+
+How to visually summarize the relationship: **a line through the scatter plot**
+
+--
+
+.left-wide[
+```{r,echo=FALSE,fig.align='left',fig.height=4,fig.width=7}
+g_math_cs +
+    ylim(50, 80) +
+    theme_bw(base_size = 14) +
+  geom_hline(yintercept = 65, col = "#d90502")
+```
+]
+
+--
+
+.right-thin[
+<br>
+
+* A *line*! Great. But **which** line? This one?
+
+* That's a *flat* line. But average mathematics score is somewhat *increasing* with class size.
+
+]
+
+---
+
+# Class size and student performance: Regression line
+
+How to visually summarize the relationship: **a line through the scatter plot**
+
+.left-wide[
+```{r,echo=FALSE,fig.align='left',fig.height=4,fig.width=7}
+g_math_cs +
+  ylim(50, 80) +
+  theme_bw(base_size = 14) +
+  geom_abline(intercept = 55,slope = 0.6, col = "#d90502")
+```
+]
+
+.right-thin[
+<br>
+
+* **That** one?
+
+* Slightly better! Has a **slope** and an **intercept**
+
+* We need a rule to decide! 
+
+]
+
+
+---
+
+# It's All About the Residuals
+
+- In *Regression as Matching* we define the residuals, $e_i$, as the difference between the observed $(Y_i)$ and fitted values $(\widehat Y_i)$. 
+    $$
+    e_i \equiv   Y_i - \widehat{Y}_i 
+    $$
+
+
+
+- By fitted values, we mean a line (for now) that summarizes the relationship between $X$ and $Y$. 
+
+- The equation for such a line with an intercept $a$ and a slope $b$ is:
+    $$
+    \widehat{Y}_i = a + b X\_i
+    $$
+
+
+---
+
+# What's A Line: A Refresher
+
+```{r, echo = F, fig.width = 10, fig.height = 5}
+a = 32
+b = 4.1
+space = .5
+
+base_plot <- ggplot() +
+    geom_abline(slope = b, intercept = a) +
+    scale_x_continuous(limits = c(-5,10), expand = c(0,0)) +
+    scale_y_continuous(limits = c(0,100), expand = c(0,0)) +
+    theme_bw(base_size = 16) +
+    annotate(geom = "text", x = -4.3, y = 94, label = "y", parse = TRUE, size = 8, hjust = 0) +
+    annotate(geom = "text", x = -4.3 + space, y = 94, label = "=", size = 8, hjust = 0) +
+    annotate(geom = "text", x = -4.3 + 2*space, y = 94, label = "a", color = "#DE9854", parse = TRUE, size = 8, hjust = 0) +
+    annotate(geom = "text", x = -4.3 + 2*space + .6, y = 94, label = "+", size = 8, hjust = 0) +
+    annotate(geom = "text", x = -4.3 + 3*space + .6, y = 94, label = "b", parse = TRUE, color = "#d90502", size = 8, hjust = 0) +
+    annotate(geom = "text", x = -4.3 + 4*space + .6, y = 94, label = "x", parse = TRUE, size = 8, hjust = 0)
+base_plot
+```
+
+---
+
+# What's A Line: A Refresher
+
+```{r, echo = F, fig.width = 10, fig.height = 5}
+library('latex2exp')
+plot_a <- base_plot + 
+    annotate(geom = "segment", x = 0, xend = 0, y = 0, yend = a, arrow = arrow(angle = 12, type = "closed"), color = "#DE9854") +
+    annotate(geom = "segment", x = -5, xend = 0, y = a, yend = a, arrow = arrow(angle = 12, type = "closed", ends = "first"), color = "#DE9854") +
+    scale_y_continuous(limits = c(0,100), expand = c(0,0), breaks = c(0,25,a,50,75,100), labels = c("0","25",parse(text = TeX("$a$")),"50","75","100"), minor_breaks = seq(0,100,12.5)) +
+    theme(axis.text.y = element_text(color = c("grey30", "grey30", "#DE9854", "grey30", "grey30", "grey30")),
+          axis.ticks.y = element_line(color = c("grey30", "grey30", "#DE9854", "grey30", "grey30", "grey30")),
+          panel.grid.minor = element_line(color = c("grey92", "grey92", "grey92", "grey92", "grey92", "grey92")),
+          panel.grid.major.y = element_line(color = c("grey92", "grey92", NA, "grey92", "grey92", "grey92")))
+plot_a
+```
+
+---
+
+# What's A Line: A Refresher
+
+```{r, echo = F, fig.width = 10, fig.height = 5}
+
+plot_a + 
+    annotate(geom = "segment", x = 5, xend = 6, y = a+5*b, yend = a+5*b, arrow = arrow(angle = 12, type = "closed", length = unit(.4, "cm")), color = "#d90502") +
+    annotate(geom = "text", x = 5.5, y = 49, label = "1", size = 5, color = "#d90502") +
+    annotate(geom = "segment", x = 6, xend = 6, y = a+5*b, yend = a+6*b, arrow = arrow(angle = 12, type = "closed", length = unit(.2, "cm")), color = "#d90502") +
+    annotate(geom = "text", x = 6.5, y = (a+6*b + a+5*b)/2, label = "b", parse = TRUE, size = 6, color = "#d90502")
+```
+
+---
+
+# Simple Linear Regression: Residual
+
+* If all the data points were __on__ the line then $\widehat{Y}_i = Y_i$.
+
+--
+
+```{r, echo = FALSE, fig.height = 4,fig.width=7}
+x <- runif(50, min  = 0, max = 1)
+y <- 1 * x
+
+data <- data.frame(y = y,
+                   x = x)
+
+plot_ex <- data %>% ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  xlim(0, 1) +
+  ylim(0, 1) +
+  labs(x = "x",
+       y = "y") +
+  theme_bw(base_size = 14)
+plot_ex
+```
+
+---
+
+# Simple Linear Regression: Residual
+
+* If all the data points were __on__ the line then $\widehat{Y}_i = Y_i$.
+
+```{r, echo = FALSE, fig.height = 4,fig.width=7}
+plot_ex + geom_line(color = "#d90502")
+```
+
+
+---
+
+# Simple Linear Regression: Graphically
+
+```{r, echo = F, fig.width = 10, fig.height = 5}
+plot_1 <- g_math_cs +
+    ylim(50, 80) +
+    theme_bw(base_size = 14)
+plot_1
+```
+
+---
+
+# Simple Linear Regression: Graphically
+
+```{r, echo = F, fig.width = 10, fig.height = 5}
+plot_2 <- plot_1 +
+  stat_smooth(data = grades_avg_cs, method = "lm", se = FALSE, colour = "#d90502") +
+  annotate("text", x = 6.5, y = 64, label = "hat(y)", parse = TRUE, colour = "#d90502", size = 6)
+plot_2
+```
+
+---
+
+# Simple Linear Regression: Graphically
+
+```{r, echo = F, fig.width = 10, fig.height = 5}
+g_math_cs +
+    ylim(50, 80) +
+    theme_bw(base_size = 14) +
+  stat_smooth(method = "lm", se = FALSE, colour = "#d90502") +
+  annotate("text", x = 6.5, y = 64, label = "hat(y)", parse = TRUE, colour = "#d90502", size = 6) +
+  geom_point(data = grades_avg_cs %>% filter(classize == 17), aes(x = classize, y = avgmath_cs), color = "#d90502", size = 4) +
+  annotate("text", x = 17, y = 69, label = "y[x = 17]", parse = TRUE, colour = "#d90502", size = 6)
+```
+
+---
+
+# Simple Linear Regression: Graphically
+
+```{r, echo = F, fig.width = 10, fig.height = 5}
+math_class_reg <- lm(avgmath_cs ~ classize, data = grades_avg_cs)
+math_class_reg <- broom::augment(math_class_reg)
+
+g_math_cs +
+    ylim(50, 80) +
+    theme_bw(base_size = 14) +
+  stat_smooth(method = "lm", se = FALSE, colour = "#d90502") +
+  annotate("text", x = 6.5, y = 64, label = "hat(y)", parse = TRUE, colour = "#d90502", size = 6) +
+  geom_point(data = grades_avg_cs %>% filter(classize == 17), aes(x = classize, y = avgmath_cs), color = "#d90502", size = 4) +
+  annotate("text", x = 17, y = 69, label = "y[x = 17]", parse = TRUE, colour = "#d90502", size = 6) +
+  geom_segment(data = math_class_reg %>% filter(classize == 17),
+               aes(xend = classize, yend = .fitted), color = "#d90502", size = 1) +
+  annotate("text", x = 18, y = 65.55, label = "e[x = 17]", parse = TRUE, colour = "#d90502", size = 6)
+```
+
+---
+
+# Simple Linear Regression: Graphically
+
+```{r, echo = F, fig.width = 10, fig.height = 5}
+g_math_cs +
+    ylim(50, 80) +
+    theme_bw(base_size = 14) +
+  stat_smooth(method = "lm", se = FALSE, colour = "#d90502") +
+  annotate("text", x = 6.5, y = 64, label = "hat(y)", parse = TRUE, colour = "#d90502", size = 6) +
+  geom_segment(data = math_class_reg,
+               aes(xend = classize, yend = .fitted), color = "#d90502", size = 0.5)
+```
+
+---
+
+# Simple Linear Regression: Graphically
+
+.left-wide[
+```{r, echo = F, out.width = "100%", fig.height = 5.5}
+g_math_cs +
+    ylim(50, 80) +
+    theme_bw(base_size = 14) +
+  stat_smooth(method = "lm", se = FALSE, colour = "#d90502") +
+  annotate("text", x = 6.5, y = 64, label = "hat(y)", parse = TRUE, colour = "#d90502", size = 6) +
+  geom_segment(data = math_class_reg,
+               aes(xend = classize, yend = .fitted), color = "#d90502", size = 0.5)
+```
+]
+
+.right-thin[
+<br>
+<br>
+<p style="text-align: center; font-weight: bold; font-size: 35px; color: #d90502;">Which "minimisation" criterion should (can) be used?</strong>
+]
+---
+
+# **O**rdinary **L**east **S**quares (OLS) Estimation
+
+* Errors of different sign $(+/-)$ cancel out, so we consider **squared residuals** 
+$$e_i^2 = (Y_i - \widehat Y_i)^2 = (Y_i - a - b X_i)^2$$
+
+* Choose $(a,b)$ such that $\sum_{i = 1}^N e_1^2 + \dots + e_N^2$ is **as small as possible**.
+
+--
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.width=7,fig.height = 3.5}
+g_math_cs +
+    ylim(50, 80) +
+    xlim(0, 50) +
+    theme_bw(base_size = 14) +
+    stat_smooth(method = "lm", se = FALSE, colour = "darkgreen") +
+  coord_fixed(ratio = 0.65)
+```
+
+---
+
+# **O**rdinary **L**east **S**quares (OLS) Estimation
+
+* Errors of different sign $(+/-)$ cancel out, so we consider **squared residuals** 
+$$e_i^2 = (Y_i - \widehat Y_i)^2 = (Y_i - a - b X_i)^2$$
+
+* Choose $(a,b)$ such that $\sum_{i = 1}^N e_1^2 + \dots + e_N^2$ is **as small as possible**.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.width=7,fig.height = 3.5}
+g_math_cs +
+    ylim(50, 80) +
+    xlim(0, 50) +
+    theme_bw(base_size = 14) +
+    stat_smooth(method = "lm", se = FALSE, colour = "darkgreen") +
+    geom_rect(data = math_class_reg,
+              aes(
+              xmin = classize,
+              xmax = classize + abs(.resid)*0.65,
+              ymin = avgmath_cs,
+              ymax = avgmath_cs - .resid),
+              fill = "darkgreen",
+              alpha = 0.3) +
+  coord_fixed(ratio = 0.65)
+```
+
+---
+
+# **O**rdinary **L**east **S**quares (OLS) Estimation
+
+```{r, echo = F, out.extra = 'style="border: none;"'}
+knitr::include_url("https://gustavek.shinyapps.io/reg_simple/")
+```
+[Link](https://gustavek.shinyapps.io/reg_simple/)
+---
+
+# **O**rdinary **L**east **S**quares (OLS) Estimation
+
+```{r, echo = F, out.extra = 'style="border: none;"'}
+knitr::include_url("https://gustavek.shinyapps.io/SSR_cone/")
+```
+
+[Link](https://gustavek.shinyapps.io/SSR_cone/)
+
+---
+# Covariance: Brief Explainer 1/2
+
+- The covariance is a measure of co-movement between two random variables $(X_i, Y_i)$: 
+$$
+\begin{equation}
+Cov(X_i, Y_i) = \sigma_{XY} = \mathop{\mathbb{E}}\left[ (X_i - \mathop{\mathbb{E}}[X_i]) (Y_i - \mathop{\mathbb{E}}[Y_i]) \right]
+\end{equation}
+$$
+- With its sample counterpart (for the case of equally likely observations): 
+$$
+\begin{equation}
+\widehat \sigma_{XY} = \frac{\sum(X_i - \overline{X_i})(Y_i - \overline{Y_i})}{n}
+\end{equation}
+$$
+- If either formula looks weird, think of the variance, as the covariance between $X_i$ and itself $(X_i)$ and the above should look more familiar: $\sigma_{XX} = \mathop{\mathbb{E}}\left[ (X_i - \mathop{\mathbb{E}}[X_i]) (X_i - \mathop{\mathbb{E}}[X_i]) \right] = \mathop{\mathbb{E}}\left[ (X_i - \mathop{\mathbb{E}}[X_i])^2 \right] = \sigma_X^2$ 
+
+---
+# Covariance: Brief Explainer 2/2
+
+In addition to $\sigma_{XX} = \sigma_X^2$, we might use two other properties of the covariance: 
+
+- If the expectation of either $X_i$ or $Y_i$ is 0, the covariance between them is the expectation of their product: $Cov(X_i, Y_i) = E(X_i Y_i)$
+
+- The covariance linear functions of variables $X_i$ and $Y_i$ -- written as $W_i = c_1 + c_2 X_i$ and $Z_i = c_3 + c_4 Y_i$ for constants $c_1, c_2, c_3, c_4$ -- is given by:
+$$
+\begin{equation}
+Cov(W_i, Z_i) = c_2 c_4 Cov(X_i, Y_i)
+\end{equation}
+$$
+- You are not asked to memorize any of these formulas. Just used them to understand many concepts in regression. 
+
+---
+
+# .font90[**O**rdinary **L**east **S**quares (OLS): Coefficient Formulas 1/4]
+
+* **OLS**: *estimation* method consisting in choosing $a$ and $b$ to minimize the sum of squared residuals.
+
+* In the case of one regressor (and a constant), the result of this minimization generates the following formulas: (derivation [in this video](https://www.youtube.com/watch?v=Hi5EJnBHFB4) and [these slides](https://raw.githack.com/edrubin/EC421W19/master/LectureNotes/02Review/02_review.html#25)).
+
+* So what are the formulas for $a$ (intercept) and $b$ (slope)?
+
+* We can solve this problem for the population or for random sample. 
+
+* Warning: the next 3 slides are heavy on notation. If you lose track, the main takeaway is that we want an intuitive formula for the solution to this problem. 
+---
+
+# .font90[**O**rdinary **L**east **S**quares (OLS): Coefficient Formulas 2/4]
+.font90[
+.pull-left[
+.center[**Population**]
+
+Problem to solve: 
+$$
+\begin{equation}
+  \arg \min_{a,b} \left\{ 
+  \mathop{\mathbb{E}}[(Y_i - a - b X_i)^2]
+  \right\}
+\end{equation}
+$$
+Solution: 
+
+$$
+\begin{equation}
+b =  \beta = \frac{\mathop{\mathbb{E}}\left[ (X_i - \mathop{\mathbb{E}}[X_i]) (Y_i - \mathop{\mathbb{E}}[Y_i]) \right]}{\mathop{\mathbb{E}}\left[ (X_i - \mathop{\mathbb{E}}[X_i])^2 \right]}
+\end{equation}
+$$
+$$
+\begin{equation}
+a =  \alpha = \mathop{\mathbb{E}}[Y_i] - b\mathop{\mathbb{E}}[X_i]
+\end{equation}
+$$
+]
+
+.pull-right[
+.center[**Sample**]
+
+Problem to solve: 
+
+$$
+\begin{equation}
+  \arg \min_{a,b} \left\{ 
+  \sum (Y_i - a - b X_i)^2
+  \right\}
+\end{equation}
+$$
+
+Solution:
+
+$$
+\begin{equation}
+b = \widehat \beta = \frac{\sum (Y_i-\overline{Y}) (X_i-\overline{X}) }{\sum(X_i - \overline{X})^2}
+\end{equation}
+$$
+$$
+\begin{equation}
+a = \widehat \alpha = \overline{Y} -b\overline{X}
+\end{equation}
+$$
+
+]
+
+- Let's bring the concept of Covariance to make this formulas more intuitive 
+]
+
+---
+
+# .font90[**O**rdinary **L**east **S**quares (OLS): Coefficient Formulas 3/4]
+
+.font100[
+.pull-left[
+.center[**Population**]
+
+$$
+\begin{equation}
+b =  \beta = \frac{Cov(X_i, Y_i)}{Var(X_i)} = \frac{\sigma_{XY}}{\sigma_{X}^2}
+\end{equation}
+$$
+$$
+\begin{equation}
+a =  \alpha = \mathop{\mathbb{E}}[Y_i] - b\mathop{\mathbb{E}}[X_i]
+\end{equation}
+$$
+]
+
+.pull-right[
+.center[**Sample**]
+
+$$
+\begin{equation}
+b = \widehat \beta = \frac{
+\frac{\sum (Y_i-\overline{Y}) (X_i-\overline{X})}{n} }{\frac{\sum(X_i - \overline{X})^2}{n}} 
+\end{equation}
+$$
+$$
+\begin{equation}
+a = \widehat \alpha = \overline{Y} -b\overline{X}
+\end{equation}
+$$
+
+]
+
+]
+
+---
+
+# .font90[**O**rdinary **L**east **S**quares (OLS): Coefficient Formulas 3/4]
+
+.font100[
+.pull-left[
+.center[**Population**]
+
+$$
+\begin{equation}
+b =  \frac{Cov(X_i, Y_i)}{Var(X_i)} = \frac{\sigma_{XY}}{\sigma_{X}^2}
+\end{equation}
+$$
+
+$$
+\begin{equation}
+a =  \alpha = \mathop{\mathbb{E}}[Y_i] - b\mathop{\mathbb{E}}[X_i]
+\end{equation}
+$$
+]
+
+.pull-right[
+.center[**Sample**]
+
+$$
+\begin{equation}
+b = \widehat \beta = \frac{Cov(X_i, Y_i)}{Var(X_i)} = \frac{\widehat\sigma_{XY}}{\widehat\sigma_{X}^2}
+\end{equation}
+$$
+$$
+\begin{equation}
+a = \widehat \alpha = \overline{Y} -b\overline{X}
+\end{equation}
+$$
+
+]
+
+]
+
+---
+
+# .font90[**O**rdinary **L**east **S**quares (OLS): Coefficient Formulas 4/4]
+
+<br><br>
+- The main takeaway: 
+
+.font200[
+
+$$
+\begin{equation}
+b = \frac{Cov(X_i, Y_i)}{Var(X_i)} 
+\end{equation}
+$$
+
+]
+
+---
+# Properties of Residuals 1/2
+
+- As we saw at the beginning of this class, in a regression the observed outcome $(Y_i)$ can be separated into a component "explained" by the regression equation (aka model) and a residual component: 
+
+$$
+\begin{equation}
+Y_i = \underbrace{\widehat Y_i}_{\text{fitted values (explained)}} + \underbrace{e_i}_{residuals}
+\end{equation}
+$$
+- Two important properties of the residuals: 
+
+  1. They have expectation 0. $E(e_i) = 0$
+  1. They are uncorrelated with all the regressors that made them and with the corresponding fitted values. For each regressor $X_{ki}$:   
+  $E[X_{ki} e_i] = 0$  and  $E[\widehat Y_{i} e_i] = 0$
+
+---
+# Properties of Residuals 2/2
+
+- We take this properties as given in this course (they come from the calculus of the minimization problem). 
+
+- One important point is that this properties are true always (regardless of biased coefficients). 
+
+- This does not imply however that we have solve the problem selection bias. 
+
+- In the traditional way of teaching econometrics this two concepts are mixed (hence required a distinction between residuals $(e_i)$ and unobservables $(u_i)$). 
+---
+
+# (OLS with R)
+.font90[
+* In `R`, OLS regressions are estimated using the `lm` function.
+
+* This is how it works:
+
+  ```{r, echo = TRUE, eval = FALSE}
+  lm(formula = dependent variable ~  independent variable)
+  ```
+
+Let's estimate the following model by OLS: $\textrm{average math score}_i = a + b \textrm{class size}_i + e_i$
+
+.pull-left[
+```{r echo=T, eval = FALSE}
+# OLS regression of class size on average maths score
+lm(avgmath_cs ~ classize, grades_avg_cs) 
+```
+]
+
+.pull-right[
+```{r echo=F, eval = TRUE}
+# OLS regression of class size on average maths score
+lm(avgmath_cs ~ classize, grades_avg_cs) 
+```
+]
+]
+
+
+
+---
+# Acknowledgments
+
+.pull-left[
+- [Ed Rubin's Undergraduate Econometrics II](https://github.com/edrubin/EC421W19)
+- [ScPoEconometrics](https://raw.githack.com/ScPoEcon/ScPoEconometrics-Slides/master/chapter_causality/chapter_causality.html#1)
+- MM
+]
+.pull-right[
+
+]
+
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+pagedown::chrome_print("13_reg_line_fit_ce.html", output = "13_reg_line_fit_ce.pdf")
+```

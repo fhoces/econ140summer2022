@@ -1,0 +1,136 @@
+---
+title: "Ec140 - Midterm 1 Review"
+author: "Fernando Hoces la Guardia"
+date: "07/11/2022"
+output: 
+  xaringan::moon_reader:
+    footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
+    css: [default, metropolis, metropolis-fonts] 
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css">
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+</style>
+
+```{r , include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, viridis, knitr, extrafont, tidyverse, magrittr, latex2exp, 
+       parallel, Ecdat, wooldridge, dslabs, ggforce, emo, png, grid, pander, 
+       countdown, emoGG, haven, broom)
+
+
+options(htmltools.dir.version = FALSE)
+
+# define vars
+om = par("mar")
+lowtop = c(om[1],om[2],0.1,om[4])
+
+overwrite = FALSE
+
+
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#23373b" # metropolis font color
+# Notes directory
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  message = FALSE,
+  warning = FALSE,
+  dev = "svg",
+  cache = TRUE
+  #fig.width = 11,
+  #fig.height = 5
+)
+
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 14),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  legend.position = "none"
+)
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+
+# countdown style
+countdown(
+  color_border              = "#d90502",
+  color_text                = "black",
+  color_running_background  = "#d90502",
+  color_running_text        = "white",
+  color_finished_background = "white",
+  color_finished_text       = "#d90502",
+  color_finished_border     = "#d90502"
+)
+
+
+
+```
+
+
+
+# Midterm Review
+- Go over the exam. 
+
+---
+
+# Midterm Takeaways 1/2
+
+My expectations: 
+
+- If you: 
+  -  (1) actively engage with class material, **and** 
+  -  (2) read the book, **and**
+  -  (3) did section + practice questions, **and** 
+  -  (4) check with classmates and/or us in OH, 
+  **then**
+  - you should have done well in the midterm. 
+
+- Using some of the course language: conditional on doing the work, your expected permanence should be high. 
+---
+
+# Midterm Takeaways 2/2
+
+- If you did (1) - (4) and did not do well, probably it was a bad day, please come to OH and let's work on a plan so this doesn't happen again. 
+
+- If you did not do either (1), (2), (3), or (4) and did not do well, do them and I am confident that you will do much better in Midterm 2 and Exam.
+
+- Final comment: I hope that it's clear now that "consumer approach" $\neq$ "easy course". It means: if you do the work, you will leave this course with a strong foundation to read and use causal evidence and contribute to policy discussions (and also with strong foundation for further studies in econometrics). 
+
+
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+pagedown::chrome_print("10_midterm_review.html", output = "10_midterm_review.pdf")
+```

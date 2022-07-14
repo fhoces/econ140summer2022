@@ -137,6 +137,30 @@
   font-size: 85%;
 }
 
+/* Two-column layout (wide left col) */
+.left-wide {
+  width: 65%;
+  float: left;
+}
+
+.right-thin {
+  width: 35%;
+  float: right;
+}
+
+/* Two-column layout (wide left col) */
+.right-wide {
+  width: 65%;
+  float: right;
+}
+
+.left-thin {
+  width: 35%;
+  float: left;
+}
+
+
+
 .remark-slide-content {
   background-color: #ffffff;
   border-top: 80px solid #23373B;

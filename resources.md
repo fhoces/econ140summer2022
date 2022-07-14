@@ -26,3 +26,6 @@ Here you will find a collection of resources used by other instructors from whic
 - [Eddie Woo's Explanation of Expectation](https://youtu.be/tF2Kns7RrfQ)
 
 - [Stat 110 Expectations](https://youtu.be/sheoa3TrcCI)
+
+- Econimate
+- Numberphile 

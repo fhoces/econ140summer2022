@@ -1,0 +1,475 @@
+---
+title: "Ec140 - Statistical Inference and Regression"
+author: "Fernando Hoces la Guardia"
+date: "07/12/2022"
+output: 
+  xaringan::moon_reader:
+    footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
+    css: [default, metropolis, metropolis-fonts] 
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css">
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+</style>
+
+```{r , include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, viridis, knitr, extrafont, tidyverse, magrittr, latex2exp, 
+       parallel, Ecdat, wooldridge, dslabs, ggforce, emo, png, grid, pander, 
+       countdown, emoGG, haven, broom)
+
+
+options(htmltools.dir.version = FALSE)
+
+# define vars
+om = par("mar")
+lowtop = c(om[1],om[2],0.1,om[4])
+
+overwrite = FALSE
+
+
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#23373b" # metropolis font color
+# Notes directory
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  message = FALSE,
+  warning = FALSE,
+  dev = "svg",
+  cache = TRUE
+  #fig.width = 11,
+  #fig.height = 5
+)
+
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 14),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  legend.position = "none"
+)
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+
+# countdown style
+countdown(
+  color_border              = "#d90502",
+  color_text                = "black",
+  color_running_background  = "#d90502",
+  color_running_text        = "white",
+  color_finished_background = "white",
+  color_finished_text       = "#d90502",
+  color_finished_border     = "#d90502"
+)
+
+
+
+```
+
+
+
+# Housekeeping
+- Problem Set #2 due this Friday at 5pm on Gradescope.
+- Section merge: 
+   - Section 102 and 103 will be taught at the time of 102 (9:30am MW @ Evans 3)
+   - Section 106 and 108 will be taught at the time of 106 (2pm TTh @ Evans 9)
+
+
+---
+# Today's Lecture
+
+- Finish Statistical Inference
+  - Confidence Intervals 
+  - P-Hacking
+
+- Start the Regression Journey!
+  - Regression as Matching - Part I 
+
+
+---
+# Confidence Intervals 1/4
+
+- Confidence Intervals flips the question of statistical significance, and asks what are the set all possible values of $\mu$ (the true population value) that are consistent with the sample mean that we observe. 
+
+- To simplify notation, let's define $\hat{\mu} = \overline{Y_1} -  \overline{Y_0}$. Then the expression for the t-statistic from last class, can be written as: 
+
+
+$$
+\begin{equation}
+t(\mu_0) = \frac{ \hat{\mu} -  \mu_0}{SE( \hat{\mu})}
+\end{equation}
+$$
+---
+# Confidence Intervals 2/4
+.font80[
+- For confidence intervals, we fixed the value of $t$ at some critical value, usually the (approximate) value of $|t_{5\%}| = 2$ (2 and -2) that correspond to the 5% convention of statistical significance, and ask which values of $\mu$ could take for our data to be compatible with null hypothesis (that we would not reject): 
+$$
+\begin{aligned}
+2  &\geq \frac{ \hat{\mu} -  \mu}{SE( \hat{\mu})} \text{ and }
+-2   \leq \frac{ \hat{\mu} -  \mu}{SE( \hat{\mu})}\\
+\Leftrightarrow 2 \times SE( \hat{\mu}) &\geq \hat{\mu} -  \mu \text{ and }
+-2 \times SE( \hat{\mu}) \leq \hat{\mu} -  \mu\\
+\Leftrightarrow \mu &\geq \hat{\mu} - 2 \times SE( \hat{\mu}) \text{ and }
+  \mu \leq \hat{\mu} + 2 \times SE( \hat{\mu}) \\
+\end{aligned}
+$$
+
+Hence, the interval: 
+$$
+\begin{equation}
+\left[ \hat{\mu} -  2 \times SE(\hat{\mu}), \hat{\mu}  +  2 \times SE(\hat{\mu}\right]
+\end{equation}
+$$
+will contain the true value of $\mu$ 95% of the times. 
+]
+
+---
+# Confidence Intervals 3/5
+So we have a confidence interval for $\mu$, _e.g._, $\left[ 0.324,\, 0.588 \right]$.
+
+What does it mean?
+
+--
+
+**Informally:** The confidence interval gives us a region (interval) in which we can place some trust (confidence) for containing the parameter.
+
+--
+
+**More formally:** If repeatedly sample from our population and construct confidence intervals for each of these samples, $X\%$ percent of our intervals (_e.g._, 95%) will contain the population parameter *somewhere in the interval*.
+
+
+
+---
+# Confidence Intervals 4/5
+.font90[
+- But this concept of 95% of the samples is pretty abstract. As we observe just one sample (the one we have in our data). In order to better grasp this concept, we will do a simulation. 
+
+- Let’s drew 10,000 samples (each of size $n = 30$) from a population and where $E(Y|D=1) - E(Y|D=0) = \mu = 0.5$ (we are not focusing now on whether $\mu$ is causal or not). 
+
+- One sample of $n=30$ from the population for values of Y and D could yield an estimate: 
+ $\overline{Y_1} -  \overline{Y_0} = \hat{\mu} = 0.456$ with a confidence interval $[0.324, 0.588]$. 
+
+- This is one sample (what we usually see). But in a simulation (where we know the data generating process) we can repeat this as many times as we want. So, let’s draw 10,000 of these “worlds” and compute its $\hat{\mu}$ and CI for each.
+]
+---
+# Confidence Intervals 5/6
+
+```{R, gen dataset, include = F, cache = T}
+# Set population and sample sizes 
+n_p <- 100
+n_s <- 30
+# Set the seed
+set.seed(12468)
+# Generate data
+pop_df <- tibble(
+  i = 3,
+  x = sample(c(0,1), size = n_p, replace =  TRUE),
+  e = rnorm(n_p, mean = 0, sd = 1),
+  y = i + 0.5 * x + e,
+  row = rep(1:sqrt(n_p), times = sqrt(n_p)),
+  col = rep(1:sqrt(n_p), each = sqrt(n_p)),
+  s1 = sample(x = c(rep(T, n_s), rep(F, n_p - n_s))),
+  s2 = sample(x = c(rep(T, n_s), rep(F, n_p - n_s))),
+  s3 = sample(x = c(rep(T, n_s), rep(F, n_p - n_s)))
+)
+# Regressions
+lm0 <- lm(y ~ x, data = pop_df)
+lm1 <- lm(y ~ x, data = filter(pop_df, s1 == T))
+lm2 <- lm(y ~ x, data = filter(pop_df, s2 == T))
+lm3 <- lm(y ~ x, data = filter(pop_df, s3 == T))
+# Simulation
+set.seed(12468)
+sim_df <- mclapply(
+  mc.cores = 10,
+  X = 1:1e4,
+  FUN = function(x, size = n_s) {
+    lm(y ~ x, data = pop_df %>% sample_n(size = size)) %>% tidy()
+  }
+) %>% do.call(rbind, .) %>% as_tibble()
+```
+
+
+```{R, simulation ci data, include = F}
+# Create confidence intervals for b1
+ci_df <- sim_df %>% filter(term == "x") %>%
+  mutate(
+    lb = estimate - std.error * qt(.975, 28),
+    ub = estimate + std.error * qt(.975, 28),
+    ci_contains = (lm0$coefficients[2] >= lb) & (lm0$coefficients[2] <= ub),
+    ci_above = lm0$coefficients[2] < lb,
+    ci_below = lm0$coefficients[2] > ub,
+    ci_group = 2 * ci_above + (!ci_below)
+  ) %>%
+  arrange(ci_group, estimate) %>%
+  mutate(x = 1:1e4)
+```
+
+
+This amazing figure (from Ed Rubin’s class) represents all those CI. As you can see `r ci_df$ci_contains %>% multiply_by(100) %>% mean() %>% round(1)`% of 95% confidences contain the true parameter of $\mu=0.5$. 
+
+```{R, simulation ci, echo = F, dev = "svg", fig.height = 4.5}
+# Plot
+ggplot(data = ci_df) +
+geom_segment(aes(y = lb, yend = ub, x = x, xend = x, color = ci_contains)) +
+geom_hline(yintercept = lm0$coefficients[2]) +
+scale_y_continuous(breaks = lm0$coefficients[2], labels = TeX("$\\mu = 0.5$")) +
+scale_color_manual(values = c(red_pink, "grey85")) +
+theme_simple +
+  labs(x = NULL, y= NULL) +
+theme(
+  axis.text.x = element_blank(),
+  axis.text.y = element_text(size = 18)
+)
+```
+
+---
+# Confidence Intervals: Warning
+.font90[
+- After seeing so much CLT and how it applies to the t-statistic, at some point in the future you might feel the temptation to think “it must be the case that the true population parameter is normally distributed in the confidence interval, hence its more likely to be in the middle than in the corners”. 
+
+- There are two errors in that way of thinking:
+    1. The true parameter does not have a distribution (remember it's a fix quantity)
+    2. Even if you were to focus on something like the “distribution of likely truths” (whatever that might be), we do not know if it is the sum of i.i.d RVs, hence nothing tells us that the CLT applies here. 
+    
+Absent any additional information, our best guess is that the true parameter is uniformly distributed in this range. 
+]
+---
+# P-Hacking
+
+- **Definition**: flexibility in data analysis allows portrayal of *almost anything* as below an arbitrary p-value threshold.
+
+- Statistical significance loses its meaning.
+
+- Also called *specification-searching*, *fishing*, *researcher degrees of freedom*, or *data-mining*.
+
+- Not something only evil people do. It's subconscious, or simply built into how we have practice statistical inference (until very recently).
+
+---
+background-image: url("Images/significant1.png"), url("Images/significant2.png")
+background-size: contain, contain
+background-position: 20% 50%, 80% 50%   
+# P-Hacking in One (Fictional) Picture: XQCD
+
+
+
+---
+background-image: url("Images/brodeur2020.png")
+background-size: 65%
+background-position: 50% 00%  
+
+# .font100[P-Hacking in One (Real) Picture: Economic Papers]
+
+.pull-right[
+<br><br><br><br><br><br><br><br>
+.font70[
+.right[ (Brodeur et. al., <br> [2020](https://pubs.aeaweb.org/doi/pdfplus/10.1257/aer.20190687))
+]
+]
+]
+---
+
+# P-hacking Solutions
+
+- Registrations
+
+- Pre-Analysis Plans 
+
+- Computational Reproducibility 
+
+(Check out [bitss.org](http://www.bitss.org) if you want to learn more about this!)
+
+
+---
+class: inverse, middle
+
+# Regression
+
+
+---
+count:false
+# Regression: The Next 4 (to 6) Lectures Ahead
+
+- Regression as Matching on Groups (Part I today). Ch2 of MM up to page 68 (not included). 
+
+- Regression as Conditional Expectation and Line Fitting. Ch2 of MM, Appendix + others. 
+
+- Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79. 
+
+- Regression Inference, Binary Variables and Logarithms. Ch2 of MM, Appendix + others. 
+
+
+---
+# Regression: The Next 4 (to 6) Lectures Ahead
+
+- **Regression as Matching on Groups (Part I today). Ch2 of MM up to page 68 (not included).**
+
+- Regression as Conditional Expectation and Line Fitting. Ch2 of MM, Appendix + others. 
+
+- Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79. 
+
+- Regression Inference, Binary Variables and Logarithms. Ch2 of MM, Appendix + others. 
+
+
+---
+# Before we Begin: A Comment on the Tone of MM 
+- MM is a huge contribution to econometrics by making it more accessible and concrete. It can help to make economics more diverse by clearly presenting the value of these topics without the barrier of a strong background in math. 
+- However, I fear that some of its tone is still highly elitist and more likely to appeal to men than women and underrepresented groups.  
+- That tone is very noticeable in a series of videos produced to supplement the book, but it can also be found in the text of the book. I will try to flag those instances and propose alternative interpretations.
+- I didn’t question this tone 10 years ago! 
+- Let’s try to focus on the great parts of the book, and be open to identify and discuss some of its limitations (in a sense, is a good exercise to detect BS, even among great teachers).   
+
+
+---
+class: inverse, middle
+
+# Regression as Matching on Groups
+
+---
+
+# What to do if we Cannot Run an Experiment?
+
+- Forget about unobservables for a minute and assume that we there is selection bias only in observables (e.g. age, income, others). 
+
+- One way to approach this would be to look at the differences within each group (e.g. ages 40-65 with incomes 40-80k) and interpret those differences as the result of an RCT within that group (or cell). This is what regression does.
+
+- Regression is the second **research design tool** we review in this course.  
+
+- Regression alone is rarely used to justify causality. Because it's hard to believe that there is no selection on unobservables.
+
+- However, it is a common approach to start with regression and build on top of it with other research designs that we will see later in the course. 
+
+
+---
+# .font90[Individual/Policy Choice Issue: Private or Public College?  1/2]
+
+- We explore the concept of regression starting from our second real-life policy (and personal) decision based on causal evidence. 
+
+- Average yearly tuition for a private four-year college in US (2012): $29,000
+
+- Average yearly tuition for a public four-year college in US (2012): $9,000
+
+- Is it worth spending (or subsidizing) this $80,000 difference (20k x 4) so you (or more students overall) can go to elite private colleges?
+
+- One dimension to assess this question is the causal effect of college on earnings. And this will be the center of this example, but first we need to talk about other possible dimensions (different from earnings). 
+---
+# .font90[Individual/Policy Choice Issue: Private or Public College?  2/2]
+
+- MM suggests that private ed might be better than public ed in many ways: “smaller classes, better facilities, more distinguished professors, smarter students”). 
+
+- Can you identify which part of that statement is true, and which BS? (here is a [tip](https://www.journals.uchicago.edu/doi/10.1086/713744)) 
+
+- Can you suggest some ways in which a public education is better than a private (here is another [tip](https://www.forbes.com/top-colleges/))?
+
+- Now let’s go back and focus on the earnings dimension.
+
+---
+# .font[Simple Difference in Groups for “Private” Treatment 1/3]
+
+- First, let’s define the treatment for this setting as having attended a private four-year college, and the control as having attended a public four-year college. 
+
+- Now, you are told that a simple difference in groups shows that student from private institutions earn between 14% and 21% more than students from public universities: 
+
+$$
+\begin{align}
+  \mathop{\mathbb{E}}(\text{Difference in group means}) &= \\
+ \mathop{\mathbb{E}}(Y_i|D_i = 1)  -  \mathop{\mathbb{E}}(Y_i|D_i = 0) &=
+\kappa + \underbrace{\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) - \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)}_\text{Selection bias} 
+\end{align}
+$$
+- How should we read the terms $\mathop{\mathbb{E}}(Y_{i0} | D_i = 1), \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)$ in this case? 
+
+
+
+---
+# .font[Simple Difference in Groups for “Private” Treatment 2/3]
+
+- They are the expected earnings for treatment and control in the counterfactual world where they did not receive a private college, and did receive a public college education. 
+
+- MM suggests some reasons why these two could be different: elite private students tend to have higher GPAs, SATs, more motivation, plus other skills and talents, than elite public college students.  
+
+- Can you identify which part of that statement is true, and which BS? Can you think of additional variables (in addition to “motivation”, “smarts”, and “skills and talents”) that could also contribute to selection bias? 
+
+
+---
+# .font[Simple Difference in Groups for “Private” Treatment 3/3]
+
+- How about receiving intense tutoring? Attending an elite high school? connections? Or having parents with knowledge of the system? 
+
+- All of the above play a similar role in selection bias, but unlike the MM interpretation, they do not suggest that private students are inherently better than public students (I am not suggesting that the latter should replace the former, only complement). 
+
+- To identify this causal effect, one proposal is to use data from applications and choices between elite private and elite public colleges. The **key underlying assumption** is that at some point luck (or lack thereof) starts playing a role in the final assignment of the treatment. 
+
+
+---
+# Intuition of Controlling For Observables
+
+- Assume that all that matters is SAT. If we compare two individuals with the same SAT: Harvey and Uma both with 1400, but Harvey choose private and the Uma choose public, then the comparison would hold other things equal (by assumption). 
+
+--
+
+- Now relax that assumption: we know that women make, on average, less than men, what if the difference we observe between Harvey and Uma is caused by gender (discrimination or something else) and not by type of school? 
+
+--
+
+- Repeat thought experiment, but now for individuals with the same SAT and gender. This is the logic of regression. We match on characteristics, also called a matching estimator, where we hold fixed, or control for, a set of characteristics. 
+
+---
+#.font80[ Real Life Example: Regression and Causal Effects of Private College]
+- Dale and Krueger (2002) analyze data from college applications, admissions and final choice for individuals that apply
+
+- The key idea of the paper is that instead of measuring all characteristics where treatment and control will differ, they argue that they have a measure that closely summarizes all those unobserved characteristics: college application and college decisions. 
+
+- Supposedly application information is a good proxy for motivation, and acceptance is a good proxy of capacity. In my view, this could have been a good argument 20 years ago, but not today (Harvard’s Legacy+Athlete bonus, college admissions scandal, additional evidence). For the purpose of the example let’s assume that these are good proxies for all other things. 
+
+---
+# Acknowledgments
+
+.pull-left[
+- [Ed Rubin's Undergraduate Econometrics II](https://github.com/edrubin/EC421W19)
+- [XQCD](https://xkcd.com/882/)
+- [BITSS](http://www.bitss.org)
+- [ScPoEconometrics](https://raw.githack.com/ScPoEcon/ScPoEconometrics-Slides/master/chapter_causality/chapter_causality.html#1)
+- [XQCD](https://www.explainxkcd.com/wiki/index.php/882:_Significant)
+- MM
+]
+.pull-right[
+- [Matt Hollian](http://mattholian.blogspot.com/2015/01/econometrics-and-kung-fu.html#more) 
+]
+
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+pagedown::chrome_print("11_phack_reg.html", output = "11_phack_reg.pdf")
+```

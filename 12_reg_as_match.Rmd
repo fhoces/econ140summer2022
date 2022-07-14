@@ -1,0 +1,404 @@
+---
+title: "Ec140 - Regression as Matching (Part II)"
+author: "Fernando Hoces la Guardia"
+date: "07/13/2022"
+output: 
+  xaringan::moon_reader:
+    footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
+    css: [default, metropolis, metropolis-fonts, "my-css.css"] 
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css">
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+</style>
+
+```{r , include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, viridis, knitr, extrafont, tidyverse, magrittr, latex2exp, 
+       parallel, Ecdat, wooldridge, dslabs, ggforce, emo, png, grid, pander, 
+       countdown, emoGG, haven, broom)
+
+
+options(htmltools.dir.version = FALSE)
+
+# define vars
+om = par("mar")
+lowtop = c(om[1],om[2],0.1,om[4])
+
+overwrite = FALSE
+
+
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#23373b" # metropolis font color
+# Notes directory
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  message = FALSE,
+  warning = FALSE,
+  dev = "svg",
+  cache = TRUE
+  #fig.width = 11,
+  #fig.height = 5
+)
+
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 14),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  legend.position = "none"
+)
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+
+# countdown style
+countdown(
+  color_border              = "#d90502",
+  color_text                = "black",
+  color_running_background  = "#d90502",
+  color_running_text        = "white",
+  color_finished_background = "white",
+  color_finished_text       = "#d90502",
+  color_finished_border     = "#d90502"
+)
+
+
+
+```
+
+
+
+#.font80[ Real Life Example: Regression and Causal Effects of Private College]
+- Dale and Krueger (2002) analyze data from college applications, admissions and final choice for individuals that apply
+
+- The key idea of the paper is that instead of measuring all characteristics where treatment and control will differ, they argue that they have a measure that closely summarizes all those unobserved characteristics: college application and college decisions. 
+
+- Supposedly application information is a good proxy for motivation, and acceptance is a good proxy of capacity. In my view, this could have been a good argument 20 years ago, but not today (Harvard’s Legacy+Athlete bonus, college admissions scandal, additional evidence). For the purpose of the example let’s assume that these are good proxies for all other things. 
+
+---
+background-image: url("Images/MMtbl21.png")
+background-size: 70%
+background-position: 50% 50%
+# Intuition Behind Control Strategy
+
+
+---
+background-image: url("Images/MMtbl21.png")
+background-size: 50%
+background-position: 100% 50%
+# Intuition Behind Control Strategy: Notes 1/2
+
+.font80[
+.pull-left[
+- Grouped by application and admission decision at the university level. 
+- Within a group there can be variation in final decisions. 
+- Within group variation for group A is negative (-5k). Group B has a positive difference (30k). There are many combinations of such university-application-decisions-groups.
+- Group C and D have all private and all public respectively, so nothing to learn here in terms of private-public diffs (all treatment or all control). 
+]
+]
+
+---
+background-image: url("Images/MMtbl21.png")
+background-size: 50%
+background-position: 100% 50%
+# Intuition Behind Control Strategy: Notes 2/2
+.font80[
+.pull-left[
+- Simple average (of within group differences) is a good estimate of causal effects (given our assumptions): $12,500, also another good estimate is the weighted average: 9,000. Giving more weight to more data makes more efficient use of information, leading to a more precise estimate. 
+- Comparing within groups we can argue that we are holding $Y_0$ (potential earnings if no treatment) constant. 
+- Simple group difference would estimate 19.5K (all) or 20K (just A and B) diff. 
+- Selection bias emerges when comparing across, instead of within, groups. Group A was much wealthier (107K) than group B (45K), and also had more students in private schools. 
+]
+]
+
+
+---
+# Ready to Understand Regressions! 1/3
+
+- Think of regression as an automated matcher: regression estimates are weighted averages of multiple matched comparisons (similar to groups A and B before). 
+- Regression ingredients. Right hand side (LHS):  
+    - Dependent variable, or outcome variable. In our example: earnings in 20 years after graduation.   
+    RHS: 
+    - Treatment variable, in our case, a binary variable indicating 1 for private and 0 for public. 
+    - A set of control variables, in our example variables that identify sets of schools to which students apply and were admitted too. 
+- Observations: C&D are excluded from our sample because they do not provide information regarding the relevant comparison we want to make. 
+
+
+---
+# Ready to Understand Regressions! 2/3
+
+Regression equation: 
+$$
+\begin{equation}
+Y_i = \alpha + \beta P_i + \gamma A_i + e_i
+\end{equation}
+$$
+-  All RHS variables are called regressors, explanatory or independent variables. The difference between $A$ and $P$ is conceptual, not formal. The research design justifies the role each variable plays. In our case, $P$ plays a primary role, while $A$ is secondary (not interested if it's actually measuring a causal relationship).
+- Intercept/constant, $\alpha$
+- Causal effect of treatment $\beta$, and 
+- The effect of being a group A student, $\gamma$. (not relevant to us)
+- The residual, $e_i$, defined as the difference between observed $(Y_i)$ and fitted values $(\hat{Y_i})$. We will focus on this in *Regression as Line Fitting*. 
+
+
+---
+# Ready to Understand Regressions! 3/3
+
+- What regression does: chooses $\alpha$, $\beta$ and $\gamma$, to minimize the sum of squared residuals. Executing this minimization is often called “Estimating” or “Running” a regression. We will explore a little of theory, and how to run regressions in a little. But first, let’s focus on the result of running a regression.
+
+- Simple toy example (from table 2.1): $\beta$ of 10,000 shows that the regression estimate is somewhere in between the simple group comparison (12.5k) and weighted group comparison (9K).  
+
+
+---
+# From Toy Example to Data
+
+.font90[
+- Group by Barron's selectivity group-application-decisions instead of university-application-decisions-groups to increase sample size.
+
+                +---+------------------+----------------------------------------+
+                |   |      Private     |                 Public                 |
+                +---+-----+-------+----+-----------+------------+---------------+
+                | i | Ivy | Leafy | U3 | All State | Tall State | Altered State |
+                +---+-----+-------+----+-----------+------------+---------------+
+                | 1 |     |   R   |  A |           |      A     |               |
+                +---+-----+-------+----+-----------+------------+---------------+
+                | 2 |  R  |       |  A |     A     |            |               |
+                +---+-----+-------+----+-----------+------------+---------------+
+                | i |      MC     | HC |            C           |       HC      |
+                +---+-------------+----+------------------------+---------------+
+                | 1 |      R      |  A |            A           |               |
+                +---+-------------+----+------------------------+---------------+
+                | 2 |      R      |  A |            A           |               |
+                +---+-------------+----+------------------------+---------------+
+
+]
+
+---
+
+# From Toy to Actual Regression 
+.font90[
+The simplified regression: 
+
+$$
+\begin{equation}
+Y_i = \alpha + \beta P_i + \gamma A_i + e_i
+\end{equation}
+$$
+
+
+Is operationalized in practice with: 
+
+
+$$
+\begin{equation}
+ln Y_i = \alpha + \beta P_i +\sum_{j=1}^{150} \gamma_{j} GROUP_{ji} + \delta_1 SAT + \delta_2 ln PI_{i} + e_i
+\end{equation}
+$$
+Differences: 
+.pull-left[
+- $ln Y_i$ (not $Y_i$) $\Rightarrow$ $\Delta \%$  interpretation 
+- 150 groups $(GROUP_{ji})$ instead of 1 $(A_i)$
+]
+
+.pull-right[
+- Additional controls: SAT, (Ln) Parental Income, plus others (not shown)
+- Much closer to Other Things Equal!]
+]
+---
+background-image: url("Images/MMtbl22.png")
+background-size: 40%
+background-position: 50% 50%
+# First Read of Regressions Results! 1/5
+
+---
+background-image: url("Images/MMtbl22_emph.png")
+background-size: 40%
+background-position: 50% 50%
+# First Read of Regressions Results! 1/5
+
+
+---
+background-image: url("Images/MMtbl22_emphA.png"), url("Images/MMtbl22_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 15%, 100% 85%
+# First Read of Regressions Results! 1/5
+.pull-left[
+- Focus on controls that appear in equation
+
+- There are 6 regressions here
+
+- Read from left to right (column 1 - 6)
+
+- Each row contains estimates for the population parameters $(\alpha, \beta, \delta)$. This estimates are usually refereed as $(\widehat{\alpha}, \widehat{\beta}, \widehat{\delta})$, but following the book's convention (appendix) they are $a, b, d$.
+
+]
+
+---
+background-image: url("Images/MMtbl22_emphA.png"), url("Images/MMtbl22_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 15%, 100% 85%
+# First Read of Regressions Results! 2/5
+.font90[
+.pull-left[
+- Column 1 represents a regression with only a constant and the treatment indicator: $ln Y_i = \alpha + \beta P_i + e_i$
+
+- In a regression with only one binary regressor on the RHS, its coefficient is the simple difference in groups between treatment and control $(\overline{Y_1} - \overline{Y_1})$
+
+- This difference is close to 14% (0.135). 
+
+- Small SE suggests that this result is statistically different from zero.  
+
+]
+]
+
+---
+background-image: url("Images/MMtbl22_emphA.png"), url("Images/MMtbl22_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 15%, 100% 85%
+# First Read of Regressions Results! 3/5
+.font90[
+.pull-left[
+- Column 2 represents the following regression:  $ln Y_i = \alpha + \beta P_i + \delta_1 SAT_i + e_i$. 
+- The control SAT is divided by 100, hence the coefficient, which represents an increment in one unit, represents the (percent) increase in earnings **associated** with an increase of 100 points in the SAT. 
+]
+]
+
+---
+background-image: url("Images/MMtbl22_emphA.png"), url("Images/MMtbl22_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 15%, 100% 85%
+# First Read of Regressions Results! 4/5
+.font90[
+.pull-left[
+- The value of 0.048, means that additional 100 pts in the SAT are **associated** with an increase of 5% in earnings 20 years in the future. Also statistically significant.
+
+- More important: the (apparent) causal effect of private school fell to 10% (0.95) after controlling for SAT. 
+
+- Column 3 expands on this approach by adding more observables to the regression. The effect of private drops to 9% (0.86). 
+]
+]
+
+
+---
+background-image: url("Images/MMtbl22_emphA.png"), url("Images/MMtbl22_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 15%, 100% 85%
+# First Read of Regressions Results! 5/5
+.font90[
+.pull-left[
+- Now add the selection controls (move to cols 4-6). Column 6 represents the regression specified in slide 10. 
+- Effect of private school goes to zero (0.007 - 0.013). 
+- Effect of adding more control is now irrelevant. 
+- This suggests that the “selectivity controls” are measuring a significant amount of information for observables and unobservables. 
+
+]
+]
+
+---
+background-image: url("Images/MMtbl23_emphA.png"), url("Images/MMtbl23_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 5%, 100% 95%
+# Second Read of Regressions Results 
+.font90[
+.pull-left[
+- Now let's repeat the exercise but with a different measure of selectivity: average SAT in schools that applied to, and binaries for number of schools applied to. 
+- This gives us the full sample from C&B (before we only had 5,583) 
+- A similar pattern emerges: controlling for observables diminishes the effect, but it remains substantial (in economic terms).; adding “selectivity controls” drops the effect to zero. 
+
+]
+]
+
+
+---
+background-image: url("Images/MMtbl24_emphA.png"), url("Images/MMtbl24_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 5%, 100% 95%
+# Third Read of Regressions Results 1/2
+.font90[
+.pull-left[
+- Finally, what if private/public school selectivity is not the right treatment to analyze? What if its how much “better” your classmates are (at taking the SAT)
+
+- A similar story seems to emerge: some effect when looking at simple differences or controlling by some observable characteritics.
+
+- But effect goes away when controlling for the SAT selectivity proxy
+]
+]
+
+---
+background-image: url("Images/MMtbl24_emphA.png"), url("Images/MMtbl24_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 5%, 100% 95%
+# Third Read of Regressions Results 2/2
+.font90[
+.pull-left[
+
+- This evidence seems less credible and should be treated with much more skepticism. The entire exercise was meant to justify using one or another set of controls to answer a specific policy question (effect private or public school on future earnings). Changing the policy question (to effect of selectivity of class mates, measured as average SAT, on earnings) and extrapolating the validity of the former exercise into the latter is a good example of overextending the validity of a research design. 
+
+]
+]
+
+---
+# Wrapping up the Example: Why Regression is Great
+
+Four reasons: 
+
+- Clear conceptually interpretation: as difference in matched sub-groups.
+
+- Good benchmark to compare against other methods. 
+
+- Under specific circumstances, it's an unbiased the most efficient  estimator we can use to measure the causal effect of the intervention (these “specific circumstances” used to take 2-4 classes to explained).	
+
+- Computationally feasible: tractable minimization problem (will discuss more next class about this).
+
+
+---
+# Acknowledgments
+
+.pull-left[
+- [Ed Rubin's Undergraduate Econometrics II](https://github.com/edrubin/EC421W19)
+- [XQCD](https://xkcd.com/882/)
+- [BITSS](http://www.bitss.org)
+- [ScPoEconometrics](https://raw.githack.com/ScPoEcon/ScPoEconometrics-Slides/master/chapter_causality/chapter_causality.html#1)
+- [XQCD](https://www.explainxkcd.com/wiki/index.php/882:_Significant)
+- MM
+]
+.pull-right[
+- [Matt Hollian](http://mattholian.blogspot.com/2015/01/econometrics-and-kung-fu.html#more) 
+]
+
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+pagedown::chrome_print("12_reg_as_match.html", output = "12_reg_as_match.pdf")
+```

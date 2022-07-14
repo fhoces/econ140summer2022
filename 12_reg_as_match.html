@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Ec140 - Regression as Matching (Part II)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-07-13" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Ec140 - Regression as Matching (Part II)
+### Fernando Hoces la Guardia
+### 07/13/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+
+#.font80[ Real Life Example: Regression and Causal Effects of Private College]
+- Dale and Krueger (2002) analyze data from college applications, admissions and final choice for individuals that apply
+
+- The key idea of the paper is that instead of measuring all characteristics where treatment and control will differ, they argue that they have a measure that closely summarizes all those unobserved characteristics: college application and college decisions. 
+
+- Supposedly application information is a good proxy for motivation, and acceptance is a good proxy of capacity. In my view, this could have been a good argument 20 years ago, but not today (Harvard’s Legacy+Athlete bonus, college admissions scandal, additional evidence). For the purpose of the example let’s assume that these are good proxies for all other things. 
+
+---
+background-image: url("Images/MMtbl21.png")
+background-size: 70%
+background-position: 50% 50%
+# Intuition Behind Control Strategy
+
+
+---
+background-image: url("Images/MMtbl21.png")
+background-size: 50%
+background-position: 100% 50%
+# Intuition Behind Control Strategy: Notes 1/2
+
+.font80[
+.pull-left[
+- Grouped by application and admission decision at the university level. 
+- Within a group there can be variation in final decisions. 
+- Within group variation for group A is negative (-5k). Group B has a positive difference (30k). There are many combinations of such university-application-decisions-groups.
+- Group C and D have all private and all public respectively, so nothing to learn here in terms of private-public diffs (all treatment or all control). 
+]
+]
+
+---
+background-image: url("Images/MMtbl21.png")
+background-size: 50%
+background-position: 100% 50%
+# Intuition Behind Control Strategy: Notes 2/2
+.font80[
+.pull-left[
+- Simple average (of within group differences) is a good estimate of causal effects (given our assumptions): $12,500, also another good estimate is the weighted average: 9,000. Giving more weight to more data makes more efficient use of information, leading to a more precise estimate. 
+- Comparing within groups we can argue that we are holding `\(Y_0\)` (potential earnings if no treatment) constant. 
+- Simple group difference would estimate 19.5K (all) or 20K (just A and B) diff. 
+- Selection bias emerges when comparing across, instead of within, groups. Group A was much wealthier (107K) than group B (45K), and also had more students in private schools. 
+]
+]
+
+
+---
+# Ready to Understand Regressions! 1/3
+
+- Think of regression as an automated matcher: regression estimates are weighted averages of multiple matched comparisons (similar to groups A and B before). 
+- Regression ingredients. Right hand side (LHS):  
+    - Dependent variable, or outcome variable. In our example: earnings in 20 years after graduation.   
+    RHS: 
+    - Treatment variable, in our case, a binary variable indicating 1 for private and 0 for public. 
+    - A set of control variables, in our example variables that identify sets of schools to which students apply and were admitted too. 
+- Observations: C&amp;D are excluded from our sample because they do not provide information regarding the relevant comparison we want to make. 
+
+
+---
+# Ready to Understand Regressions! 2/3
+
+Regression equation: 
+$$
+`\begin{equation}
+Y_i = \alpha + \beta P_i + \gamma A_i + e_i
+\end{equation}`
+$$
+-  All RHS variables are called regressors, explanatory or independent variables. The difference between `\(A\)` and `\(P\)` is conceptual, not formal. The research design justifies the role each variable plays. In our case, `\(P\)` plays a primary role, while `\(A\)` is secondary (not interested if it's actually measuring a causal relationship).
+- Intercept/constant, `\(\alpha\)`
+- Causal effect of treatment `\(\beta\)`, and 
+- The effect of being a group A student, `\(\gamma\)`. (not relevant to us)
+- The residual, `\(e_i\)`, defined as the difference between observed `\((Y_i)\)` and fitted values `\((\hat{Y_i})\)`. We will focus on this in *Regression as Line Fitting*. 
+
+
+---
+# Ready to Understand Regressions! 3/3
+
+- What regression does: chooses `\(\alpha\)`, `\(\beta\)` and `\(\gamma\)`, to minimize the sum of squared residuals. Executing this minimization is often called “Estimating” or “Running” a regression. We will explore a little of theory, and how to run regressions in a little. But first, let’s focus on the result of running a regression.
+
+- Simple toy example (from table 2.1): `\(\beta\)` of 10,000 shows that the regression estimate is somewhere in between the simple group comparison (12.5k) and weighted group comparison (9K).  
+
+
+---
+# From Toy Example to Data
+
+.font90[
+- Group by Barron's selectivity group-application-decisions instead of university-application-decisions-groups to increase sample size.
+
+                +---+------------------+----------------------------------------+
+                |   |      Private     |                 Public                 |
+                +---+-----+-------+----+-----------+------------+---------------+
+                | i | Ivy | Leafy | U3 | All State | Tall State | Altered State |
+                +---+-----+-------+----+-----------+------------+---------------+
+                | 1 |     |   R   |  A |           |      A     |               |
+                +---+-----+-------+----+-----------+------------+---------------+
+                | 2 |  R  |       |  A |     A     |            |               |
+                +---+-----+-------+----+-----------+------------+---------------+
+                | i |      MC     | HC |            C           |       HC      |
+                +---+-------------+----+------------------------+---------------+
+                | 1 |      R      |  A |            A           |               |
+                +---+-------------+----+------------------------+---------------+
+                | 2 |      R      |  A |            A           |               |
+                +---+-------------+----+------------------------+---------------+
+
+]
+
+---
+
+# From Toy to Actual Regression 
+.font90[
+The simplified regression: 
+
+$$
+`\begin{equation}
+Y_i = \alpha + \beta P_i + \gamma A_i + e_i
+\end{equation}`
+$$
+
+
+Is operationalized in practice with: 
+
+
+$$
+`\begin{equation}
+ln Y_i = \alpha + \beta P_i +\sum_{j=1}^{150} \gamma_{j} GROUP_{ji} + \delta_1 SAT + \delta_2 ln PI_{i} + e_i
+\end{equation}`
+$$
+Differences: 
+.pull-left[
+- `\(ln Y_i\)` (not `\(Y_i\)`) `\(\Rightarrow\)` `\(\Delta \%\)`  interpretation 
+- 150 groups `\((GROUP_{ji})\)` instead of 1 `\((A_i)\)`
+]
+
+.pull-right[
+- Additional controls: SAT, (Ln) Parental Income, plus others (not shown)
+- Much closer to Other Things Equal!]
+]
+---
+background-image: url("Images/MMtbl22.png")
+background-size: 40%
+background-position: 50% 50%
+# First Read of Regressions Results! 1/5
+
+---
+background-image: url("Images/MMtbl22_emph.png")
+background-size: 40%
+background-position: 50% 50%
+# First Read of Regressions Results! 1/5
+
+
+---
+background-image: url("Images/MMtbl22_emphA.png"), url("Images/MMtbl22_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 15%, 100% 85%
+# First Read of Regressions Results! 1/5
+.pull-left[
+- Focus on controls that appear in equation
+
+- There are 6 regressions here
+
+- Read from left to right (column 1 - 6)
+
+- Each row contains estimates for the population parameters `\((\alpha, \beta, \delta)\)`. This estimates are usually refereed as `\((\widehat{\alpha}, \widehat{\beta}, \widehat{\delta})\)`, but following the book's convention (appendix) they are `\(a, b, d\)`.
+
+]
+
+---
+background-image: url("Images/MMtbl22_emphA.png"), url("Images/MMtbl22_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 15%, 100% 85%
+# First Read of Regressions Results! 2/5
+.font90[
+.pull-left[
+- Column 1 represents a regression with only a constant and the treatment indicator: `\(ln Y_i = \alpha + \beta P_i + e_i\)`
+
+- In a regression with only one binary regressor on the RHS, its coefficient is the simple difference in groups between treatment and control `\((\overline{Y_1} - \overline{Y_1})\)`
+
+- This difference is close to 14% (0.135). 
+
+- Small SE suggests that this result is statistically different from zero.  
+
+]
+]
+
+---
+background-image: url("Images/MMtbl22_emphA.png"), url("Images/MMtbl22_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 15%, 100% 85%
+# First Read of Regressions Results! 3/5
+.font90[
+.pull-left[
+- Column 2 represents the following regression:  `\(ln Y_i = \alpha + \beta P_i + \delta_1 SAT_i + e_i\)`. 
+- The control SAT is divided by 100, hence the coefficient, which represents an increment in one unit, represents the (percent) increase in earnings **associated** with an increase of 100 points in the SAT. 
+]
+]
+
+---
+background-image: url("Images/MMtbl22_emphA.png"), url("Images/MMtbl22_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 15%, 100% 85%
+# First Read of Regressions Results! 4/5
+.font90[
+.pull-left[
+- The value of 0.048, means that additional 100 pts in the SAT are **associated** with an increase of 5% in earnings 20 years in the future. Also statistically significant.
+
+- More important: the (apparent) causal effect of private school fell to 10% (0.95) after controlling for SAT. 
+
+- Column 3 expands on this approach by adding more observables to the regression. The effect of private drops to 9% (0.86). 
+]
+]
+
+
+---
+background-image: url("Images/MMtbl22_emphA.png"), url("Images/MMtbl22_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 15%, 100% 85%
+# First Read of Regressions Results! 5/5
+.font90[
+.pull-left[
+- Now add the selection controls (move to cols 4-6). Column 6 represents the regression specified in slide 10. 
+- Effect of private school goes to zero (0.007 - 0.013). 
+- Effect of adding more control is now irrelevant. 
+- This suggests that the “selectivity controls” are measuring a significant amount of information for observables and unobservables. 
+
+]
+]
+
+---
+background-image: url("Images/MMtbl23_emphA.png"), url("Images/MMtbl23_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 5%, 100% 95%
+# Second Read of Regressions Results 
+.font90[
+.pull-left[
+- Now let's repeat the exercise but with a different measure of selectivity: average SAT in schools that applied to, and binaries for number of schools applied to. 
+- This gives us the full sample from C&amp;B (before we only had 5,583) 
+- A similar pattern emerges: controlling for observables diminishes the effect, but it remains substantial (in economic terms).; adding “selectivity controls” drops the effect to zero. 
+
+]
+]
+
+
+---
+background-image: url("Images/MMtbl24_emphA.png"), url("Images/MMtbl24_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 5%, 100% 95%
+# Third Read of Regressions Results 1/2
+.font90[
+.pull-left[
+- Finally, what if private/public school selectivity is not the right treatment to analyze? What if its how much “better” your classmates are (at taking the SAT)
+
+- A similar story seems to emerge: some effect when looking at simple differences or controlling by some observable characteritics.
+
+- But effect goes away when controlling for the SAT selectivity proxy
+]
+]
+
+---
+background-image: url("Images/MMtbl24_emphA.png"), url("Images/MMtbl24_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 5%, 100% 95%
+# Third Read of Regressions Results 2/2
+.font90[
+.pull-left[
+
+- This evidence seems less credible and should be treated with much more skepticism. The entire exercise was meant to justify using one or another set of controls to answer a specific policy question (effect private or public school on future earnings). Changing the policy question (to effect of selectivity of class mates, measured as average SAT, on earnings) and extrapolating the validity of the former exercise into the latter is a good example of overextending the validity of a research design. 
+
+]
+]
+
+---
+# Wrapping up the Example: Why Regression is Great
+
+Four reasons: 
+
+- Clear conceptually interpretation: as difference in matched sub-groups.
+
+- Good benchmark to compare against other methods. 
+
+- Under specific circumstances, it's an unbiased the most efficient  estimator we can use to measure the causal effect of the intervention (these “specific circumstances” used to take 2-4 classes to explained).	
+
+- Computationally feasible: tractable minimization problem (will discuss more next class about this).
+
+
+---
+# Acknowledgments
+
+.pull-left[
+- [Ed Rubin's Undergraduate Econometrics II](https://github.com/edrubin/EC421W19)
+- [XQCD](https://xkcd.com/882/)
+- [BITSS](http://www.bitss.org)
+- [ScPoEconometrics](https://raw.githack.com/ScPoEcon/ScPoEconometrics-Slides/master/chapter_causality/chapter_causality.html#1)
+- [XQCD](https://www.explainxkcd.com/wiki/index.php/882:_Significant)
+- MM
+]
+.pull-right[
+- [Matt Hollian](http://mattholian.blogspot.com/2015/01/econometrics-and-kung-fu.html#more) 
+]
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Ec140 - Regression as Line Fitting and Conditional Expectation</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-07-14" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Ec140 - Regression as Line Fitting and Conditional Expectation
+## (Part I)
+### Fernando Hoces la Guardia
+### 07/14/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+# Regression Journey
+
+- Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
+
+- Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix + [SoPo Econometrics](https://github.com/ScPoEcon/ScPoEconometrics-Slides). (Part I today) 
+
+- Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79. 
+
+- Regression Inference, Binary Variables and Logarithms. Ch2 of MM, Appendix + others. 
+
+---
+# Regression Journey
+
+- Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
+
+- **Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix + [SoPo Econometrics](https://github.com/ScPoEcon/ScPoEconometrics-Slides). (Part I today)** 
+
+- Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79. 
+
+- Regression Inference, Binary Variables and Logarithms. Ch2 of MM, Appendix + others. 
+
+
+
+---
+class: inverse, middle
+
+# Regression as Line Fitting and Conditional Expectation
+
+---
+# Regression as Line Fitting: Today's Goal
+.font90[
+- The goals of today's class are two: 
+  1. Provide an explanation to what regression does when "it generate fitted values" (or "it fits a line"), and
+  2. Provide some insight to a useful formula that represents the main coefficient of interest `\((\beta)\)`. 
+
+- Today's class will be a bit more technical than previous classes. 
+
+- For this reason it is important to always keep in mind what the goal is. 
+
+- Even if you end up completely lost about today's material, these explanations are not essential for you to do well in class. 
+
+- They are meant to solidify your intuition, not to discourage you from continuing the exploration of learning causal inference.
+
+]
+
+---
+# Regression as Line Fitting
+
+
+
+- Example: Class size and student performance (Slides adapted from [SciencePo Econometrics](https://github.com/ScPoEcon/ScPoEconometrics-Slides) course, and [data from Raj Chetty and Greg Bruich's course](https://opportunityinsights.org/course/))
+
+
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-3-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Class size and student performance: Regression line
+
+How to visually summarize the relationship: **a line through the scatter plot**
+
+--
+
+.left-wide[
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-4-1.svg" style="display: block; margin: auto auto auto 0;" /&gt;
+]
+
+--
+
+.right-thin[
+&lt;br&gt;
+
+* A *line*! Great. But **which** line? This one?
+
+* That's a *flat* line. But average mathematics score is somewhat *increasing* with class size.
+
+]
+
+---
+
+# Class size and student performance: Regression line
+
+How to visually summarize the relationship: **a line through the scatter plot**
+
+.left-wide[
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-5-1.svg" style="display: block; margin: auto auto auto 0;" /&gt;
+]
+
+.right-thin[
+&lt;br&gt;
+
+* **That** one?
+
+* Slightly better! Has a **slope** and an **intercept**
+
+* We need a rule to decide! 
+
+]
+
+
+---
+
+# It's All About the Residuals
+
+- In *Regression as Matching* we define the residuals, `\(e_i\)`, as the difference between the observed `\((Y_i)\)` and fitted values `\((\widehat Y_i)\)`. 
+    $$
+    e_i \equiv   Y_i - \widehat{Y}_i 
+    $$
+
+
+
+- By fitted values, we mean a line (for now) that summarizes the relationship between `\(X\)` and `\(Y\)`. 
+
+- The equation for such a line with an intercept `\(a\)` and a slope `\(b\)` is:
+    $$
+    \widehat{Y}_i = a + b X\_i
+    $$
+
+
+---
+
+# What's A Line: A Refresher
+
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-6-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# What's A Line: A Refresher
+
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-7-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# What's A Line: A Refresher
+
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-8-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Simple Linear Regression: Residual
+
+* If all the data points were __on__ the line then `\(\widehat{Y}_i = Y_i\)`.
+
+--
+
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-9-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Simple Linear Regression: Residual
+
+* If all the data points were __on__ the line then `\(\widehat{Y}_i = Y_i\)`.
+
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-10-1.svg" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Simple Linear Regression: Graphically
+
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-11-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Simple Linear Regression: Graphically
+
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-12-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Simple Linear Regression: Graphically
+
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-13-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Simple Linear Regression: Graphically
+
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-14-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Simple Linear Regression: Graphically
+
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-15-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Simple Linear Regression: Graphically
+
+.left-wide[
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-16-1.svg" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.right-thin[
+&lt;br&gt;
+&lt;br&gt;
+&lt;p style="text-align: center; font-weight: bold; font-size: 35px; color: #d90502;"&gt;Which "minimisation" criterion should (can) be used?&lt;/strong&gt;
+]
+---
+
+# **O**rdinary **L**east **S**quares (OLS) Estimation
+
+* Errors of different sign `\((+/-)\)` cancel out, so we consider **squared residuals** 
+`$$e_i^2 = (Y_i - \widehat Y_i)^2 = (Y_i - a - b X_i)^2$$`
+
+* Choose `\((a,b)\)` such that `\(\sum_{i = 1}^N e_1^2 + \dots + e_N^2\)` is **as small as possible**.
+
+--
+
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-17-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# **O**rdinary **L**east **S**quares (OLS) Estimation
+
+* Errors of different sign `\((+/-)\)` cancel out, so we consider **squared residuals** 
+`$$e_i^2 = (Y_i - \widehat Y_i)^2 = (Y_i - a - b X_i)^2$$`
+
+* Choose `\((a,b)\)` such that `\(\sum_{i = 1}^N e_1^2 + \dots + e_N^2\)` is **as small as possible**.
+
+&lt;img src="13_reg_line_fit_ce_files/figure-html/unnamed-chunk-18-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# **O**rdinary **L**east **S**quares (OLS) Estimation
+
+&lt;iframe src="https://gustavek.shinyapps.io/reg_simple/" width="100%" height="400px" data-external="1" style="border: none;"&gt;&lt;/iframe&gt;
+[Link](https://gustavek.shinyapps.io/reg_simple/)
+---
+
+# **O**rdinary **L**east **S**quares (OLS) Estimation
+
+&lt;iframe src="https://gustavek.shinyapps.io/SSR_cone/" width="100%" height="400px" data-external="1" style="border: none;"&gt;&lt;/iframe&gt;
+
+[Link](https://gustavek.shinyapps.io/SSR_cone/)
+
+---
+# Covariance: Brief Explainer 1/2
+
+- The covariance is a measure of co-movement between two random variables `\((X_i, Y_i)\)`: 
+$$
+`\begin{equation}
+Cov(X_i, Y_i) = \sigma_{XY} = \mathop{\mathbb{E}}\left[ (X_i - \mathop{\mathbb{E}}[X_i]) (Y_i - \mathop{\mathbb{E}}[Y_i]) \right]
+\end{equation}`
+$$
+- With its sample counterpart (for the case of equally likely observations): 
+$$
+`\begin{equation}
+\widehat \sigma_{XY} = \frac{\sum(X_i - \overline{X_i})(Y_i - \overline{Y_i})}{n}
+\end{equation}`
+$$
+- If either formula looks weird, think of the variance, as the covariance between `\(X_i\)` and itself `\((X_i)\)` and the above should look more familiar: `\(\sigma_{XX} = \mathop{\mathbb{E}}\left[ (X_i - \mathop{\mathbb{E}}[X_i]) (X_i - \mathop{\mathbb{E}}[X_i]) \right] = \mathop{\mathbb{E}}\left[ (X_i - \mathop{\mathbb{E}}[X_i])^2 \right] = \sigma_X^2\)` 
+
+---
+# Covariance: Brief Explainer 2/2
+
+In addition to `\(\sigma_{XX} = \sigma_X^2\)`, we might use two other properties of the covariance: 
+
+- If the expectation of either `\(X_i\)` or `\(Y_i\)` is 0, the covariance between them is the expectation of their product: `\(Cov(X_i, Y_i) = E(X_i Y_i)\)`
+
+- The covariance linear functions of variables `\(X_i\)` and `\(Y_i\)` -- written as `\(W_i = c_1 + c_2 X_i\)` and `\(Z_i = c_3 + c_4 Y_i\)` for constants `\(c_1, c_2, c_3, c_4\)` -- is given by:
+$$
+`\begin{equation}
+Cov(W_i, Z_i) = c_2 c_4 Cov(X_i, Y_i)
+\end{equation}`
+$$
+- You are not asked to memorize any of these formulas. Just used them to understand many concepts in regression. 
+
+---
+
+# .font90[**O**rdinary **L**east **S**quares (OLS): Coefficient Formulas 1/4]
+
+* **OLS**: *estimation* method consisting in choosing `\(a\)` and `\(b\)` to minimize the sum of squared residuals.
+
+* In the case of one regressor (and a constant), the result of this minimization generates the following formulas: (derivation [in this video](https://www.youtube.com/watch?v=Hi5EJnBHFB4) and [these slides](https://raw.githack.com/edrubin/EC421W19/master/LectureNotes/02Review/02_review.html#25)).
+
+* So what are the formulas for `\(a\)` (intercept) and `\(b\)` (slope)?
+
+* We can solve this problem for the population or for random sample. 
+
+* Warning: the next 3 slides are heavy on notation. If you lose track, the main takeaway is that we want an intuitive formula for the solution to this problem. 
+---
+
+# .font90[**O**rdinary **L**east **S**quares (OLS): Coefficient Formulas 2/4]
+.font90[
+.pull-left[
+.center[**Population**]
+
+Problem to solve: 
+$$
+`\begin{equation}
+  \arg \min_{a,b} \left\{ 
+  \mathop{\mathbb{E}}[(Y_i - a - b X_i)^2]
+  \right\}
+\end{equation}`
+$$
+Solution: 
+
+$$
+`\begin{equation}
+b =  \beta = \frac{\mathop{\mathbb{E}}\left[ (X_i - \mathop{\mathbb{E}}[X_i]) (Y_i - \mathop{\mathbb{E}}[Y_i]) \right]}{\mathop{\mathbb{E}}\left[ (X_i - \mathop{\mathbb{E}}[X_i])^2 \right]}
+\end{equation}`
+$$
+$$
+`\begin{equation}
+a =  \alpha = \mathop{\mathbb{E}}[Y_i] - b\mathop{\mathbb{E}}[X_i]
+\end{equation}`
+$$
+]
+
+.pull-right[
+.center[**Sample**]
+
+Problem to solve: 
+
+$$
+`\begin{equation}
+  \arg \min_{a,b} \left\{ 
+  \sum (Y_i - a - b X_i)^2
+  \right\}
+\end{equation}`
+$$
+
+Solution:
+
+$$
+`\begin{equation}
+b = \widehat \beta = \frac{\sum (Y_i-\overline{Y}) (X_i-\overline{X}) }{\sum(X_i - \overline{X})^2}
+\end{equation}`
+$$
+$$
+`\begin{equation}
+a = \widehat \alpha = \overline{Y} -b\overline{X}
+\end{equation}`
+$$
+
+]
+
+- Let's bring the concept of Covariance to make this formulas more intuitive 
+]
+
+---
+
+# .font90[**O**rdinary **L**east **S**quares (OLS): Coefficient Formulas 3/4]
+
+.font100[
+.pull-left[
+.center[**Population**]
+
+$$
+`\begin{equation}
+b =  \beta = \frac{Cov(X_i, Y_i)}{Var(X_i)} = \frac{\sigma_{XY}}{\sigma_{X}^2}
+\end{equation}`
+$$
+$$
+`\begin{equation}
+a =  \alpha = \mathop{\mathbb{E}}[Y_i] - b\mathop{\mathbb{E}}[X_i]
+\end{equation}`
+$$
+]
+
+.pull-right[
+.center[**Sample**]
+
+$$
+`\begin{equation}
+b = \widehat \beta = \frac{
+\frac{\sum (Y_i-\overline{Y}) (X_i-\overline{X})}{n} }{\frac{\sum(X_i - \overline{X})^2}{n}} 
+\end{equation}`
+$$
+$$
+`\begin{equation}
+a = \widehat \alpha = \overline{Y} -b\overline{X}
+\end{equation}`
+$$
+
+]
+
+]
+
+---
+
+# .font90[**O**rdinary **L**east **S**quares (OLS): Coefficient Formulas 3/4]
+
+.font100[
+.pull-left[
+.center[**Population**]
+
+$$
+`\begin{equation}
+b =  \frac{Cov(X_i, Y_i)}{Var(X_i)} = \frac{\sigma_{XY}}{\sigma_{X}^2}
+\end{equation}`
+$$
+
+$$
+`\begin{equation}
+a =  \alpha = \mathop{\mathbb{E}}[Y_i] - b\mathop{\mathbb{E}}[X_i]
+\end{equation}`
+$$
+]
+
+.pull-right[
+.center[**Sample**]
+
+$$
+`\begin{equation}
+b = \widehat \beta = \frac{Cov(X_i, Y_i)}{Var(X_i)} = \frac{\widehat\sigma_{XY}}{\widehat\sigma_{X}^2}
+\end{equation}`
+$$
+$$
+`\begin{equation}
+a = \widehat \alpha = \overline{Y} -b\overline{X}
+\end{equation}`
+$$
+
+]
+
+]
+
+---
+
+# .font90[**O**rdinary **L**east **S**quares (OLS): Coefficient Formulas 4/4]
+
+&lt;br&gt;&lt;br&gt;
+- The main takeaway: 
+
+.font200[
+
+$$
+`\begin{equation}
+b = \frac{Cov(X_i, Y_i)}{Var(X_i)} 
+\end{equation}`
+$$
+
+]
+
+---
+# Properties of Residuals 1/2
+
+- As we saw at the beginning of this class, in a regression the observed outcome `\((Y_i)\)` can be separated into a component "explained" by the regression equation (aka model) and a residual component: 
+
+$$
+`\begin{equation}
+Y_i = \underbrace{\widehat Y_i}_{\text{fitted values (explained)}} + \underbrace{e_i}_{residuals}
+\end{equation}`
+$$
+- Two important properties of the residuals: 
+
+  1. They have expectation 0. `\(E(e_i) = 0\)`
+  1. They are uncorrelated with all the regressors that made them and with the corresponding fitted values. For each regressor `\(X_{ki}\)`:   
+  `\(E[X_{ki} e_i] = 0\)`  and  `\(E[\widehat Y_{i} e_i] = 0\)`
+
+---
+# Properties of Residuals 2/2
+
+- We take this properties as given in this course (they come from the calculus of the minimization problem). 
+
+- One important point is that this properties are true always (regardless of biased coefficients). 
+
+- This does not imply however that we have solve the problem selection bias. 
+
+- In the traditional way of teaching econometrics this two concepts are mixed (hence required a distinction between residuals `\((e_i)\)` and unobservables `\((u_i)\)`). 
+---
+
+# (OLS with R)
+.font90[
+* In `R`, OLS regressions are estimated using the `lm` function.
+
+* This is how it works:
+
+  
+  ```r
+  lm(formula = dependent variable ~  independent variable)
+  ```
+
+Let's estimate the following model by OLS: `\(\textrm{average math score}_i = a + b \textrm{class size}_i + e_i\)`
+
+.pull-left[
+
+```r
+# OLS regression of class size on average maths score
+lm(avgmath_cs ~ classize, grades_avg_cs) 
+```
+]
+
+.pull-right[
+
+```
+#&gt; 
+#&gt; Call:
+#&gt; lm(formula = avgmath_cs ~ classize, data = grades_avg_cs)
+#&gt; 
+#&gt; Coefficients:
+#&gt; (Intercept)     classize  
+#&gt;     61.1092       0.1913
+```
+]
+]
+
+
+
+---
+# Acknowledgments
+
+.pull-left[
+- [Ed Rubin's Undergraduate Econometrics II](https://github.com/edrubin/EC421W19)
+- [ScPoEconometrics](https://raw.githack.com/ScPoEcon/ScPoEconometrics-Slides/master/chapter_causality/chapter_causality.html#1)
+- MM
+]
+.pull-right[
+
+]
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

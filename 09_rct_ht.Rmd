@@ -546,6 +546,23 @@ ggplot() +
 
 
 
+---
+# Acknowledgments UPDATE
+
+.pull-left[
+- [Ed Rubin's Undergraduate Econometrics 1](https://github.com/kyleraze/EC320_Econometrics)
+- [ScPoEconometrics](https://raw.githack.com/ScPoEcon/ScPoEconometrics-Slides/master/chapter_causality/chapter_causality.html#1)
+- XQCD
+- MM
+]
+.pull-right[
+- [Matt Hollian](http://mattholian.blogspot.com/2015/01/econometrics-and-kung-fu.html#more) 
+- Causal Mixtape (Also Hanna Fry)
+- Wikipedia (Survivorship Bias)
+- MM [bookdown](https://jrnold.github.io/masteringmetrics/rand-health-insurance-experiment-hie.html) and MM [blog post](file:///Users/fhoces/Desktop/sandbox/econ140summer2022/NHIS.html) on chapter 1
+]
+
+
 
 
 
