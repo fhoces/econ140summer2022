@@ -137,33 +137,33 @@ The GSIs and the Instructors will work on developing a test bank associated with
 ## Week 3: July 4th - July 8th; Ch 1 of MM  
 - M: Holiday
 - T: Randomized Controlled Trials II
-- W: Hypothesis tests:t-statistic, p-value & p-hacking
+- W: Statistical Inference I: Hypothesis tests:t-statistic, p-value
 - **Th: Midterm 1**
 
 ## Week 4: July 11th - July 15th; Ch 2 of MM
 - M: 45 Min Discussion on midterm + Something fun
-- T: Regression I  - Conditioning
-- W: Regression II - Residuals
-- Th: Regression III- Interpreting coefficients (levels, logs, and binary vars)
+- T: Statistical Inference II: Confidence Intervals and P-Hacking
+- W: Regression I - Regression as Matching
+- Th: Regression II- Regression as Line Fitting
 - **Friday, July 15th, 5pm: Submit PS 2**
 
 ## Week 5: July 18th - July 22nd; Ch 2 of MM
-- M: Omitted variable bias
-- T: Measurement error
-- W: Collinearity
-- Th: External validity
+- M: Regression III: Regression as Conditional Expectation and Binary Treatments and Regression Anatomy
+- T: Regression IV: Omitted Variable Bias 
+- W: Regression V: All Else Regression (inference, levels/logs, non-linearities, fit)
+- Th: Collinearity
 - **Friday, July 22n, 5pm: Submit Chapter Summary 1**
 
 ## Week 6: July 25th - July 29th; Ch 3 of MM  
-- M: Slack
+- M: Review for Midterm 2 + Something Fun (if there is time)
 - **T: Midterm 2**
-- W: 45 Min Discussion on midterm + Something fun
-- Th: Instrumental Variables I
+- W: Instrumental Variables I
+- Th: Instrumental Variables II
 - **Friday, July 29th, 5pm: Submit PS 3**
 
 ## Week 7: August 1st - August 5th; Ch 4, 5 and 6 of MM
-- M: Instrumental Variables II
-- T: Regression discontinuity
+- M: Regression discontinuity
+- T: External validity
 - W: Difference in Differences I
 - Th: Difference in Differences II
 - **Friday, August 5th, 5pm: Submit Chapter Summary 2**

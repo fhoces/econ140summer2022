@@ -45,7 +45,7 @@ class: center, middle, inverse, title-slide
 
 - Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
 
-- Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix + [SoPo Econometrics](https://github.com/ScPoEcon/ScPoEconometrics-Slides). (Part II today) 
+- Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix. (Part II today)
 
 - Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79. 
 
@@ -56,134 +56,303 @@ class: center, middle, inverse, title-slide
 
 - Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
 
-- **Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix + [SoPo Econometrics](https://github.com/ScPoEcon/ScPoEconometrics-Slides). (Part II today)** 
+- **Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix. (Part II today)** 
 
 - Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79. 
 
 - Regression Inference, Binary Variables and Logarithms. Ch2 of MM, Appendix + others. 
 
 
-
----
-class: inverse, middle
-
-# Regression as Line Fitting and Conditional Expectation
-
 ---
 
 # Regression as Conditional Expectation: Today's Goal
 
-- The goals of today's class are two: 
+- Similar to line fitting, this topic will be pretty abstract. 
+
+- In a similar spirit, this material is useful but not essential.  
+
+- Put limited effort into understanding it (~today’s class +1-4hrs looking at your notes and reading the appendix of Ch2) but if it doesn’t sink in, don’t get discouraged and move forward into the next topic. 
+
+- For Regression as Conditional Expectations our goals: 
+ 1. Connect the concept of regression with conditional expectations. 
+ 1. Show how regression is a simple difference in means within groups defined by regesssors.  
+ 
+- Last mainly theoretical topic of the course!
+ 
+
+---
+
+# Regression as Conditional Expectation: Outline
+
+- Conditional Expectation and the Conditional Expectation Function (CEF).
+  - Definitions
+  - Example
+  - Why should we care about it (regardless of regression)?
+- Connection between CEF and regression.
+- Use CEF to solidify our understanding of how regression **is** a simple difference in groups, for groups defined by values of regressors.  
   
+
 ---
-name: why
+count:false
 
-## Why?
+# Regression as Conditional Expectation: Outline
 
-In our previous discussion, we began moving from simple differences to a regression framework.
-
---
-
-.hi-slate[Q] Why do we&lt;sup&gt;.pink[†]&lt;/sup&gt; care so much about linear regression and OLS?
-
-.footnote[.pink[†] *we* = empirically inclined applied economists]
-
---
-
-.hi-slate[A] As we discussed, regression allows us to control for covariates that *can* assist with (.slate[1]) causal identification and (.slate[2]) inference.
-
---
-
-There's a deeper reason that we care about *linear* regression and ordinary least squares (OLS): .hi-pink[*the conditional expectation function (CEF).*]
+- Conditional Expectation and the Conditional Expectation Function (CEF).
+  - **Definitions**
+  - Example
+  - Why should we care about it (regardless of regression)?
+- Connection between CEF and regression.
+- Use CEF to solidify our understanding of how regression **is** a simple difference in groups, for groups defined by values of regressors.  
+  
 
 ---
 
-## Why?
+# .font90[Conditional Expectation and Conditional Expectation Function]
 
-Even ignoring causality, we can show important relationships between
+- Earlier in the semester we defined the a Conditional Expectation as the population average of one variable, given some value taken by another variable. 
 
-1. .hi-pink[the CEF] (the conditional expectation function),
+$$
+`\begin{equation}
+\mathop{\mathbb{E}}(Y_i|X_i=x)  = \sum_{y}yP(Y_i=y|X_i=x)
+\end{equation}`
+$$
+  
+- This average does two things:
+  1. it summarizes the distribution (the data) of `\(Y_i\)`, given `\(x\)`. 
+  1. it provides information how `\(Y_i\)` changes as we move `\(x\)`. It gave us our first way of thinking about associations (before RCTs and regressions!). As a thought exercise, let's think about the distribution of happiness `\((Y_i)\)` and the result of some sports outcome `\((X_i)\)` (or other leisurely activity). 
 
-2. the .hi-purple[population regression function],
 
-3. and the .hi-slate[sampling distribution of regression estimates].
 ---
-layout: true
+# CEF: Definition
 
-# Regression
-## The *CEF*
----
-name: cef
+- When we look at a CE, we naturally tend to focus on `\(Y_i\)`. But if our goal is to describe `\(Y_i\)`, the relevant section to vary in the CE its not `\(Y_i\)`, its `\(X_i\)`. 
 
-.hi-slate[Definition] The .hi[conditional expectation function] for a dependent variable `\(\text{Y}_{i}\)`, given a `\(\text{K}\times 1\)` vector of covariates `\(\text{X}_{i}\)`, tells us .pink[the expected value (population average) of] `\(\color{#e64173}{\text{Y}_{i}}\)` .pink[with] `\(\color{#e64173}{\text{X}_{i}}\)` .pink[held constant.]
+- For this reason when we want to use the concept CE to describe the data `\((Y_i)\)`, with one number (the average), across a range of values of `\(x\)`, we define the .hi-pink[*Conditional Expectation Function (CEF).*] as the collection of all such CEs (averages). 
 
---
+.hi-slate[Examples:]
 
-Written as `\(\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right]\)`, the CEF is a function of `\(\text{X}_{i}\)`.&lt;sup&gt;.pink[†]&lt;/sup&gt;
-
-.footnote[
-.pink[†] We'll generally assume `\(\text{X}_{i}\)` is a random variable, which implies that `\(\mathop{E}\left[ \text{Y}_{i}\mid \text{X}_{i} \right]\)` is also a random variable.
+.pull-left[
+- `\(\mathop{E}\left[ \text{Income}_i \mid \text{Education}_i \right]\)`
+- `\(\mathop{E}\left[ \text{Birth weight}_i \mid \text{Air quality}_i \right]\)`
 ]
 
---
-
-.hi-slate[Examples]
-
-- `\(\mathop{E}\left[ \text{Income}_i \mid \text{Education}_i \right]\)`
-
---
-
+.pull-right[
 - `\(\mathop{E}\left[ \text{Wage}_i \mid \text{Gender}_i \right]\)`
-
---
-
-- `\(\mathop{E}\left[ \text{Birth weight}_i \mid \text{Air quality}_i \right]\)`
----
-
-Formally, for continuous `\(\text{Y}_{i}\)` with conditional density `\(f_y(t|\text{X}_{i}=x)\)`,
-$$
-`\begin{align}
-  \mathop{E}\left[ \text{Y}_{i}\mid \text{X}_{i} = x \right] = \int t f_y(t|\text{X}_{i}=x)dt
-\end{align}`
-$$
---
-and for discrete `\(\text{Y}_{i}\)` with conditional p.m.f. `\(\mathop{\text{Pr}}\left(\text{Y}_{i}=t|\text{X}_{i}=x\right)\)`,
-$$
-`\begin{align}
-  \mathop{E}\left[ \text{Y}_{i}\mid \text{X}_{i}=x \right] = \sum_t t \mathop{\text{Pr}}\left(\text{Y}_{i}=t|\text{X}_{i}=x\right)
-\end{align}`
-$$
-
-.hi-slate[*Notice*] We are focusing on the .hi-pink[population].
---
- We want to build our intuition about the parameters that we will eventually estimate.
+]
 ---
 layout: false
 class: clear, middle
 
-Graphically...
+Graphically (From another of [Ed Rubin's Classes](https://github.com/edrubin/EC607S21))...
 ---
-class: clear, center, middle
 name: graphically
 
-The conditional distributions of `\(\text{Y}_{i}\)` for `\(\text{X}_{i}=x\)` in 8, ..., 22.
+# The conditional distributions of `\(Y_{i}\)` for `\(X_{i}=x\)` 
 
+
+
+
+&lt;br&gt;
 
 
 &lt;img src="14_reg_ce_mult_files/figure-html/fig_cef_dist-1.svg" style="display: block; margin: auto;" /&gt;
 ---
-class: clear, middle, center
+# The conditional distributions of `\(Y_{i}\)` for `\(X_{i}=x\)` 
 
 The CEF, `\(\mathop{E}\left[ \text{Y}_{i}\mid \text{X}_{i} \right]\)`, connects these conditional distributions' means.
 
 &lt;img src="14_reg_ce_mult_files/figure-html/fig_cef-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
-class: clear, middle, center
+# The conditional distributions of `\(Y_{i}\)` for `\(X_{i}=x\)` 
 
 Focusing in on the CEF, `\(\mathop{E}\left[ \text{Y}_{i}\mid \text{X}_{i} \right]\)`...
 
 &lt;img src="14_reg_ce_mult_files/figure-html/fig_cef_only-1.svg" style="display: block; margin: auto;" /&gt;
+---
+# The CEF is a Function of One or More Xs
+
+- **The CEF is a function of the variables and values we are conditioning on**. For the expression: 
+$$
+`\begin{equation}
+CEF(X_i = x) = \mathop{\mathbb{E}}(Y_i|X_{1i}) =  \mathop{\mathbb{E}}(Y_i|\underbrace{X_{1i}=x}_{\text{this is what varies}}) 
+\end{equation}`
+$$
+- In a somewhat confusing convention (to me!), you will usually see that the CEF is presented as the expression in the middle above, in terms of the variable `\((X_{1i})\)`, and not the possible values `\((x)\)`.  
+
+- The next key step is to realize that, the same way we can condition over one variable  `\((X_{1i})\)`, we can condition over many other variables too: 
+
+$$
+`\begin{equation}
+ \mathop{\mathbb{E}}(Y_i|X_{1i} = x_1, X_{2i} = x_2,...,  X_{Ki} = x_K,) =  \mathop{\mathbb{E}}(Y_i|X_{1i}, X_{2i}, ..., X_{Ki}) 
+\end{equation}`
+$$
+---
+# CEF With Multiple Xs (in English) 1/2
+
+$$
+`\begin{equation}
+ \mathop{\mathbb{E}}(Y_i|X_{1i} = x_1, X_{2i} = x_2,...,  X_{Ki} = x_K) =  \mathop{\mathbb{E}}(Y_i|X_{1i}, X_{2i}, ..., X_{Ki}) 
+\end{equation}`
+$$
+
+- In the same way `\(E[Y|X=13]\)` can represent the answer to the question “what is the average earning for individuals with 13 years of education?”, we can also ask “what is the average earnings for individuals with 13 years of education, and residing in California?” or `\(E[Y|X_1=13, X_2=6]\)` where 6 represents a numerical code for the state of California. 
+
+- For this case, the CEF would be written as `\(E[Y|X_1, X_2]\)`
+
+---
+# CEF With Multiple Xs (in English) 2/2
+
+- As the number of `\(X's\)` grow, it becomes unwieldy notation, hence from now on we use `\(X\)` to refer to "one or more variables", leaving us with a general expression for the CEF: 
+$$
+`\begin{equation}
+ \mathop{\mathbb{E}}(Y_i|X) 
+\end{equation}`
+$$
+
+- As quick trick to never forget that the CEF depends on `\(X\)` (and not on `\(Y\)`), every time you see the expression `\(\mathop{\mathbb{E}}(Y_i|X)\)` replace it in your mind with some function `\(g(X)\)`.
+
+
+---
+count:false
+
+# Regression as Conditional Expectation: Outline
+
+- Conditional Expectation and the Conditional Expectation Function (CEF).
+  - Definitions
+  - **Example**
+  - Why should we care about it (regardless of regression)?
+- Connection between CEF and regression.
+- Use CEF to solidify our understanding of how regression **is** a simple difference in groups, for groups defined by values of regressors.  
+
+---
+# CEF: Example
+
+- Let's bring this abstract concept down to hearth for the case of private/public colleges. 
+- Before drawing the connection to regression, we can still think of the conditional expectation of our variable of interest ( `\(Y_i =\)` earnings), and how it changes for all our other (explanatory) variables: 
+
+$$
+`\begin{equation}
+ \mathop{\mathbb{E}}(Y_i|X) =  \mathop{\mathbb{E}}(Y_i|P_i, GROUP_i, SAT_i, lnPI_i) 
+\end{equation}`
+$$
+
+- Where `\(GROUP_i\)` represents the collection of 150 binary variables. 
+- Notice the until now, we have not said anything about the functional form of the CEF, to make it more explicit, let's bring the `\(g()\)` notation: 
+
+$$
+`\begin{equation}
+ \mathop{\mathbb{E}}(Y_i|P_i, GROUP_i, SAT_i, lnPI_i)  = g(P_i, GROUP_i, SAT_i, lnPI_i)
+\end{equation}`
+$$
+
+---
+count:false
+
+# Regression as Conditional Expectation: Outline
+
+- Conditional Expectation and the Conditional Expectation Function (CEF).
+  - Definitions
+  - Example
+  - **Why should we care about it (regardless of regression)?**
+- Connection between CEF and regression.
+- Use CEF to solidify our understanding of how regression **is** a simple difference in groups, for groups defined by values of regressors.  
+
+
+---
+# But Why Should we Care About the CEF? 
+
+- The CEF is good summary of relationship between `\(Y\)` and `\(X\)` because:
+
+  - (Informally) Averages are good ways of summarizing random variables (and `\(Y|X\)` is a RV)  
+  - (Formally) The CEF is the best predictor of `\(Y|X\)` in the sense that it solves the Minimum Mean Squared Error (MMSE) problem `\((\arg \min_{m(X)}\{E(Y-m(X)^2\})\)`. In English: given X, our best guess about `\(Y\)`, ,the one that will render the smallest mistake, will be its CEF. 
+  
+  - This last point sounds similar to regression, but up to this point we have not run any regressions!
+
+---
+count:false
+
+# Regression as Conditional Expectation: Outline
+
+- Conditional Expectation and the Conditional Expectation Function (CEF).
+  - Definitions
+  - Example
+  - Why should we care about it (regardless of regression)?
+- **Connection between CEF and regression.**
+- Use CEF to solidify our understanding of how regression **is** a simple difference in groups, for groups defined by values of regressors.  
+
+---
+# Connection Between CEF and Regression 1/4
+- Today we have seen that the CEF is good for summarizes relationships in the data
+- Before today we have also see that Regression provides simple and powerful insights about relationships in the data
+
+- Let’s connect the two. 
+
+- Here we focus on the regression estimates for the population (remember we can think of regression as minimizing a population or a sample problem). This parameters correspond to: 
+$$
+`\begin{equation}
+ \{\alpha, \beta\} = \arg \min_{a,b} \left\{ 
+  \mathop{\mathbb{E}}[(Y_i - a - b X_i)^2]
+  \right\}
+\end{equation}`
+$$
+- Let's re-write that expression allowing for more regressors
+---
+# Connection Between CEF and Regression 2/4
+
+
+- Now we are allowing to have more than one regressor, so let's redefine `\(\beta\)` as the collection of all parameters that solve the minimization (what before was `\(\alpha, \beta, \delta, \gamma, ...\)` ), and `\(X\)` as the collection of all regressors. This allows us to write the above expression in a more compact way (representing more regressors!): 
+$$
+`\begin{equation}
+ \beta = \arg \min_{b} \left\{ 
+  \mathop{\mathbb{E}}[(Y_i - X_ib)^2]
+  \right\}
+\end{equation}`
+$$
+
+(as we increase the number of regressors the minimization requires linear algebra in addition to calculus. This is the solution of OLS with multiple variables: `\(\beta = \mathop{E}\left[ \text{X}_{i} \text{X}_{i}' \right]^{-1} \mathop{E}\left[ \text{X}_{i} \text{Y}_{i} \right]\)` where each element represents matrices of different dimensions. This expression is the matrix version of `\(\beta = \frac{Cov(X_i, Y_i)}{Var(X_i)}\)`  and of `\(\alpha = \mathop{\mathbb{E}}[Y_i] - b\mathop{\mathbb{E}}[X_i]\)`  combined!)
+
+---
+# Connection Between CEF and Regression 3/4
+
+- Basic claim connection CEF and Regression: if you we interested in the CEF (as summary of relationships), we should be interested in the coefficients that solve the regression (minimization) problem. 
+
+- Let review two properties to support this claim: 
+
+- **Property 1**: If the CEF is linear, a regression estimation (minimization) will obtain the CEF parameters (“If the CEF is linear, regression will find it”). But linearity of CEF is a strong assumption, CEF is linear when underlying data is normal, this is not very common. Using MM words: “If the CEF is linear, regression will find it”.
+
+
+---
+# Connection Between CEF and Regression 4/4
+
+- **Property 2:** If the CEF is not linear, regression estimates will find the best linear approximation to the CEF in the sense that the regression coefficients will be the solution to a minimization problem with respect to `\(\mathop{\mathbb{E}}[Y_i|X]\)`, which is different from `\(Y_i\)` `\((\arg \min_{b}(E( \mathop{\mathbb{E}}[Y_i|X] - X’b )^2)\)`. Using MM words: "If the CEF is not linear, regression finds a good approximation to it". 
+
+- (if you are interested in the proofs for these check [this slides](https://raw.githack.com/edrubin/EC607S21/master/notes-lecture/03-why-regression/03-why-regression.html#38), it all starts from Adam's Law!)
+
+- Let's go back to our example to see this properties in practice. 
+
+
+
+---
+# Connection Between CEF and Regression 5/4
+
+- We define the CEF for the private/public example as follows: 
+
+$$
+`\begin{equation}
+ \mathop{\mathbb{E}}(Y_i|P_i, GROUP_i, SAT_i, lnPI_i)  = g(P_i, GROUP_i, SAT_i, lnPI_i)
+\end{equation}`
+$$
+- Now, to explore property 1, we will **assume** that the CEF of `\(lnY_i\)` is linear in X's: 
+$$
+`\begin{equation}
+ \mathop{\mathbb{E}}(ln Y_i|X) =  \theta_1 + \theta_2 P_i +\sum_{j=1}^{150} \theta_{3,j} GROUP_{ji} + \theta_4 SAT + \theta_4 ln PI_{i}
+\end{equation}`
+$$
+- What property 1 tells us is that in this case, the OLS regression for `\(\beta\)` (define as all the collection of parameters) will produce as result the same parameters of the CEF above (i.e, `\(\beta = \theta\)` ).
+
+
+
 ---
 class: clear, middle
 
@@ -207,56 +376,15 @@ which says that the .hi-purple[unconditional expectation] is equal to the .b[unc
 
 ---
 layout: false
-# Regression
-
-.hi-slate[A proof of the LIE]
-
-First, we need notation...
-
-Let `\(\mathop{f_{x,y}}(u,t)\)` denote the joint density for continuous RVs `\(\left( \text{X}_{i},\text{Y}_{i} \right)\)`.
-
-Let `\(\mathop{f_{y|x}}(t\mid \text{X}_{i}=u)\)` denote the conditional distribution of `\(\text{Y}_{i}\)` given `\(\text{X}_{i}=u\)`.
-
-And let `\(\mathop{g_y}(t)\)` and `\(\mathop{g_x}(u)\)` denote the marginal densities of `\(\text{Y}_{i}\)` and `\(\text{X}_{i}\)`.
----
-# Regression
-
-.hi-slate[A proof of the LIE]
-
-`\(\mathop{E}\!\bigg( \color{#e64173}{\mathop{E}\left[ \text{Y}_{i}\mid \text{X}_{i} \right]} \bigg)\)`
---
-&lt;br&gt;  `\(= {\displaystyle\int} \color{#e64173}{\mathop{E}\left[ \text{Y}_{i}\mid \text{X}_{i} = u \right]} \mathop{g_x}(u) du\)`
---
-&lt;br&gt;  `\(={\displaystyle\int} \color{#e64173}{\left[{\displaystyle\int} t \mathop{f_{y|x}}\left( t\mid \text{X}_{i}=u \right) dt\right]} \mathop{g_x}(u) du\)`
---
-&lt;br&gt;  `\(={\displaystyle\int} {\displaystyle\int} \color{#e64173}{t \mathop{f_{y|x}}\left( t\mid \text{X}_{i}=u \right)} \mathop{g_x}(u) du \, \color{#e64173}{dt}\)`
---
-&lt;br&gt;  `\(={\displaystyle\int} \color{#e64173}{t} \left[ {\displaystyle\int} \color{#e64173}{\mathop{f_{y|x}}\left( t\mid \text{X}_{i}=u \right)} \mathop{g_x}(u) du \right] \color{#e64173}{dt}\)`
---
-&lt;br&gt;  `\(={\displaystyle\int} \color{#e64173}{t} \left[ {\displaystyle\int} \mathop{f_{x,y}}(u,t) du \right] \color{#e64173}{dt}\)`
---
-&lt;br&gt;  `\(={\displaystyle\int} \color{#e64173}{t} \mathop{g_y(t)} \color{#e64173}{dt}\)`
---
-&lt;br&gt;  `\(=\mathop{E}\left[ \text{Y}_{i} \right]\)`
---
-  .bigger[🥳]
----
-layout: false
 class: clear, middle
 
 Great. What's the point?
 ---
-layout: true
-# Regression
-## The *LIE* and the *CEF*
----
 name: decomposition
-
-.hi-slate[Theorem] The CEF decomposition property (3.1.1)
+.font90[
+#.hi-slate[Theorem] The CEF decomposition property (3.1.1)
 
 The LIE allows us to **decompose random variables** into two pieces
-
---
 
 $$
 `\begin{align}
@@ -265,51 +393,20 @@ $$
 $$
 
 1. .hi-pink[the conditional expectation function]
-2. .hi-purple[a residual] with special powers&lt;sup&gt;.pink[†]&lt;/sup&gt;
+2. .hi-purple[a residual] with special powers
 &lt;br&gt; i.  `\(\color{#6A5ACD}{\varepsilon_i}\)` is mean independent of `\(\text{X}_{i}\)`, _i.e._, `\(\mathop{E}\left[ \color{#6A5ACD}{\varepsilon_i} \mid \text{X}_{i} \right] = 0\)`.
 &lt;br&gt; ii.  `\(\color{#6A5ACD}{\varepsilon_i}\)` is uncorrelated with any function of `\(\text{X}_{i}\)`.
 
-.footnote[.pink[†] Angrist and Pischke go with *special properties*.]
-
---
 
 .hi-orange[*Important*] It might not seem like much, but these results are .hi-orange[huge] for building intuition, theory, *and* application.
---
+
  Put a ⭐ here!
+ ]
+
 ---
 
-.hi-slate[Proof] The CEF decomposition property (properties i. and ii. of `\(\color{#6A5ACD}{\varepsilon_i}\)`)
+#The CEF decomposition property
 
---
-
-.pull-left[
-.hi-slate[Mean independence], `\(\mathop{E}\left[ \color{#6A5ACD}{\varepsilon_i} \mid \text{X}_{i} \right] = 0\)`
-$$
-`\begin{align}
-  &amp;\mathop{E}\left[ \color{#6A5ACD}{\varepsilon_i} \mid \text{X}_{i} \right] \\[0.6em]
-  &amp;= \mathop{E}\!\bigg( \text{Y}_{i} - \color{#e64173}{\mathop{E}\left[ \text{Y}_{i}\mid \text{X}_{i} \right]} \bigg| \text{X}_{i} \bigg) \\[0.6em]
-  &amp;= \color{#e64173}{\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right]} - \mathop{E}\!\bigg( \color{#e64173}{\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right]} \bigg| \text{X}_{i} \bigg) \\[0.6em]
-  &amp;= \color{#e64173}{\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right]} - \color{#e64173}{\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right]} \\[0.6em]
-  &amp;= 0
-\end{align}`
-$$
-]
---
-.pull-right[
-.hi-slate[Zero correlation] btn. `\(\color{#6A5ACD}{\varepsilon_i}\)` and `\(\mathop{h}\left( \text{X}_{i} \right)\)`
-$$
-`\begin{align}
-  &amp;\mathop{E}\left[ \mathop{h}\left( \text{X}_{i} \right) \color{#6A5ACD}{\varepsilon_i}\right] \\[0.6em]
-  &amp;= \mathop{E}\!\bigg( \mathop{E}\left[ \mathop{h}\left( \text{X}_{i} \right) \color{#6A5ACD}{\varepsilon_i}\mid \text{X}_{i} \right]\bigg) \\[0.6em]
-  &amp;= \mathop{E}\!\bigg( \mathop{h}\left( \text{X}_{i} \right) \mathop{E}\left[\color{#6A5ACD}{\varepsilon_i}\mid \text{X}_{i} \right]\bigg) \\[0.6em]
-  &amp;= \mathop{E}\left[ \mathop{h}\left( \text{X}_{i} \right) \times 0\right] \\[0.6em]
-  &amp;= 0
-\end{align}`
-$$
-]
----
-
-.hi-slate[The CEF decomposition property]
 &lt;br&gt;says that we can decompose any random variable (_e.g._, `\(\text{Y}_{i}\)`) into
 
 1. a part that is .pink[explained by] `\(\color{#e64173}{\text{X}_{i}}\)` (_i.e._, the CEF `\(\color{#e64173}{\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right]}\)`),
@@ -328,7 +425,7 @@ But (of course) there are more reasons to use the CEF...
 ---
 name: prediction
 
-.hi-slate[Theorem] The CEF prediction property (3.1.2)
+# Theorem: The CEF prediction property 
 
 Let `\(\mathop{m}\left( \text{X}_{i} \right)\)` be *any* function of `\(\text{X}_{i}\)`. The CEF solves
 $$
@@ -343,43 +440,9 @@ In other words, the .hi-pink[CEF] is the minimum mean-squared error (MMSE) predi
 .hi-slate[*Notice*]
 1. We haven't restricted `\(m\)` to any class of functions—it can be nonlinear.
 2. We're talking about *prediction* (specifically predicting `\(\text{Y}_{i}\)`).
+
 ---
-layout: false
-class: clear
-
-.hi-slate[Proof] The CEF prediction property
-
-`\(\bigg( \text{Y}_{i} - \mathop{m}\left( \text{X}_{i} \right) \bigg)^2\)` .right10[.orange[(**1**)]]
---
-&lt;br&gt;  `\(= \bigg( \big\{ \text{Y}_{i} - \color{#e64173}{\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right]} \big\} + \big\{ \color{#e64173}{\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right]} - \mathop{m}\left( \text{X}_{i} \right) \big\} \bigg)^2\)`
---
-&lt;br&gt;  `\(= \bigg( \text{Y}_{i} - \color{#e64173}{\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right]} \bigg)^2\)`  .right10[.turquoise[(**a**)]]
-&lt;br&gt;   `\(+ 2 \bigg( \color{#e64173}{\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right] - \mathop{m}\left( \text{X}_{i} \right)}\bigg)\times \bigg( \text{Y}_{i} - \color{#e64173}{\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right]} \bigg)\)`  .right10[.turquoise[(**b**)]]
-&lt;br&gt;   `\(+ \bigg( \color{#e64173}{\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right]} - \mathop{m}\left( \text{X}_{i} \right) \bigg)^2\)`  .right10[.turquoise[(**c**)]]
-
---
-
-.hi-slate[Recall:] We want to choose the `\(\mathop{m}\left( \text{X}_{i} \right)\)` that minimizes .orange[(**1**)] in expectation.
---
-&lt;br&gt; .turquoise[(**a**)] is irrelevant, _i.e._,  it does not depend upon `\(\mathop{m}\left( \text{X}_{i} \right)\)`.
---
-&lt;br&gt; .turquoise[(**b**)] equals zero in expectation: `\(\mathop{E}\left[ \mathop{h}\left( \text{X}_{i} \right)\times \color{#6A5ACD}{\varepsilon_i} \right] = 0\)`.
---
-&lt;br&gt; .turquoise[(**c**)] is minimized by `\(\mathop{m}\left( \text{X}_{i} \right) = \color{#e64173}{\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right]}\)`, _i.e._, when `\(\mathop{m}\left( \text{X}_{i} \right)\)` is the .pink[CEF].
----
-layout: true
-
-# Regression
-## The *LIE* and the *CEF*
----
-
-∴ the .pink[CEF] is the function that minimizes the mean-squared error (MSE)
-$$
-`\begin{align}
-  \color{#e64173}{\mathop{E}\left[ \text{Y}_{i} \mid \text{X}_{i} \right]} = \underset{\mathop{m}\left( \text{X}_{i} \right)}{\text{arg min}}\enspace \mathop{E}\left[ \left( \text{Y}_{i} - \mathop{m}\left( \text{X}_{i} \right) \right)^2 \right]
-\end{align}`
-$$
----
+# ANOVA Theorem
 
 One final property of the .pink[CEF] (very similar to the decomposition property)
 
@@ -393,13 +456,8 @@ which says that we can decompose the variance in `\(\text{Y}_{i}\)` into
 1. the variance in the .pink[CEF]
 2. the variance of the residual
 
---
-
 .hi-slate[*Example*] Decomposing wage variation into (.hi-slate[1]) variation explained by workers' characteristics and (.hi-slate[2]) unexplained (residual) variation
 
---
-
-The proof centers on the independence from the decomposition property of the CEF.
 ---
 layout: false
 class: clear, middle
@@ -513,8 +571,6 @@ class: clear, middle
 
 Graphical example
 ---
-class: clear, middle, center
-
 
 
 `\(y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + \varepsilon_i\)`
