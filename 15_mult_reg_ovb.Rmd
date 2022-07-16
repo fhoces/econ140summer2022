@@ -1,0 +1,238 @@
+---
+title: "Multiple Regression and OVB"
+author: "Fernando Hoces de la Guardia"
+date: '2022-07-16'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+
+
+REGRESSION ANATOMY
+REGRESSION ANATOMY
+In fact, we can re-write our coefficients to further emphasize this point
+$$
+\begin{align}
+  \beta_k &= \dfrac{\mathop{\text{Cov}} \left( \widetilde{\text{Y}}_{i},\, \widetilde{x}_{ki} \right)}{\mathop{\text{Var}} \left( \widetilde{x}_{ki} \right)}
+\end{align}
+$$
+$\widetilde{\text{Y}}_{i}$ denotes the residual from regressing $\text{Y}_{i}$ on all regressors except $x_{ki}$.
+---
+layout: false
+class: clear, middle
+
+Graphical example
+---
+```{R, data_anatomy, cache = F, include = F, fig.height = 4 }
+n <- 1e2
+set.seed(1234)
+gen_df <- tibble(
+  x2 = sample(x = c(F, T), size = n, replace = T),
+  x1 = runif(n = n, min = -3, max = 3) + x2 - 0.5,
+  u  = rnorm(n = n, mean = 0, sd = 1),
+  y  = -3 + x1 + x2 * 4 + u
+)
+ya_mean <- filter(gen_df, x2 == F)$y %>% mean()
+yb_mean <- filter(gen_df, x2 == T)$y %>% mean()
+x1a_mean <- filter(gen_df, x2 == F)$x1 %>% mean()
+x1b_mean <- filter(gen_df, x2 == T)$x1 %>% mean()
+gen_df %<>% mutate(
+  y_dm = y - ya_mean * (x2 == F) - yb_mean * (x2 == T),
+  x1_dm = x1 - x1a_mean * (x2 == F) - x1b_mean * (x2 == T)
+)
+```
+
+$y_i = \beta_0 + \beta_1 x_{1i} + \beta_2 x_{2i} + \varepsilon_i$
+
+```{R, fig_anatomy1, echo = F, fig.height = 4}
+ggplot(data = gen_df, aes(y = y, x = x1, color = x2, shape = x2)) +
+  geom_hline(yintercept = 0, color = "grey85") +
+  geom_vline(xintercept = 0, color = "grey85") +
+  geom_point(size = 3) +
+  annotate("text", x = -0.075, y = 6.75, label = TeX("$y$"), size = 8) +
+  annotate("text", x = 2.95, y = 0.3, label = TeX("$x_1$"), size = 8) +
+  ylim(c(-7, 7)) +
+  xlim(c(-3.5, 3.5)) +
+  theme_empty +
+  scale_color_manual(
+    expression(x[2]),
+    values = c("darkslategrey", red_pink),
+    labels = c("A", "B")
+  ) +
+  scale_shape_manual(
+    expression(x[2]),
+    values = c(1, 19),
+    labels = c("A", "B")
+  ) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 22)
+  )
+```
+---
+class: clear, middle, center
+count: false
+
+$\beta_1$ gives the relationship between $y$ and $x_1$ *after controlling for* $x_2$
+
+```{R, fig_anatomy2, echo = F, fig.height = 4}
+ggplot(data = gen_df, aes(y = y, x = x1, color = x2, shape = x2)) +
+  geom_hline(yintercept = ya_mean, color = "darkslategrey", alpha = 0.5, size = 2) +
+  geom_hline(yintercept = yb_mean, color = red_pink, alpha = 0.5, size = 2) +
+  geom_hline(yintercept = 0, color = "grey85") +
+  geom_vline(xintercept = 0, color = "grey85") +
+  geom_point(size = 3) +
+  annotate("text", x = -0.075, y = 6.75, label = TeX("$y$"), size = 8) +
+  annotate("text", x = 2.95, y = 0.3, label = TeX("$x_1$"), size = 8) +
+  ylim(c(-7, 7)) +
+  xlim(c(-3.5, 3.5)) +
+  theme_empty +
+  scale_color_manual(
+    expression(x[2]),
+    values = c("darkslategrey", red_pink),
+    labels = c("A", "B")
+  ) +
+  scale_shape_manual(
+    expression(x[2]),
+    values = c(1, 19),
+    labels = c("A", "B")
+  ) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 22)
+  )
+```
+---
+class: clear, middle, center
+count: false
+
+$\beta_1$ gives the relationship between $y$ and $x_1$ *after controlling for* $x_2$
+
+```{R, fig_anatomy3, echo = F, fig.height = 4}
+ggplot(data = gen_df %>% mutate(y = y - 4 * x2), aes(y = y_dm, x = x1)) +
+  geom_hline(yintercept = 0, color = "grey85") +
+  geom_vline(xintercept = 0, color = "grey85") +
+  geom_point(size = 3, aes(color = x2, shape = x2)) +
+  annotate("text", x = -0.075, y = 6.75, label = TeX("$y|x_2$"), size = 8, hjust = 1) +
+  annotate("text", x = 2.95, y = 0.3, label = TeX("$x_1$"), size = 8) +
+  ylim(c(-7, 7)) +
+  xlim(c(-3.5, 3.5)) +
+  theme_empty +
+  scale_color_manual(
+    expression(x[2]),
+    values = c("darkslategrey", red_pink),
+    labels = c("A", "B")
+  ) +
+  scale_shape_manual(
+    expression(x[2]),
+    values = c(1, 19),
+    labels = c("A", "B")
+  ) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 22)
+  )
+```
+---
+class: clear, middle, center
+count: false
+
+$\beta_1$ gives the relationship between $y$ and $x_1$ *after controlling for* $x_2$
+
+```{R, fig_anatomy4, echo = F, fig.height = 4}
+ggplot(data = gen_df %>% mutate(y = y - 4 * x2), aes(y = y_dm, x = x1)) +
+  geom_hline(yintercept = 0, color = "grey85") +
+  geom_vline(xintercept = 0, color = "grey85") +
+  geom_vline(xintercept = x1a_mean, color = "darkslategrey", alpha = 0.5, size = 2) +
+  geom_vline(xintercept = x1b_mean, color = red_pink, alpha = 0.5, size = 2) +
+  geom_point(size = 3, aes(color = x2, shape = x2)) +
+  annotate("text", x = -0.075, y = 6.75, label = TeX("$y|x_2$"), size = 8, hjust = 1) +
+  annotate("text", x = 2.95, y = 0.3, label = TeX("$x_1$"), size = 8) +
+  ylim(c(-7, 7)) +
+  xlim(c(-3.5, 3.5)) +
+  theme_empty +
+  scale_color_manual(
+    expression(x[2]),
+    values = c("darkslategrey", red_pink),
+    labels = c("A", "B")
+  ) +
+  scale_shape_manual(
+    expression(x[2]),
+    values = c(1, 19),
+    labels = c("A", "B")
+  ) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 22)
+  )
+```
+---
+class: clear, middle, center
+count: false
+
+$\beta_1$ gives the relationship between $y$ and $x_1$ *after controlling for* $x_2$
+
+```{R, fig_anatomy5, echo = F, fig.height = 4}
+ggplot(data = gen_df %>% mutate(y = y - 4 * x2), aes(y = y_dm, x = x1_dm)) +
+  geom_hline(yintercept = 0, color = "grey85") +
+  geom_vline(xintercept = 0, color = "grey85") +
+  geom_point(size = 3, aes(color = x2, shape = x2)) +
+  annotate("text", x = -0.075, y = 6.75, label = TeX("$y|x_2$"), size = 8, hjust = 1) +
+  annotate("text", x = 2.95, y = 0.3, label = TeX("$x_1|x_2$"), size = 8, hjust = 1) +
+  ylim(c(-7, 7)) +
+  xlim(c(-3.5, 3.5)) +
+  theme_empty +
+  scale_color_manual(
+    expression(x[2]),
+    values = c("darkslategrey", red_pink),
+    labels = c("A", "B")
+  ) +
+  scale_shape_manual(
+    expression(x[2]),
+    values = c(1, 19),
+    labels = c("A", "B")
+  ) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 22)
+  )
+```
+---
+class: clear, middle, center
+count: false
+
+$\beta_1$ gives the relationship between $y$ and $x_1$ *after controlling for* $x_2$
+
+```{R, fig_anatomy6, echo = F, fig.height = 4}
+ggplot(data = gen_df %>% mutate(y = y - 4 * x2), aes(y = y_dm, x = x1_dm)) +
+  geom_hline(yintercept = 0, color = "grey85") +
+  geom_vline(xintercept = 0, color = "grey85") +
+  geom_smooth(method = lm, se = F, color = purple, alpha = 1, size = 2) +
+  geom_point(size = 3, aes(color = x2, shape = x2)) +
+  annotate("text", x = -0.075, y = 6.75, label = TeX("$y|x_2$"), size = 8, hjust = 1) +
+  annotate("text", x = 2.95, y = 0.3, label = TeX("$x_1|x_2$"), size = 8, hjust = 1) +
+  ylim(c(-7, 7)) +
+  xlim(c(-3.5, 3.5)) +
+  theme_empty +
+  scale_color_manual(
+    expression(x[2]),
+    values = c("darkslategrey", red_pink),
+    labels = c("A", "B")
+  ) +
+  scale_shape_manual(
+    expression(x[2]),
+    values = c(1, 19),
+    labels = c("A", "B")
+  ) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 22)
+  )
+```
+
