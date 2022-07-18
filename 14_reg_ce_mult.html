@@ -41,6 +41,7 @@ class: center, middle, inverse, title-slide
 }
 &lt;/style&gt;
 
+
 # Regression Journey
 
 - Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
@@ -103,7 +104,7 @@ count:false
 
 ---
 
-# .font90[Conditional Expectation and Conditional Expectation Function]
+# .font80[Conditional Expectation and Conditional Expectation Function]
 
 - Earlier in the semester we defined the a Conditional Expectation as the population average of one variable, given some value taken by another variable. 
 
@@ -263,7 +264,7 @@ count:false
 - The CEF is good summary of relationship between `\(Y\)` and `\(X\)` because:
 
   - (Informally) Averages are good ways of summarizing random variables (and `\(Y|X\)` is a RV)  
-  - (Formally) The CEF is the best predictor of `\(Y|X\)` in the sense that it solves the Minimum Mean Squared Error (MMSE) problem `\((\arg \min_{m(X)}\{E(Y-m(X)^2\})\)`. In English: given X, our best guess about `\(Y\)`, ,the one that will render the smallest mistake, will be its CEF. 
+  - (Formally) The CEF is the best predictor of `\(Y|X\)` in the sense that it solves the Minimum Mean Squared Error (MMSE) problem `\((\arg \min_{m(X)}\{E(Y-m(X)^2\})\)`. In English: given X, our best guess about `\(Y\)`, defined as the one that will render the smallest mistake, will be its CEF. 
   
   - This last point sounds similar to regression, but up to this point we have not run any regressions!
 
@@ -282,7 +283,7 @@ count:false
 
 ---
 # Connection Between CEF and Regression 1/4
-- Today we have seen that the CEF is good for summarizes relationships in the data
+- Today we have seen that the CEF is good for summarizing relationships in the data
 - Before today we have also see that Regression provides simple and powerful insights about relationships in the data
 
 - Let’s connect the two. 
@@ -314,7 +315,7 @@ $$
 ---
 # Connection Between CEF and Regression 3/4
 
-- Basic claim connection CEF and Regression: if you we interested in the CEF (as summary of relationships), we should be interested in the coefficients that solve the regression (minimization) problem. 
+- Basic claim connecting CEF and Regression: if you we interested in the CEF (as summary of relationships), we should be interested in the coefficients that solve the regression (minimization) problem. 
 
 - Let review two properties to support this claim: 
 
@@ -448,7 +449,7 @@ $$
 
 - Hence, we just prove that the CEF for this particular case (one binary conditioning variable) is linear.
 
-- Now we can invoke property 2 of CEF and regression and we have that a regression that estimates the following equation: 
+- Now we can invoke property 2 of CEF and regression, and we have that a regression that estimates the following equation: 
 
 $$
 `\begin{equation}
@@ -456,7 +457,7 @@ Y_i = \alpha + \beta Z_i + e_i
 \end{equation}`
 $$
 
-- Will and estimate that corresponds to the CEF `\((\alpha = \theta_1, \beta = \theta_2)\)`.
+- Will estimate coefficients that corresponds to the CEF `\((\alpha = \theta_1, \beta = \theta_2)\)`.
 
 ---
 # .font80[CEF and Regression With Binnay Treaments as Single Regressor 3/3]
