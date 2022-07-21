@@ -2,7 +2,7 @@
 title: "Ec140 - Regression as Conditional Expectation "
 subtitle: " "
 author: "Fernando Hoces la Guardia"
-date: "07/15/2022"
+date: "07/18/2022"
 output: 
   xaringan::moon_reader:
     footer: "These slides available at https://fhoces.github.io/econ140summer2022/"

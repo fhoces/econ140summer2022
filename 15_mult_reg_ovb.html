@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Multiple Regression: Omitted Varible Bias and Regression Anatomy</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-07-19" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Multiple Regression: Omitted Varible Bias and Regression Anatomy
+### Fernando Hoces la Guardia
+### 07/19/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+
+# Regression Journey
+
+- Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
+
+- Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix.
+
+- Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79 and Appendix. 
+
+- Regression Inference, Binary Variables and Logarithms. Ch2 of MM, Appendix + others. 
+
+---
+# Regression Journey
+
+- Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
+
+- Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix.
+
+- **Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79 and Appendix.** 
+
+- Regression Inference, Binary Variables and Logarithms. Ch2 of MM, Appendix + others. 
+
+
+---
+
+# Today's Lecture
+
+- Omitted Variable Bias (very important)
+
+- Regression Anatomy (not essential)
+
+
+
+---
+class: inverse, middle
+
+# Omitted Variable Bias (OVB)
+
+---
+# Omitted Variable Bias (OVB)
+
+- We are back into the focus on causality!
+
+- The most common regression version of selection bias is called omitted variable bias (OVB).
+
+- Let's go back to the causal question from  Dale and Krueger (2002) to motivate this concept. 
+
+
+---
+background-image: url("Images/MMtbl23_emphA_OVB.png"), url("Images/MMtbl23_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 5%, 100% 95%
+# Back to Earnings and Private/Public College Choice
+
+.font90[
+.pull-left[
+- In moving from (1) to (2) we were controlling for `\(SAT\)`
+- Including `\(SAT\)` had an effect on the coefficient of `\(P_i\)`
+- Let's review the change from (4) to (5). 
+- Including `\(SAT\)`, after controlling for selectivity, seems to not change our causal estimates. 
+- Today we will formalize this relationship and it will help us understand how other unobservables might affect our causal estimates
+
+]
+]
+
+
+---
+# Can We Control for Everything? 
+
+- In our regressions we would like to control for how much resources had the family of each student. 
+- A proxy for resources is parental income, but it does not capture other aspects of being rich or poor in resources. 
+- One example is that two families could have the same income but different family sizes.
+  - Imagine a family of 3 and a family of 6 with the same parental income. The larger family has far fewer resources to pay for higher tuition fees than the smaller family.
+  - So even controlling for parental income, we would not have Other Things Equal.
+- OVB helps us describe what happens when a relevant variable is omitted 
+
+---
+# What Can We Say About This Bias?
+
+- To understand OVB, let's go back to the simple example of 5 students and two selectivity groups (A and B) for the effect of private college on earnings.
+
+- First, assume that we have all the variables we need and then explore how omitting the variable group `\((A_i)\)` will bias our estimates.
+
+--
+
+- Let’s label the regression that has the variable  `\((A_i)\)` as the “long” regression `\((l)\)` and the regression that does not have this variable as the “short” regression `\((s)\)`.
+
+$$
+`\begin{aligned}
+ Y_i &amp;= \alpha^{l} + \beta^{l} P_i + \gamma A_i + e^{l}_i\\
+ Y_i &amp;= \alpha^{s} + \beta^{s} P_i + e^{s}_i
+\end{aligned}`
+$$
+---
+background-image: url("Images/MMtbl21.png")
+background-size: 50%
+background-position: 100% 50%
+count:false
+
+# Short and Long Regressions: Simple Example 1/2
+
+.font90[
+.pull-left[
+- From the toy example data on Table 2.1 of MM, we have already compute the regression estimates `\(\alpha^{l} = 40,000\)`, `\(\beta^{l} = 10,000\)`, and  `\(\gamma^{l} =60,000\)`
+- Any ideas on how to compute the regression coefficient `\(\beta^{s}\)`?
+]
+]
+
+
+
+---
+background-image: url("Images/MMtbl21.png")
+background-size: 50%
+background-position: 100% 50%
+
+# Short and Long Regressions: Simple Example 1/2
+.font90[
+.pull-left[
+- From the toy example data on Table 2.1 of MM, we have already compute the regression estimates `\(\alpha^{l} = 40,000\)`, `\(\mathbf{\beta^{l} = 10,000}\)`, and  `\(\gamma^{l} =60,000\)`
+- Any ideas on how to compute the regression coefficient `\(\beta^{s}\)`?
+- As we saw yesterday `\(\beta^{s}\)` is the simple difference in earnings `\((Y_i)\)` between treatment `\((P_i = 1)\)` and control `\((P_i = 0)\)`. From table 2.1 (focusing only on groups A and B) we have that `\(\mathbf{\beta^{s} = 20,000}\)`. 
+- Omitting `\(A_i\)` leads to bias = `\(\beta^{s} - \beta^{l} = 10,000\)`
+]
+]
+
+---
+# Short and Long Regressions: Simple Example 2/2
+
+-  OVB is define as the difference between effect omitting (on short) minus the effect not omitting (on long). `\(OVB \equiv \beta^{s} - \beta^{l}\)`. In this toy example is 10k. 
+
+- The source of this bias  is in attributing to `\(P_i\)` the difference between groups (A and B) captured by `\(A_i\)`. 
+
+- We can now establish more formally the two components that connect the coefficients from the long and short regression: 
+  1. The relationship between the omitted variable `\((A_i)\)` and treatment  `\((P_i)\)`. 
+  2. The relationship between the outcome `\((Y_i)\)` and the omitted variable `\((A_i)\)`. This relationship is givent by the parameter `\(\gamma\)` in the long regression. 
+
+---
+# OVB Formula: General 
+
+
+.font140[
+$$
+`\begin{equation}
+\text{Effect of included in short} = \text{Effect of included in long} + \\ 
+ \text{Effect of omitted on outcome, in long} \times \\
+ \text{Relationhip between omitted and included} \times \\
+\end{equation}`
+$$
+]
+
+--
+
+&gt; *"Short equals long plus effect of omitted in long (on outcome) times the regression of omitted on included"*
+
+
+---
+# OVB Formula: General (Causal)
+
+
+.font140[
+$$
+`\begin{equation}
+\text{Effect of treatment in short} = \text{Effect of treatment in long} + \\ 
+ \text{Effect of omitted on outcome, in long} \times \\
+ \text{Relationhip between omitted and treatment} \times \\
+\end{equation}`
+$$
+]
+
+
+
+&gt; *"Short equals long plus effect of omitted in long (on outcome) times the regression of omitted on included"*
+
+---
+# OVB Formula in Example 1/3
+
+
+.font140[
+$$
+`\begin{equation}
+\text{Effect of } P_i \text{ in short} = \text{Effect of } P_i \text{ in long} + \\ 
+ \text{Effect of } A_i \text{ on } Y_i \text{ (in long)} \times \\
+ \text{Relationship between } A_i \text{ and } P_i 
+\end{equation}`
+$$
+]
+
+&gt; *"Short equals long plus effect of omitted in long (on outcome) times the regression of omitted on included"*
+
+---
+# OVB Formula in Example 2/3
+
+$$
+`\begin{equation}
+\text{Effect of } P_i \text{ in short} = \text{Effect of } P_i \text{ in long} + \\ 
+ \text{Effect of } A_i \text{ on } Y_i \text{ (in long)} \times \\
+ \text{Relationship between } A_i \text{ and } P_i 
+\end{equation}`
+$$
+--
+
+$$
+`\begin{equation}
+\beta^{s} = \beta^{l} + \\ 
+ \text{Relationship between }A_i \text{ and } P_i \times \\
+ \gamma
+\end{equation}`
+$$
+
+$$
+`\begin{equation}
+OVB = \beta^{s} - \beta^{l}  =  \text{Relationship between }A_i \text{ and } P_i \times \gamma
+\end{equation}`
+$$
+
+--
+
+The relationship between `\(A_i\)` and `\(P_i\)` can be estimated using an auxiliary regression: 
+
+$$
+`\begin{equation}
+A_i = \pi_0 + \pi_1 P_i + u_i
+\end{equation}`
+$$
+
+---
+# OVB Formula in Example 3/3
+
+.font140[
+$$
+`\begin{equation}
+OVB = \beta^{s} - \beta^{l}  =  \pi_1 \times \gamma
+\end{equation}`
+$$
+]
+
+--
+- We know `\(\gamma = 60,000\)`, how could we estimate `\(\pi_1\)`?
+
+--
+
+- `\(\pi_1 =  \overline A_1 - \overline A_0  = 2/3 -1/2 = 0.1667\)`
+
+- `\(OVB = \beta^{s} - \beta^{l}  = 0.1667 \times 60,000 = 10,000\)`
+
+- The same we obtained by computing `\(\beta^{s} - \beta^{l}\)` before!
+
+- The key idea is that we care about the bias that we cannot observe `\((\beta^{s} - \beta^{l})\)`, but we can investigate it by thinking about plausible values for the relationship between omitted and included `\((\pi_1)\)`  and the effect of omitted in long `\((\gamma)\)`. 
+
+---
+# OVB in Dale and Krueger Study 1/3 
+
+- Let's discuss how the omitted variable "Family Size" `\((FS_i)\)` could be generating some OVB. 
+
+- What would be the short equation in this case (hint: is not that short)?
+
+--
+
+$$
+`\begin{equation}
+ln Y_i = \alpha^{s} + \beta^{s} P_i +\sum_{j=1}^{150} \gamma^{s}_{j} GROUP_{ji} + \delta^{s}_1 SAT + \delta^{s}_2 ln PI_{i} + e^{s}_i
+\end{equation}`
+$$
+
+
+- What would be the long equation in this case (hint: long basically means "longer" than short)?
+
+--
+
+$$
+`\begin{equation}
+ln Y_i = \alpha^{l} + \beta^{l} P_i + \sum_{j=1}^{150} \gamma^{l}_{j} GROUP_{ji} + \delta^{l}_1 SAT + \delta^{l}_2 ln PI_{i} + \lambda FS_i +  e^{l}_i
+\end{equation}`
+$$
+
+
+---
+count:false 
+
+# OVB in Dale and Krueger Study 2/3 
+.font90[
+
+$$
+`\begin{equation}
+ln Y_i = \alpha^{s} + \beta^{s} P_i +\sum_{j=1}^{150} \gamma^{s}_{j} GROUP_{ji} + \delta^{s}_1 SAT + \delta^{s}_2 ln PI_{i} + e^{s}_i
+\end{equation}`
+$$
+$$
+`\begin{equation}
+ln Y_i = \alpha^{l} + \beta^{l} P_i + \sum_{j=1}^{150} \gamma^{l}_{j} GROUP_{ji} + \delta^{l}_1 SAT + \delta^{l}_2 ln PI_{i} + \lambda FS_i +  e^{l}_i
+\end{equation}`
+$$
+
+- What would be the auxiliary regression in this case?
+]
+
+--
+
+.font90[
+
+$$
+`\begin{equation}
+FS_i = \pi_0 + \pi_1 P_i + \sum_{j=1}^{150} \pi_{3,j} GROUP_{ji} + \pi_4 SAT + \pi_5 ln PI_{i}  +  u_i
+\end{equation}`
+$$
+
+$$
+`\begin{equation}
+OVB = \beta^{s} - \beta^{l}  =  \pi_1 \times \lambda
+\end{equation}`
+$$
+
+-  Time to think about the sign and magnitude of  `\(\pi_1\)` and `\(\lambda\)` in this case. ]
+
+---
+
+# OVB in Dale and Krueger Study 2/3 
+.font90[
+
+$$
+`\begin{equation}
+ln Y_i = \alpha^{s} + \mathbf{\beta^{s}} P_i +\sum_{j=1}^{150} \gamma^{s}_{j} GROUP_{ji} + \delta^{s}_1 SAT + \delta^{s}_2 ln PI_{i} + e^{s}_i
+\end{equation}`
+$$
+$$
+`\begin{equation}
+ln Y_i = \alpha^{l} + \mathbf{\beta^{l}} P_i + \sum_{j=1}^{150} \gamma^{l}_{j} GROUP_{ji} + \delta^{l}_1 SAT + \delta^{l}_2 ln PI_{i} + \mathbf{\lambda} FS_i +  e^{l}_i
+\end{equation}`
+$$
+
+- What would be the auxiliary regression in this case?
+]
+
+
+
+.font90[
+
+$$
+`\begin{equation}
+FS_i = \pi_0 + \mathbf{\pi_1} P_i + \sum_{j=1}^{150} \pi_{3,j} GROUP_{ji} + \pi_4 SAT + \pi_5 ln PI_{i} +  u_i
+\end{equation}`
+$$
+
+$$
+`\begin{equation}
+OVB = \mathbf{\beta^{s} - \beta^{l}  =  \pi_1 \times \lambda}
+\end{equation}`
+$$
+
+-  Time to think about the sign and magnitude of  `\(\pi_1\)` and `\(\lambda\)` in this case. ]
+
+---
+# OVB in Dale and Krueger Study 3/3
+
+-  `\(\pi_1\)` is likely to be negative and large in magnitude. 
+- `\(\lambda\)` higher family sizes might lead to less resources per children and this could have a negative effect on future earnings. Hence `\(\lambda &lt; 0\)`
+- Hence omitting `\(FS_i\)` will probably lead to a OVB that is positive (estimated effects are larger than true effects) positive. 
+--
+
+- Let's think of other potentially omitted variables: received tutoring? parental education? 
+--
+
+- One thing that is interesting about this particular example is that most stories that you can think have either `\(\lambda &lt; 0, \pi_1&lt;0\)` or `\(\lambda &gt; 0, \pi_1&gt;0\)` leading us to suspect that the estimated effect of private college in a regression are likely to be overestimated. 
+
+---
+# Robustness to Inclusion/Exclussion of Regressors
+
+- In regression, we can never know if we have control for enough variables to eliminate OVB/selection bias.
+
+- Given this, we should always ask how much do the estimated coefficients change when including new variables. 
+
+- Confidence on regression estimates of causal effects grow when treatment effects are insensitive to the inclusion of new variables.
+
+---
+background-image: url("Images/MMtbl23_emphA_OVB.png"), url("Images/MMtbl23_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 5%, 100% 95%
+count:false
+
+# Robustness: Dale and Krueger Study 1/2
+.font80[
+.pull-left[
+- Moving from column (1) to (2): 
+  - (1) was omitting `\(SAT_i\)`, and (2) is the long version of (1)
+  - `\(OVB = \beta^{s} - \beta^{l} = 0.212 - 0.152 = 0.06\)`
+  - How about computing the same but using the OVB formula? 
+    - We need the auxiliary regression (page 76 of MM): `\(\pi_1 = 1.165\)`
+    - Where is the "effect of omitted in long" `\((\lambda)\)`?
+]
+]
+---
+background-image: url("Images/MMtbl23_emphA_OVB.png"), url("Images/MMtbl23_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 5%, 100% 95%
+
+# Robustness: Dale and Krueger Study 1/2
+.font80[
+.pull-left[
+- Moving from column (1) to (2): 
+  - (1) was omitting `\(SAT_i\)`, and (2) is the long version of (1).
+  - `\(OVB = \beta^{s} - \beta^{l} = 0.212 - 0.152 = 0.06\)`
+  - How about computing the same but using the OVB formula? 
+    - We need the auxiliary regression (page 76 of MM): `\(\pi_1 = 1.165\)`
+    - Where is the "effect of omitted in long" `\((\lambda)\)`?
+    - `\(\lambda= 0.051\)`
+    - `\(OVB = \pi_1 \times \lambda = 1.165 \times 0.051 = 0.06\)`!
+]
+]
+
+---
+background-image: url("Images/MMtbl23_emphA_OVB.png"), url("Images/MMtbl23_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 5%, 100% 95%
+count: false
+
+# Robustness: Dale and Krueger Study 2/2
+.font80[
+.pull-left[
+- Moving from column (4) to (5): 
+  - (4) was omitting `\(SAT_i\)`, and (5) is the long version of (4)
+  - `\(OVB = \beta^{s} - \beta^{l} = 0.034 - 0.031 = 0.003\)`
+  - How about computing the same but using the OVB formula? 
+    - We need the auxiliary regression (page 76 of MM): `\(\pi_1 = 0.066\)`
+    - Where is the  `\((\lambda)\)`?
+]
+]
+
+---
+background-image: url("Images/MMtbl23_emphA_OVB.png"), url("Images/MMtbl23_emphB.png")
+background-size: 50%, 50%
+background-position: 100% 5%, 100% 95%
+
+# Robustness: Dale and Krueger Study 2/2
+.font80[
+.pull-left[
+- Moving from column (4) to (5): 
+  - (4) was omitting `\(SAT_i\)`, and (5) is the long version of (4)
+  - `\(OVB = \beta^{s} - \beta^{l} = 0.034 - 0.031 = 0.003\)`
+  - How about computing the same but using the OVB formula? 
+    - We need the auxiliary regression (page 76 of MM): `\(\pi_1 = 0.066\)`
+    - Where is the  `\((\lambda)\)`?
+    - `\(\lambda= 0.036\)`
+    - `\(OVB = \pi_1 \times \lambda = 0.066 \times 0.036 = 0.0024\)`!
+    - Differences are due to rounding of small numbers
+    - Most of the change comes from `\(\pi_1\)`
+]
+]
+
+---
+count:false
+
+# Proof of OVB Formula
+
+.font90[ 
+
+.pull-left[
+
+
+$$
+`\begin{aligned}
+\beta^{s}_1 &amp;= \frac{Cov(X_{1i}, Y_{1i})}{Var(X_{1i})}
+\end{aligned}`
+$$
+
+]
+.pull-right[ 
+
+.right[
+
+Substitute for `\(Y_i\)` using equation for long.
+
+
+  ]
+]
+
+]
+
+
+---
+count:false
+
+# Proof of OVB Formula
+
+.font90[ 
+
+.pull-left[
+
+
+$$
+`\begin{aligned}
+\beta^{s}_1 &amp;= \frac{Cov(X_{1i}, Y_{1i})}{Var(X_{1i})}\\
+\beta^{s} &amp;= \frac{Cov(X_{1i}, \alpha^{l} + \beta^{l} X_{1i} + \gamma X_{2i} + e^{l}_i  )}{Var(X_{1i})} \\ 
+ &amp;= \frac{\beta^{l} Var(X_{1i}) +\gamma Cov(X_{1i}, X_{2i}) + Cov(X_{1i}, e^{l}_{i}) }{Var(X_{1i})}
+\end{aligned}`
+$$
+
+]
+.pull-right[ 
+
+.right[
+
+Substitute for `\(Y_i\)` using equation for long.
+
+&lt;br&gt;
+
+But what is a key &lt;br&gt;
+property of any residuals?
+
+
+  ]
+]
+
+]
+
+---
+count:false
+
+# Proof of OVB Formula
+
+.font90[ 
+
+.pull-left[
+
+
+$$
+`\begin{aligned}
+\beta^{s}_1 &amp;= \frac{Cov(X_{1i}, Y_{1i})}{Var(X_{1i})}\\
+\beta^{s} &amp;= \frac{Cov(X_{1i}, \alpha^{l} + \beta^{l} X_{1i} + \gamma X_{2i} + e^{l}_i  )}{Var(X_{1i})} \\ 
+ &amp;= \frac{\beta^{l} Var(X_{1i}) +\gamma Cov(X_{1i}, X_{2i}) + Cov(X_{1i}, e^{l}_{i}) }{Var(X_{1i})}\\
+\beta^{s} &amp;= \frac{\beta^{l} Var(X_{1i}) +\gamma Cov(X_{1i}, X_{2i})  }{Var(X_{1i})}\\
+&amp;= \beta^{l}  + \gamma\frac{Cov(X_{1i}, X_{2i})  }{Var(X_{1i})}
+\end{aligned}`
+$$
+
+]
+.pull-right[ 
+
+.right[
+
+Substitute for `\(Y_i\)` using equation for long.
+
+&lt;br&gt;
+
+But what is a key &lt;br&gt;
+property of any residuals?
+
+&lt;br&gt;&lt;br&gt;
+
+What is that last term? &lt;br&gt;
+(think auxiliary regression)
+
+
+  ]
+]
+
+]
+
+
+---
+count:true
+
+# Proof of OVB Formula
+
+.font90[ 
+
+.pull-left[
+
+
+$$
+`\begin{aligned}
+\beta^{s}_1 &amp;= \frac{Cov(X_{1i}, Y_{1i})}{Var(X_{1i})}\\
+\beta^{s} &amp;= \frac{Cov(X_{1i}, \alpha^{l} + \beta^{l} X_{1i} + \gamma X_{2i} + e^{l}_i  )}{Var(X_{1i})} \\ 
+ &amp;= \frac{\beta^{l} Var(X_{1i}) +\gamma Cov(X_{1i}, X_{2i}) + Cov(X_{1i}, e^{l}_{i}) }{Var(X_{1i})}\\
+\beta^{s} &amp;= \frac{\beta^{l} Var(X_{1i}) +\gamma Cov(X_{1i}, X_{2i})  }{Var(X_{1i})}\\
+&amp;= \beta^{l}  + \gamma\frac{Cov(X_{1i}, X_{2i})  }{Var(X_{1i})}\\
+&amp;= \beta^{l}  + \gamma \pi_1
+\end{aligned}`
+$$
+
+]
+.pull-right[ 
+
+.right[
+
+Substitute for `\(Y_i\)` using equation for long.
+
+&lt;br&gt;
+
+But what is a key &lt;br&gt;
+property of any residuals?
+
+&lt;br&gt;&lt;br&gt;
+
+What is that last term? &lt;br&gt;
+(think auxiliary regression)
+
+
+  ]
+]
+
+]
+
+
+
+---
+# Acknowledgments
+
+.pull-left[
+- [Ed Rubin's Graduate Econometrics](https://github.com/edrubin/EC607S21)
+- MM
+]
+.pull-right[
+
+]
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

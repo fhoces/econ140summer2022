@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>All Things Regression</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-07-19" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# All Things Regression
+## Part I
+### Fernando Hoces la Guardia
+### 07/19/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+
+# Regression Journey
+
+- Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
+
+- Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix.
+
+- Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79 and Appendix. 
+- All Things Regression: Anatomy, Inference, Logarithms, Binary Outcomes, and `\(R^2\)`. Ch2 of MM, Appendix + others. 
+
+---
+# Regression Journey
+
+- Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
+
+- Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix.
+
+- Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79 and Appendix.
+
+- **All Things Regression: Anatomy, Inference, Logarithms, Binary Outcomes, and `\(R^2\)`. Ch2 of MM, Appendix + others.** 
+
+
+---
+
+# Today and Tomorrow's Lecture
+
+- Regression Anatomy 
+
+- Regression Inference
+
+- Non-linearities: 
+   - Logarithms
+   - Others 
+
+- Binary Outcomes
+
+- `\(R^2\)`
+
+
+
+---
+class: inverse, middle
+
+# Regression Anatomy
+
+---
+# Regression Anatomy
+
+- In addition to the intuition of regression as matching in subgroups, here we will explore another interpretation of what does it mean to control for multiple variables (regressors)
+
+- We started with our exploration to regression with just on regressor: 
+`\(Y_i = \alpha + \beta  P_i +e_i\)`
+
+- We then added multiple regressors and interpreted the beta coefficient as a weighted average of difference within subgroups. 
+
+- The first resgression is sometimes called a bivariate regression (or bivariate analysis, aka univariate analysis, in the sense that there is only one independent variable). 
+
+- The second is called a multivariate regression (aka multivariate analysis). 
+
+---
+#  "Controlling For" a Second Interpretation 1/2
+
+.font90[
+- In a **multiple** regression like the following: 
+
+$$
+`\begin{equation}
+Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + e_i
+\end{equation}`
+$$
+
+- The coefficient of `\(X_{1i}\)` `\((\beta_1)\)` is the same as the one obtained from a **bivariate** regression between the outcome variable `\((Y_i)\)` and the residual term `\(\widetilde X_{1i}\)`, that corresponds to the following (auxiliary) regression: 
+
+$$
+`\begin{equation}
+X_{1i} = \pi_0 + \pi_1 X_{2i} + \widetilde X_{1i}
+\end{equation}`
+$$
+Meaning: 
+$$
+`\begin{align}
+  \beta_1 &amp;= \dfrac{\mathop{\text{Cov}} \left( \text{Y}_{i},\, \widetilde{X}_{1i} \right)}{\mathop{\text{Var}} \left( \widetilde{X}_{1i} \right)}
+\end{align}`
+$$
+]
+
+---
+#  "Controlling For" a Second Interpretation 2/2
+
+$$
+`\begin{equation}
+X_{1i} = \pi_0 + \pi_1 X_{2i} + \widetilde X_{1i}
+\end{equation}`
+$$
+
+- Let’s think about what this residual means: 
+  - All variation (information) in `\(X_{1i}\)` that cannot be explained by variation (information) in  `\(X_{2i}\)`. 
+  - Then the bivariate regression (of `\(Y_i\)` and `\(\widetilde X_{1i}\)` ) is basically regressing `\(Y_i\)` on “all of `\(X_{1i}\)` that is not explained by `\(X_{2i}\)`” or “all of `\(X_{1i}\)`, removing, or controlling for, the variation in `\(X_{2i}\)`” 
+
+---
+
+# Regression Anatomy: Visually
+
+- This formula also applies for the residual after regression `\(Y_i\)` on `\(X_{2i}\)`, and this last one has a nice visual interpretation. 
+
+- (Regression Anatomy here is a simplified version of a more general idea called the Frisch-Waugh-Lovell theorem, it is outside of the scope of the course, but if you learn linear algebra, it has a really cool interpretation)
+
+- Graphical example (Again from the great slides of [Ed Rubin](https://github.com/edrubin/EC607S21)) for the case where `\(X_2i\)` is a binary variable
+
+---
+# Regression Anatomy: Visually
+
+
+
+`\(Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + e_i\)`
+
+&lt;img src="16_all_things_reg_files/figure-html/fig_anatomy1-1.svg" style="display: block; margin: auto;" /&gt;
+---
+count: true
+# Regression Anatomy: Visually
+
+`\(\beta_1\)` gives the relationship between `\(y\)` and `\(x_1\)` *after controlling for* `\(x_2\)`
+
+&lt;img src="16_all_things_reg_files/figure-html/fig_anatomy2-1.svg" style="display: block; margin: auto;" /&gt;
+---
+count: true
+# Regression Anatomy: Visually
+
+`\(\beta_1\)` gives the relationship between `\(y\)` and `\(x_1\)` *after controlling for* `\(x_2\)`
+
+&lt;img src="16_all_things_reg_files/figure-html/fig_anatomy3-1.svg" style="display: block; margin: auto;" /&gt;
+---
+count: true
+# Regression Anatomy: Visually
+
+`\(\beta_1\)` gives the relationship between `\(y\)` and `\(x_1\)` *after controlling for* `\(x_2\)`
+
+&lt;img src="16_all_things_reg_files/figure-html/fig_anatomy4-1.svg" style="display: block; margin: auto;" /&gt;
+---
+count: true
+# Regression Anatomy: Visually
+
+`\(\beta_1\)` gives the relationship between `\(y\)` and `\(x_1\)` *after controlling for* `\(x_2\)`
+
+&lt;img src="16_all_things_reg_files/figure-html/fig_anatomy5-1.svg" style="display: block; margin: auto;" /&gt;
+---
+count: true
+# Regression Anatomy: Visually
+
+`\(\beta_1\)` gives the relationship between `\(y\)` and `\(x_1\)` *after controlling for* `\(x_2\)`
+
+&lt;img src="16_all_things_reg_files/figure-html/fig_anatomy6-1.svg" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Regression Anatomy: Many Regressors 1/2
+
+- This logic, of removing the variation explained by other regressors and turning a multivariate regression into a bivariate regression, applies to any number of regressors. 
+
+- Hence the multivariate regression: 
+
+
+
+$$
+`\begin{equation}
+Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + ...  + \beta_k X_{ki} + ... \beta_K X_{Ki} + e_i
+\end{equation}`
+$$
+
+- The coefficient of `\(X_{ki}\)` `\((\beta_k)\)` is the same as the one obtained from a bivariate regression between the outcome variable `\((Y_i)\)` and the residual term `\(\widetilde X_{ki}\)`, that corresponds to the following (auxiliary) regression: 
+
+$$
+`\begin{equation}
+X_{ki} = \pi_0 + \pi_1 X_{1i} + \pi_1 X_{2i}+ ...  \pi_{k-1} X_{k-1,i}+ \pi_{k+1} X_{k+1,i}+...+ \beta_K X_{Ki}+\widetilde X_{k1i}
+\end{equation}`
+$$
+
+
+
+
+---
+# Regression Anatomy: Many Regressors 2/2
+With: 
+$$
+`\begin{align}
+  \beta_k &amp;= \dfrac{\mathop{\text{Cov}} \left( \text{Y}_{i},\, \widetilde{X}_{ki} \right)}{\mathop{\text{Var}} \left( \widetilde{X}_{ki} \right)}
+\end{align}`
+$$
+
+- With this approach, "controlling for" can be understood as "removing all the variation between the variable of interest `\((X_{ki})\)` and all the other controls" 
+
+---
+# Today and Tomorrow's Lecture
+
+- Regression Anatomy 
+
+- **Regression Inference**
+
+- Non-linearities: 
+   - Logarithms
+   - Others 
+
+- Binary Outcomes
+
+- `\(R^2\)`
+
+
+
+
+---
+class: inverse, middle
+
+# Regression Inference
+
+
+---
+# Until Now We Have Focus On **The** Population Regression
+
+
+
+.pull-left[
+
+&lt;img src="16_all_things_reg_files/figure-html/pop1-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[**Population**]
+
+]
+
+--
+
+.pull-right[
+
+&lt;img src="16_all_things_reg_files/figure-html/scatter1-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[**Population relationship**]
+
+$$ Y_i = 2.53 + 0.57 X_i + e_i $$
+
+$$ Y_i = \alpha + \beta X_i + e_i $$
+
+
+]
+
+---
+# Now We Focus On Regressions Based On A Sample
+
+.pull-left[
+
+&lt;img src="16_all_things_reg_files/figure-html/sample1-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[**Sample 1:** 30 random individuals]
+
+]
+
+--
+
+.pull-right[
+
+&lt;img src="16_all_things_reg_files/figure-html/sample1 scatter-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[
+
+**Population relationship**
+&lt;br&gt;
+`\(Y_i = 2.53 + 0.57 X_i + u_i\)`
+
+**Sample relationship**
+&lt;br&gt;
+`\(\hat{Y}_i = 2.36 + 0.61 X_i\)`
+
+]
+
+]
+
+---
+# Now We Focus On Regressions Based On A Sample
+
+.pull-left[
+
+&lt;img src="16_all_things_reg_files/figure-html/sample2-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[**Sample 2:** 30 random individuals]
+
+]
+
+.pull-right[
+
+&lt;img src="16_all_things_reg_files/figure-html/sample2 scatter-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[
+
+**Population relationship**
+&lt;br&gt;
+`\(Y_i = 2.53 + 0.57 X_i + u_i\)`
+
+**Sample relationship**
+&lt;br&gt;
+`\(\hat{Y}_i = 2.79 + 0.56 X_i\)`
+
+]
+
+]
+---
+# Now We Focus On Regressions Based On A Sample
+
+.pull-left[
+
+&lt;img src="16_all_things_reg_files/figure-html/sample3-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[**Sample 3:** 30 random individuals]
+
+]
+
+.pull-right[
+
+&lt;img src="16_all_things_reg_files/figure-html/sample3 scatter-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[
+
+**Population relationship**
+&lt;br&gt;
+`\(Y_i = 2.53 + 0.57 X_i + u_i\)`
+
+**Sample relationship**
+&lt;br&gt;
+`\(\hat{Y}_i = 3.21 + 0.45 X_i\)`
+
+]
+
+]
+
+---
+layout: false
+class: white-slide, middle
+
+Repeat **10,000 times** (Monte Carlo simulation).
+
+---
+class: white-slide
+
+
+&lt;img src="16_all_things_reg_files/figure-html/simulation scatter-1.png" style="display: block; margin: auto;" /&gt;
+
+.right[
+Another beautiful visualization by [Ed Rubin](https://github.com/edrubin/EC421W19) and [Kyle Raze](https://raw.githack.com/kyleraze/EC320_Econometrics/master/Lectures/10-Simple_Linear_Regression_Inference/10-Simple_Linear_Regression_Inference.html#1)
+]
+
+---
+# CLT in Action 
+
+.pull-left[
+
+.center[
+**Intercept Estimates**
+]
+&lt;img src="16_all_things_reg_files/figure-html/simulation hist1-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+
+.center[
+**Slope Estimates**
+]
+&lt;img src="16_all_things_reg_files/figure-html/simulation hist2-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+- The estimated coefficients are a linear combination (similar to a summation) of independent random variables. Hence the CLT applies.
+
+- Let `\(\widehat \beta\)` be the estimated coefficient of the slope, CLT tells us: 
+`\(\widehat \beta \sim N(\beta, SE(\widehat \beta) )\)` 
+---
+# Standard Errors of Estimated Coefficients  1/3 
+
+- Remember that the standard deviation of the sample mean, what we called standard errors, is: 
+$$
+`\begin{equation}
+SE(\overline Y) = \frac{\sigma_{Y}}{\sqrt{n}}
+\end{equation}`
+$$
+- A similar formula applied also to the difference in means `\(\widehat \mu  = \overline Y_1 - \overline Y_0\)`. 
+
+- Following a similar intuition, here we will state that the standard error of the estimated regression coefficient of interest is:
+$$
+`\begin{equation}
+SE(\widehat \beta) = \frac{\sigma_{e}}{\sqrt{n}} \times \frac{1}{\sigma_X}
+\end{equation}`
+$$
+
+---
+background-image: url("Images/MMFig22.png")
+background-size: 50%
+background-position: 100% 50%
+
+# Standard Errors of Estimated Coefficients  2/3
+
+.font100[
+.pull-left[
+
+- One regressor: `\(SE(\widehat \beta) = \frac{\sigma_{e}}{\sqrt{n}} \times \frac{1}{\sigma_X}\)`
+- `\(n\)` plays a similar role as for the previous SEs.  
+- `\(\sigma_{e}\)`: is the standard deviation of the residual. As `\(X\)` explains (fits) more of `\(Y\)` this standard deviation gets smaller. As `\(X\)` explains more of `\(Y\)`, the precision of `\(\widehat \beta\)` increases. 
+- `\(\sigma_X\)`: is the standard deviation of the variable `\(X\)`. As `\(X\)` varies more, the precision of `\(\widehat \beta\)` increases. 
+
+]
+]
+
+---
+# Standard Errors of Estimated Coefficients  3/3
+
+.pull-left[
+- The standard error of a coefficient `\(\widehat \beta_k\)` in a multivariate regression is:
+&lt;br&gt;
+&lt;br&gt;
+- Where `\(\widehat \beta_k\)` comes from a multivariate regression: 
+&lt;br&gt;
+&lt;br&gt;
+- And `\(\widetilde X_{ki}\)` is the residual from regression anatomy:
+]
+.pull-right[
+
+$$
+`\begin{equation}
+SE(\widehat \beta_k) = \frac{\sigma_{e}}{\sqrt{n}} \times \frac{1}{\sigma_{\widetilde X_{k}}}
+\end{equation}`
+$$
+
+
+
+$$
+`\begin{equation}
+Y_i = \alpha + \sum_{k = 1}^{K} \beta_{k}X_{ki} + e_i
+\end{equation}`
+$$
+$$
+`\begin{equation}
+X_{ki} = \pi_0 + \sum_{j = 1}^{k-1} \pi_{j}X_{ki}  + \sum_{j = k+1}^{K} \pi_{j}X_{ki} + \widetilde X_{ki}
+\end{equation}`
+$$
+
+]
+
+- `\(\sigma_{\widetilde X_{k}}\)` is the standard deviation of the residual `\(\widetilde X_{ki}\)`. It represents all the variation that is left in `\(X_{k}\)` after controlling for all other regressors. By construction it will be less than `\(\sigma_{X_{k}}\)`. Notice the trade-off of adding more regressors. 
+
+
+---
+# Collinearity 1/2
+
+- Collinearity is a problem of regression that happens when two or more regressors are closely correlated ("colinear"). 
+
+- In the non-extreme case of perfect collinearity, regression will still work, but the resulting SE will be inflated. Let's look at the SE formula to see why: 
+
+$$
+`\begin{equation}
+SE(\widehat \beta_k) = \frac{\sigma_{e}}{\sqrt{n}} \times \frac{1}{\sigma_{\widetilde X_{k}}}
+\end{equation}`
+$$
+
+- If `\(X_{k}\)` is highly collinear, with one or more other regressors, it will render a very small residual in the auxiliary regression, resulting in turn in a very small  `\(\sigma_{\widetilde X_{k}}\)`. Given that this last term is in the denominator, the SE will become very large, rendering any coefficient statistically insignificant. 
+
+- The way to solve this is either to remove the collinear regressor or test for the significance of multiple coefficients simultaneously (not covered here)
+
+---
+# Collinearity 2/2
+.font90[
+
+$$
+`\begin{equation}
+SE(\widehat \beta_k) = \frac{\sigma_{e}}{\sqrt{n}} \times \frac{1}{\sigma_{\widetilde X_{k}}}
+\end{equation}`
+$$
+- The extreme version of this problem is when one regressor is perfectly correlated with one or more regressors (making it a linear combination of the regressor). 
+
+- In this case the residual is zero, and so is its variance in the auxiliary regression. 
+
+- Under perfect collinearity (aka multicollinearity) the software that is runnin the regression will do one of two things: (i) drop one or more of the regressor to avoid perfect collinearity, or (ii) don't run the regression (saying something like "cannot invert matrix"). 
+
+- (Perfect collinearity is the reason why we don't include two binary variables two describe two groups, as they would be perfectly collinear with the intercept)
+
+]
+---
+# Robust Standard Errors
+
+- One underlying assumption behind the SEs discussed so far is that the residual does not change in a systematic way across the Xs. 
+
+- For an example of how this assumption does not hold, look draw this pattern on the board. 
+
+- There is a modified version of the SEs that is robust to this problem. In the sense that when the problem is present, it solves it, and when its not, it doesn't do harm. 
+
+- This is the most common formula for standard errors that is reported in current research.
+
+- MM shows the formula for this Robust SEs, but its intuition is similar to the one reviewed here (and you will not be asked about it). 
+
+
+
+---
+# Repeat Hypothesis Testing and Confidence Intervals 
+
+- Now that we have our SEs, the procedure to conduct hypothesis tests, and build confidence intervals for estimated coefficients `\((\widehat \beta)\)` , is the same as discussed in the statistical inference lecture: 
+1. Define a null hypothesis `\(\beta_0\)` (usually `\(\beta_0 = 0\)`) 
+2. Construct a t-statistic: `\(t(\beta_0)\)` by subtracting the null and dividing by the SE. 
+3. Compute the p-value as probability that we observe a t-statistic as extreme as the obtained in the sample, if the null is true. You don't need to obtain the exact p-value, but you are asked to remember that the probability that this t-statistic is larger than 1 is about 30%, of being larger than 2 is about 5%, and of being larger than 3 is less than 1% (from the `\(N(0,1)\)`).  
+4. Compute 95% confidence intervals as the range that will contain the true population parameter 95% of the time (by subtracting and adding `\(2\times SE(\widehat \beta)\)` )
+
+
+---
+
+# Today and Tomorrow's Lecture
+
+- Regression Anatomy 
+
+- Regression Inference
+
+- Non-linearities:
+   - Logarithms
+   - Others 
+
+- Binary Outcomes
+
+- `\(R^2\)`
+
+
+
+---
+class: inverse, middle
+
+# Non-linearities
+
+
+---
+# Acknowledgments
+
+.pull-left[
+- [Ed Rubin's Graduate Econometrics](https://github.com/edrubin/EC607S21)
+- [Kyle Raze's Undergraduate Econometrics 1](https://github.com/kyleraze/EC320_Econometrics)
+- MM
+]
+.pull-right[
+
+]
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

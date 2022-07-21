@@ -1,0 +1,1058 @@
+---
+title: "All Things Regression"
+subtitle: "Part I"
+author: "Fernando Hoces la Guardia"
+date: "07/19/2022"
+output: 
+  xaringan::moon_reader:
+    footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
+    css: [default, metropolis, metropolis-fonts, "my-css.css"] 
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css">
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+</style>
+
+```{r , include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, viridis, knitr, extrafont, tidyverse, magrittr, latex2exp, 
+       parallel, Ecdat, wooldridge, dslabs, ggforce, emo, png, grid, pander, 
+       countdown, emoGG, haven, broom, ggridges, gridExtra, kableExtra, snakecase, 
+       janitor, data.table, lubridate, lfe, here)
+
+# Define pink color
+red_pink <- "#e64173"
+turquoise <- "#20B2AA"
+orange <- "#FFA500"
+red <- "#fb6107"
+blue <- "#3b3b9a"
+green <- "#8bb174"
+grey_light <- "grey70"
+grey_mid <- "grey50"
+grey_dark <- "grey20"
+purple <- "#6A5ACD"
+slate <- "#314f4f"
+# Dark slate grey: #314f4f
+
+options(htmltools.dir.version = FALSE)
+
+# define vars
+om = par("mar")
+lowtop = c(om[1],om[2],0.1,om[4])
+
+overwrite = FALSE
+
+
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#23373b" # metropolis font color
+# Notes directory
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  message = FALSE,
+  warning = FALSE,
+  dev = "svg",
+  cache = TRUE
+  #fig.width = 11,
+  #fig.height = 5
+)
+
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 14),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  legend.position = "none"
+)
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -0.5, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_simple <- theme_bw() + theme(
+  line = element_blank(),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text.x = element_text(size = 18, family = "STIXGeneral"),
+  axis.text.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  # plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_math <- theme_void() + theme(
+  text = element_text(family = "MathJax_Math"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_serif <- theme_void() + theme(
+  text = element_text(family = "MathJax_Main"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes <- theme_void() + theme(
+  text = element_text(family = "Fira Sans Book"),
+  axis.title = element_text(size = 18),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = grey_light,
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_set(theme_gray(base_size = 20))
+# Column names for regression results
+reg_columns <- c("Term", "Est.", "S.E.", "t stat.", "p-Value")
+# Function for formatting p values
+format_pvi <- function(pv) {
+  return(ifelse(
+    pv < 0.0001,
+    "<0.0001",
+    round(pv, 4) %>% format(scientific = F)
+  ))
+}
+format_pv <- function(pvs) lapply(X = pvs, FUN = format_pvi) %>% unlist()
+# Tidy regression results table
+tidy_table <- function(x, terms, highlight_row = 1, highlight_color = "black", highlight_bold = T, digits = c(NA, 3, 3, 2, 5), title = NULL) {
+  x %>%
+    tidy() %>%
+    select(1:5) %>%
+    mutate(
+      term = terms,
+      p.value = p.value %>% format_pv()
+    ) %>%
+    kable(
+      col.names = reg_columns,
+      escape = F,
+      digits = digits,
+      caption = title
+    ) %>%
+    kable_styling(font_size = 20) %>%
+    row_spec(1:nrow(tidy(x)), background = "white") %>%
+    row_spec(highlight_row, bold = highlight_bold, color = highlight_color)
+}
+
+
+```
+
+
+
+```{css, echo = F, eval = T}
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+```
+
+
+# Regression Journey
+
+- Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
+
+- Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix.
+
+- Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79 and Appendix. 
+- All Things Regression: Anatomy, Inference, Logarithms, Binary Outcomes, and $R^2$. Ch2 of MM, Appendix + others. 
+
+---
+# Regression Journey
+
+- Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
+
+- Regression as Line Fitting and Conditional Expectation. Ch2 of MM, Appendix.
+
+- Multiple Regression and Omitted Variable Bias. Ch2 of MM pages 68-79 and Appendix.
+
+- **All Things Regression: Anatomy, Inference, Logarithms, Binary Outcomes, and $R^2$. Ch2 of MM, Appendix + others.** 
+
+
+---
+
+# Today and Tomorrow's Lecture
+
+- Regression Anatomy 
+
+- Regression Inference
+
+- Non-linearities: 
+   - Logarithms
+   - Others 
+
+- Binary Outcomes
+
+- $R^2$
+
+
+
+---
+class: inverse, middle
+
+# Regression Anatomy
+
+---
+# Regression Anatomy
+
+- In addition to the intuition of regression as matching in subgroups, here we will explore another interpretation of what does it mean to control for multiple variables (regressors)
+
+- We started with our exploration to regression with just on regressor: 
+$Y_i = \alpha + \beta  P_i +e_i$
+
+- We then added multiple regressors and interpreted the beta coefficient as a weighted average of difference within subgroups. 
+
+- The first resgression is sometimes called a bivariate regression (or bivariate analysis, aka univariate analysis, in the sense that there is only one independent variable). 
+
+- The second is called a multivariate regression (aka multivariate analysis). 
+
+---
+#  "Controlling For" a Second Interpretation 1/2
+
+.font90[
+- In a **multiple** regression like the following: 
+
+$$
+\begin{equation}
+Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + e_i
+\end{equation}
+$$
+
+- The coefficient of $X_{1i}$ $(\beta_1)$ is the same as the one obtained from a **bivariate** regression between the outcome variable $(Y_i)$ and the residual term $\widetilde X_{1i}$, that corresponds to the following (auxiliary) regression: 
+
+$$
+\begin{equation}
+X_{1i} = \pi_0 + \pi_1 X_{2i} + \widetilde X_{1i}
+\end{equation}
+$$
+Meaning: 
+$$
+\begin{align}
+  \beta_1 &= \dfrac{\mathop{\text{Cov}} \left( \text{Y}_{i},\, \widetilde{X}_{1i} \right)}{\mathop{\text{Var}} \left( \widetilde{X}_{1i} \right)}
+\end{align}
+$$
+]
+
+---
+#  "Controlling For" a Second Interpretation 2/2
+
+$$
+\begin{equation}
+X_{1i} = \pi_0 + \pi_1 X_{2i} + \widetilde X_{1i}
+\end{equation}
+$$
+
+- Let’s think about what this residual means: 
+  - All variation (information) in $X_{1i}$ that cannot be explained by variation (information) in  $X_{2i}$. 
+  - Then the bivariate regression (of $Y_i$ and $\widetilde X_{1i}$ ) is basically regressing $Y_i$ on “all of $X_{1i}$ that is not explained by $X_{2i}$” or “all of $X_{1i}$, removing, or controlling for, the variation in $X_{2i}$” 
+
+---
+
+# Regression Anatomy: Visually
+
+- This formula also applies for the residual after regression $Y_i$ on $X_{2i}$, and this last one has a nice visual interpretation. 
+
+- (Regression Anatomy here is a simplified version of a more general idea called the Frisch-Waugh-Lovell theorem, it is outside of the scope of the course, but if you learn linear algebra, it has a really cool interpretation)
+
+- Graphical example (Again from the great slides of [Ed Rubin](https://github.com/edrubin/EC607S21)) for the case where $X_2i$ is a binary variable
+
+---
+# Regression Anatomy: Visually
+
+```{R, data_anatomy, cache = F, include = F, fig.height = 4 }
+n <- 1e2
+set.seed(1234)
+gen_df <- tibble(
+  x2 = sample(x = c(F, T), size = n, replace = T),
+  x1 = runif(n = n, min = -3, max = 3) + x2 - 0.5,
+  u  = rnorm(n = n, mean = 0, sd = 1),
+  y  = -3 + x1 + x2 * 4 + u
+)
+ya_mean <- filter(gen_df, x2 == F)$y %>% mean()
+yb_mean <- filter(gen_df, x2 == T)$y %>% mean()
+x1a_mean <- filter(gen_df, x2 == F)$x1 %>% mean()
+x1b_mean <- filter(gen_df, x2 == T)$x1 %>% mean()
+gen_df %<>% mutate(
+  y_dm = y - ya_mean * (x2 == F) - yb_mean * (x2 == T),
+  x1_dm = x1 - x1a_mean * (x2 == F) - x1b_mean * (x2 == T)
+)
+```
+
+$Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + e_i$
+
+```{R, fig_anatomy1, echo = F, fig.height = 4}
+ggplot(data = gen_df, aes(y = y, x = x1, color = x2, shape = x2)) +
+  geom_hline(yintercept = 0, color = "grey85") +
+  geom_vline(xintercept = 0, color = "grey85") +
+  geom_point(size = 3) +
+  annotate("text", x = -0.075, y = 6.75, label = TeX("$y$"), size = 8) +
+  annotate("text", x = 2.95, y = 0.3, label = TeX("$x_1$"), size = 8) +
+  ylim(c(-7, 7)) +
+  xlim(c(-3.5, 3.5)) +
+  theme_empty +
+  scale_color_manual(
+    expression(x[2]),
+    values = c("darkslategrey", red_pink),
+    labels = c("A", "B")
+  ) +
+  scale_shape_manual(
+    expression(x[2]),
+    values = c(1, 19),
+    labels = c("A", "B")
+  ) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 22)
+  )
+```
+---
+count: true
+# Regression Anatomy: Visually
+
+$\beta_1$ gives the relationship between $y$ and $x_1$ *after controlling for* $x_2$
+
+```{R, fig_anatomy2, echo = F, fig.height = 4}
+ggplot(data = gen_df, aes(y = y, x = x1, color = x2, shape = x2)) +
+  geom_hline(yintercept = ya_mean, color = "darkslategrey", alpha = 0.5, size = 2) +
+  geom_hline(yintercept = yb_mean, color = red_pink, alpha = 0.5, size = 2) +
+  geom_hline(yintercept = 0, color = "grey85") +
+  geom_vline(xintercept = 0, color = "grey85") +
+  geom_point(size = 3) +
+  annotate("text", x = -0.075, y = 6.75, label = TeX("$y$"), size = 8) +
+  annotate("text", x = 2.95, y = 0.3, label = TeX("$x_1$"), size = 8) +
+  ylim(c(-7, 7)) +
+  xlim(c(-3.5, 3.5)) +
+  theme_empty +
+  scale_color_manual(
+    expression(x[2]),
+    values = c("darkslategrey", red_pink),
+    labels = c("A", "B")
+  ) +
+  scale_shape_manual(
+    expression(x[2]),
+    values = c(1, 19),
+    labels = c("A", "B")
+  ) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 22)
+  )
+```
+---
+count: true
+# Regression Anatomy: Visually
+
+$\beta_1$ gives the relationship between $y$ and $x_1$ *after controlling for* $x_2$
+
+```{R, fig_anatomy3, echo = F, fig.height = 4}
+ggplot(data = gen_df %>% mutate(y = y - 4 * x2), aes(y = y_dm, x = x1)) +
+  geom_hline(yintercept = 0, color = "grey85") +
+  geom_vline(xintercept = 0, color = "grey85") +
+  geom_point(size = 3, aes(color = x2, shape = x2)) +
+  annotate("text", x = -0.075, y = 6.75, label = TeX("$y|x_2$"), size = 8, hjust = 1) +
+  annotate("text", x = 2.95, y = 0.3, label = TeX("$x_1$"), size = 8) +
+  ylim(c(-7, 7)) +
+  xlim(c(-3.5, 3.5)) +
+  theme_empty +
+  scale_color_manual(
+    expression(x[2]),
+    values = c("darkslategrey", red_pink),
+    labels = c("A", "B")
+  ) +
+  scale_shape_manual(
+    expression(x[2]),
+    values = c(1, 19),
+    labels = c("A", "B")
+  ) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 22)
+  )
+```
+---
+count: true
+# Regression Anatomy: Visually
+
+$\beta_1$ gives the relationship between $y$ and $x_1$ *after controlling for* $x_2$
+
+```{R, fig_anatomy4, echo = F, fig.height = 4}
+ggplot(data = gen_df %>% mutate(y = y - 4 * x2), aes(y = y_dm, x = x1)) +
+  geom_hline(yintercept = 0, color = "grey85") +
+  geom_vline(xintercept = 0, color = "grey85") +
+  geom_vline(xintercept = x1a_mean, color = "darkslategrey", alpha = 0.5, size = 2) +
+  geom_vline(xintercept = x1b_mean, color = red_pink, alpha = 0.5, size = 2) +
+  geom_point(size = 3, aes(color = x2, shape = x2)) +
+  annotate("text", x = -0.075, y = 6.75, label = TeX("$y|x_2$"), size = 8, hjust = 1) +
+  annotate("text", x = 2.95, y = 0.3, label = TeX("$x_1$"), size = 8) +
+  ylim(c(-7, 7)) +
+  xlim(c(-3.5, 3.5)) +
+  theme_empty +
+  scale_color_manual(
+    expression(x[2]),
+    values = c("darkslategrey", red_pink),
+    labels = c("A", "B")
+  ) +
+  scale_shape_manual(
+    expression(x[2]),
+    values = c(1, 19),
+    labels = c("A", "B")
+  ) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 22)
+  )
+```
+---
+count: true
+# Regression Anatomy: Visually
+
+$\beta_1$ gives the relationship between $y$ and $x_1$ *after controlling for* $x_2$
+
+```{R, fig_anatomy5, echo = F, fig.height = 4}
+ggplot(data = gen_df %>% mutate(y = y - 4 * x2), aes(y = y_dm, x = x1_dm)) +
+  geom_hline(yintercept = 0, color = "grey85") +
+  geom_vline(xintercept = 0, color = "grey85") +
+  geom_point(size = 3, aes(color = x2, shape = x2)) +
+  annotate("text", x = -0.075, y = 6.75, label = TeX("$y|x_2$"), size = 8, hjust = 1) +
+  annotate("text", x = 2.95, y = 0.3, label = TeX("$x_1|x_2$"), size = 8, hjust = 1) +
+  ylim(c(-7, 7)) +
+  xlim(c(-3.5, 3.5)) +
+  theme_empty +
+  scale_color_manual(
+    expression(x[2]),
+    values = c("darkslategrey", red_pink),
+    labels = c("A", "B")
+  ) +
+  scale_shape_manual(
+    expression(x[2]),
+    values = c(1, 19),
+    labels = c("A", "B")
+  ) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 22)
+  )
+```
+---
+count: true
+# Regression Anatomy: Visually
+
+$\beta_1$ gives the relationship between $y$ and $x_1$ *after controlling for* $x_2$
+
+```{R, fig_anatomy6, echo = F, fig.height = 4}
+ggplot(data = gen_df %>% mutate(y = y - 4 * x2), aes(y = y_dm, x = x1_dm)) +
+  geom_hline(yintercept = 0, color = "grey85") +
+  geom_vline(xintercept = 0, color = "grey85") +
+  geom_smooth(method = lm, se = F, color = purple, alpha = 1, size = 2) +
+  geom_point(size = 3, aes(color = x2, shape = x2)) +
+  annotate("text", x = -0.075, y = 6.75, label = TeX("$y|x_2$"), size = 8, hjust = 1) +
+  annotate("text", x = 2.95, y = 0.3, label = TeX("$x_1|x_2$"), size = 8, hjust = 1) +
+  ylim(c(-7, 7)) +
+  xlim(c(-3.5, 3.5)) +
+  theme_empty +
+  scale_color_manual(
+    expression(x[2]),
+    values = c("darkslategrey", red_pink),
+    labels = c("A", "B")
+  ) +
+  scale_shape_manual(
+    expression(x[2]),
+    values = c(1, 19),
+    labels = c("A", "B")
+  ) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 22)
+  )
+```
+
+
+---
+# Regression Anatomy: Many Regressors 1/2
+
+- This logic, of removing the variation explained by other regressors and turning a multivariate regression into a bivariate regression, applies to any number of regressors. 
+
+- Hence the multivariate regression: 
+
+
+
+$$
+\begin{equation}
+Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + ...  + \beta_k X_{ki} + ... \beta_K X_{Ki} + e_i
+\end{equation}
+$$
+
+- The coefficient of $X_{ki}$ $(\beta_k)$ is the same as the one obtained from a bivariate regression between the outcome variable $(Y_i)$ and the residual term $\widetilde X_{ki}$, that corresponds to the following (auxiliary) regression: 
+
+$$
+\begin{equation}
+X_{ki} = \pi_0 + \pi_1 X_{1i} + \pi_1 X_{2i}+ ...  \pi_{k-1} X_{k-1,i}+ \pi_{k+1} X_{k+1,i}+...+ \beta_K X_{Ki}+\widetilde X_{k1i}
+\end{equation}
+$$
+
+
+
+
+---
+# Regression Anatomy: Many Regressors 2/2
+With: 
+$$
+\begin{align}
+  \beta_k &= \dfrac{\mathop{\text{Cov}} \left( \text{Y}_{i},\, \widetilde{X}_{ki} \right)}{\mathop{\text{Var}} \left( \widetilde{X}_{ki} \right)}
+\end{align}
+$$
+
+- With this approach, "controlling for" can be understood as "removing all the variation between the variable of interest $(X_{ki})$ and all the other controls" 
+
+---
+# Today and Tomorrow's Lecture
+
+- Regression Anatomy 
+
+- **Regression Inference**
+
+- Non-linearities: 
+   - Logarithms
+   - Others 
+
+- Binary Outcomes
+
+- $R^2$
+
+
+
+
+---
+class: inverse, middle
+
+# Regression Inference
+
+
+---
+# Until Now We Have Focus On **The** Population Regression
+
+```{R, gen dataset, include = F, cache = T}
+# Set population and sample sizes
+n_p <- 100
+n_s <- 30
+# Set the seed
+set.seed(12468)
+# Generate data
+pop_df <- tibble(
+  i = 3,
+  x = rnorm(n_p, mean = 5, sd = 1.5),
+  e = rnorm(n_p, mean = 0, sd = 1),
+  y = i + 0.5 * x + e,
+  row = rep(1:sqrt(n_p), times = sqrt(n_p)),
+  col = rep(1:sqrt(n_p), each = sqrt(n_p)),
+  s1 = sample(x = c(rep(T, n_s), rep(F, n_p - n_s))),
+  s2 = sample(x = c(rep(T, n_s), rep(F, n_p - n_s))),
+  s3 = sample(x = c(rep(T, n_s), rep(F, n_p - n_s)))
+)
+# Regressions
+lm0 <- lm(y ~ x, data = pop_df)
+lm1 <- lm(y ~ x, data = filter(pop_df, s1 == T))
+lm2 <- lm(y ~ x, data = filter(pop_df, s2 == T))
+lm3 <- lm(y ~ x, data = filter(pop_df, s3 == T))
+# Simulation
+set.seed(12468)
+sim_df <- mclapply(mc.cores = 1, X = 1:1e4, FUN = function(x, size = n_s) {
+  lm(y ~ x, data = pop_df %>% sample_n(size = size)) %>% tidy()
+}) %>% do.call(rbind, .) %>% as_tibble()
+```
+
+.pull-left[
+
+```{R, pop1, echo = F, fig.fullwidth = T, dev = "svg"}
+ggplot(data = pop_df, aes(x = row, y = col)) +
+geom_point(color = "darkslategray", size = 10) +
+theme_empty
+```
+
+.center[**Population**]
+
+]
+
+--
+
+.pull-right[
+
+```{R, scatter1, echo = F, fig.fullwidth = T, dev = "svg", fig.height = 5}
+ggplot(data = pop_df, aes(x = x, y = y)) +
+geom_abline(
+  intercept = lm0$coefficients[1], slope = lm0$coefficients[2],
+  color = red_pink, size = 3
+) +
+geom_point(color = "darkslategray", size = 6) +
+theme_empty
+```
+
+.center[**Population relationship**]
+
+$$ Y_i = `r round(lm0$coefficients[1], 2)` + `r round(lm0$coefficients[2], 2)` X_i + e_i $$
+
+$$ Y_i = \alpha + \beta X_i + e_i $$
+
+
+]
+
+---
+# Now We Focus On Regressions Based On A Sample
+
+.pull-left[
+
+```{R, sample1, echo = F, fig.fullwidth = T, dev = "svg"}
+ggplot(data = pop_df, aes(x = row, y = col, shape = s1)) +
+geom_point(color = "darkslategray", size = 10) +
+scale_shape_manual(values = c(1, 19)) +
+theme_empty
+```
+
+.center[**Sample 1:** 30 random individuals]
+
+]
+
+--
+
+.pull-right[
+
+```{R, sample1 scatter, echo = F, fig.fullwidth = T, dev = "svg", fig.height = 5}
+ggplot(data = pop_df, aes(x = x, y = y)) +
+geom_abline(
+  intercept = lm0$coefficients[1], slope = lm0$coefficients[2],
+  color = red_pink, size = 3, alpha = 0.3
+) +
+geom_point(aes(shape = s1), color = "darkslategray", size = 6) +
+geom_abline(
+  intercept = lm1$coefficients[1], slope = lm1$coefficients[2],
+  size = 2, linetype = 2, color = "black"
+) +
+scale_shape_manual(values = c(1, 19)) +
+theme_empty
+```
+
+.center[
+
+**Population relationship**
+<br>
+$Y_i = `r round(lm0$coefficients[1], 2)` + `r round(lm0$coefficients[2], 2)` X_i + u_i$
+
+**Sample relationship**
+<br>
+$\hat{Y}_i = `r round(lm1$coefficients[1], 2)` + `r round(lm1$coefficients[2], 2)` X_i$
+
+]
+
+]
+
+---
+# Now We Focus On Regressions Based On A Sample
+
+.pull-left[
+
+```{R, sample2, echo = F, fig.fullwidth = T, dev = "svg"}
+ggplot(data = pop_df, aes(x = row, y = col, shape = s2)) +
+geom_point(color = "darkslategray", size = 10) +
+scale_shape_manual(values = c(1, 19)) +
+theme_empty
+```
+
+.center[**Sample 2:** 30 random individuals]
+
+]
+
+.pull-right[
+
+```{R, sample2 scatter, echo = F, fig.fullwidth = T, dev = "svg", fig.height = 5}
+ggplot(data = pop_df, aes(x = x, y = y)) +
+geom_abline(
+  intercept = lm0$coefficients[1], slope = lm0$coefficients[2],
+  color = red_pink, size = 3, alpha = 0.3
+) +
+geom_point(aes(shape = s2), color = "darkslategray", size = 6) +
+geom_abline(
+  intercept = lm1$coefficients[1], slope = lm1$coefficients[2],
+  size = 2, linetype = 2, color = "black", alpha = 0.3
+) +
+geom_abline(
+  intercept = lm2$coefficients[1], slope = lm2$coefficients[2],
+  size = 2, linetype = 2, color = "black"
+) +
+scale_shape_manual(values = c(1, 19)) +
+theme_empty
+```
+
+.center[
+
+**Population relationship**
+<br>
+$Y_i = `r round(lm0$coefficients[1], 2)` + `r round(lm0$coefficients[2], 2)` X_i + u_i$
+
+**Sample relationship**
+<br>
+$\hat{Y}_i = `r round(lm2$coefficients[1], 2)` + `r round(lm2$coefficients[2], 2)` X_i$
+
+]
+
+]
+---
+# Now We Focus On Regressions Based On A Sample
+
+.pull-left[
+
+```{R, sample3, echo = F, fig.fullwidth = T, dev = "svg"}
+ggplot(data = pop_df, aes(x = row, y = col, shape = s3)) +
+geom_point(color = "darkslategray", size = 10) +
+scale_shape_manual(values = c(1, 19)) +
+theme_empty
+```
+
+.center[**Sample 3:** 30 random individuals]
+
+]
+
+.pull-right[
+
+```{R, sample3 scatter, echo = F, fig.fullwidth = T, dev = "svg", fig.height = 5}
+ggplot(data = pop_df, aes(x = x, y = y)) +
+geom_abline(
+  intercept = lm0$coefficients[1], slope = lm0$coefficients[2],
+  color = red_pink, size = 3, alpha = 0.3
+) +
+geom_point(aes(shape = s3), color = "darkslategray", size = 6) +
+geom_abline(
+  intercept = lm1$coefficients[1], slope = lm1$coefficients[2],
+  size = 2, linetype = 2, color = "black", alpha = 0.3
+) +
+geom_abline(
+  intercept = lm2$coefficients[1], slope = lm2$coefficients[2],
+  size = 2, linetype = 2, color = "black", alpha = 0.3
+) +
+geom_abline(
+  intercept = lm3$coefficients[1], slope = lm3$coefficients[2],
+  size = 2, linetype = 2, color = "black"
+) +
+scale_shape_manual(values = c(1, 19)) +
+theme_empty
+```
+
+.center[
+
+**Population relationship**
+<br>
+$Y_i = `r round(lm0$coefficients[1], 2)` + `r round(lm0$coefficients[2], 2)` X_i + u_i$
+
+**Sample relationship**
+<br>
+$\hat{Y}_i = `r round(lm3$coefficients[1], 2)` + `r round(lm3$coefficients[2], 2)` X_i$
+
+]
+
+]
+
+---
+layout: false
+class: white-slide, middle
+
+Repeat **10,000 times** (Monte Carlo simulation).
+
+---
+class: white-slide
+
+
+```{R, simulation scatter, echo = F, dev = "png", dpi = 300, cache = T, fig.height = 5}
+# Reshape sim_df
+line_df <- tibble(
+  intercept = sim_df %>% filter(term != "x") %>% select(estimate) %>% unlist(),
+  slope = sim_df %>% filter(term == "x") %>% select(estimate) %>% unlist()
+)
+ggplot() +
+geom_abline(data = line_df, aes(intercept = intercept, slope = slope), alpha = 0.01) +
+geom_point(data = pop_df, aes(x = x, y = y), size = 3, color = "darkslategray") +
+geom_abline(
+  intercept = lm0$coefficients[1], slope = lm0$coefficients[2],
+  color = red_pink, size = 1.5
+) +
+theme_empty
+```
+
+.right[
+Another beautiful visualization by [Ed Rubin](https://github.com/edrubin/EC421W19) and [Kyle Raze](https://raw.githack.com/kyleraze/EC320_Econometrics/master/Lectures/10-Simple_Linear_Regression_Inference/10-Simple_Linear_Regression_Inference.html#1)
+]
+
+---
+# CLT in Action 
+
+.pull-left[
+
+.center[
+**Intercept Estimates**
+]
+```{R, simulation hist1, echo = F, dev = "png", dpi = 300, cache = T, fig.height = 5}
+# Reshape sim_df
+line_df <- tibble(
+  intercept = sim_df %>% filter(term != "x") %>% select(estimate) %>% unlist(),
+  slope = sim_df %>% filter(term == "x") %>% select(estimate) %>% unlist()
+)
+ggplot() +
+geom_histogram(data = line_df, aes(intercept), fill = red_pink, alpha = 0.75, bins = 40) +
+  geom_vline(xintercept = lm0$coefficients[1], size = 2, color = "darkslategray") +
+  scale_x_continuous(breaks = lm0$coefficients[1], labels = TeX("$\\alpha$")) +
+  theme(axis.text.x = element_text(size = 50),
+      axis.text.y = element_blank(),
+      rect = element_blank(),
+      axis.title.y = element_blank(),
+      axis.title = element_blank(),
+      line = element_blank())
+```
+]
+
+.pull-right[
+
+.center[
+**Slope Estimates**
+]
+```{R, simulation hist2, echo = F, dev = "png", dpi = 300, cache = T, fig.height = 5}
+# Reshape sim_df
+line_df <- tibble(
+  intercept = sim_df %>% filter(term != "x") %>% select(estimate) %>% unlist(),
+  slope = sim_df %>% filter(term == "x") %>% select(estimate) %>% unlist()
+)
+ggplot() +
+geom_histogram(data = line_df, aes(slope), fill = red_pink, alpha = 0.75, bins = 40) +
+  geom_vline(xintercept = lm0$coefficients[2], size = 2, color = "darkslategray") +
+  scale_x_continuous(breaks = lm0$coefficients[2], labels = TeX("$\\beta$")) +
+  theme(axis.text.x = element_text(size = 50),
+      axis.text.y = element_blank(),
+      rect = element_blank(),
+      axis.title.y = element_blank(),
+      axis.title = element_blank(),
+      line = element_blank())
+```
+]
+
+- The estimated coefficients are a linear combination (similar to a summation) of independent random variables. Hence the CLT applies.
+
+- Let $\widehat \beta$ be the estimated coefficient of the slope, CLT tells us: 
+$\widehat \beta \sim N(\beta, SE(\widehat \beta) )$ 
+---
+# Standard Errors of Estimated Coefficients  1/3 
+
+- Remember that the standard deviation of the sample mean, what we called standard errors, is: 
+$$
+\begin{equation}
+SE(\overline Y) = \frac{\sigma_{Y}}{\sqrt{n}}
+\end{equation}
+$$
+- A similar formula applied also to the difference in means $\widehat \mu  = \overline Y_1 - \overline Y_0$. 
+
+- Following a similar intuition, here we will state that the standard error of the estimated regression coefficient of interest is:
+$$
+\begin{equation}
+SE(\widehat \beta) = \frac{\sigma_{e}}{\sqrt{n}} \times \frac{1}{\sigma_X}
+\end{equation}
+$$
+
+---
+background-image: url("Images/MMFig22.png")
+background-size: 50%
+background-position: 100% 50%
+
+# Standard Errors of Estimated Coefficients  2/3
+
+.font100[
+.pull-left[
+
+- One regressor: $SE(\widehat \beta) = \frac{\sigma_{e}}{\sqrt{n}} \times \frac{1}{\sigma_X}$
+- $n$ plays a similar role as for the previous SEs.  
+- $\sigma_{e}$: is the standard deviation of the residual. As $X$ explains (fits) more of $Y$ this standard deviation gets smaller. As $X$ explains more of $Y$, the precision of $\widehat \beta$ increases. 
+- $\sigma_X$: is the standard deviation of the variable $X$. As $X$ varies more, the precision of $\widehat \beta$ increases. 
+
+]
+]
+
+---
+# Standard Errors of Estimated Coefficients  3/3
+
+.pull-left[
+- The standard error of a coefficient $\widehat \beta_k$ in a multivariate regression is:
+<br>
+<br>
+- Where $\widehat \beta_k$ comes from a multivariate regression: 
+<br>
+<br>
+- And $\widetilde X_{ki}$ is the residual from regression anatomy:
+]
+.pull-right[
+
+$$
+\begin{equation}
+SE(\widehat \beta_k) = \frac{\sigma_{e}}{\sqrt{n}} \times \frac{1}{\sigma_{\widetilde X_{k}}}
+\end{equation}
+$$
+
+
+
+$$
+\begin{equation}
+Y_i = \alpha + \sum_{k = 1}^{K} \beta_{k}X_{ki} + e_i
+\end{equation}
+$$
+$$
+\begin{equation}
+X_{ki} = \pi_0 + \sum_{j = 1}^{k-1} \pi_{j}X_{ki}  + \sum_{j = k+1}^{K} \pi_{j}X_{ki} + \widetilde X_{ki}
+\end{equation}
+$$
+
+]
+
+- $\sigma_{\widetilde X_{k}}$ is the standard deviation of the residual $\widetilde X_{ki}$. It represents all the variation that is left in $X_{k}$ after controlling for all other regressors. By construction it will be less than $\sigma_{X_{k}}$. Notice the trade-off of adding more regressors. 
+
+
+---
+# Collinearity 1/2
+
+- Collinearity is a problem of regression that happens when two or more regressors are closely correlated ("colinear"). 
+
+- In the non-extreme case of perfect collinearity, regression will still work, but the resulting SE will be inflated. Let's look at the SE formula to see why: 
+
+$$
+\begin{equation}
+SE(\widehat \beta_k) = \frac{\sigma_{e}}{\sqrt{n}} \times \frac{1}{\sigma_{\widetilde X_{k}}}
+\end{equation}
+$$
+
+- If $X_{k}$ is highly collinear, with one or more other regressors, it will render a very small residual in the auxiliary regression, resulting in turn in a very small  $\sigma_{\widetilde X_{k}}$. Given that this last term is in the denominator, the SE will become very large, rendering any coefficient statistically insignificant. 
+
+- The way to solve this is either to remove the collinear regressor or test for the significance of multiple coefficients simultaneously (not covered here)
+
+---
+# Collinearity 2/2
+.font90[
+
+$$
+\begin{equation}
+SE(\widehat \beta_k) = \frac{\sigma_{e}}{\sqrt{n}} \times \frac{1}{\sigma_{\widetilde X_{k}}}
+\end{equation}
+$$
+- The extreme version of this problem is when one regressor is perfectly correlated with one or more regressors (making it a linear combination of the regressor). 
+
+- In this case the residual is zero, and so is its variance in the auxiliary regression. 
+
+- Under perfect collinearity (aka multicollinearity) the software that is runnin the regression will do one of two things: (i) drop one or more of the regressor to avoid perfect collinearity, or (ii) don't run the regression (saying something like "cannot invert matrix"). 
+
+- (Perfect collinearity is the reason why we don't include two binary variables two describe two groups, as they would be perfectly collinear with the intercept)
+
+]
+---
+# Robust Standard Errors
+
+- One underlying assumption behind the SEs discussed so far is that the residual does not change in a systematic way across the Xs. 
+
+- For an example of how this assumption does not hold, look draw this pattern on the board. 
+
+- There is a modified version of the SEs that is robust to this problem. In the sense that when the problem is present, it solves it, and when its not, it doesn't do harm. 
+
+- This is the most common formula for standard errors that is reported in current research.
+
+- MM shows the formula for this Robust SEs, but its intuition is similar to the one reviewed here (and you will not be asked about it). 
+
+
+
+---
+# Repeat Hypothesis Testing and Confidence Intervals 
+
+- Now that we have our SEs, the procedure to conduct hypothesis tests, and build confidence intervals for estimated coefficients $(\widehat \beta)$ , is the same as discussed in the statistical inference lecture: 
+1. Define a null hypothesis $\beta_0$ (usually $\beta_0 = 0$) 
+2. Construct a t-statistic: $t(\beta_0)$ by subtracting the null and dividing by the SE. 
+3. Compute the p-value as probability that we observe a t-statistic as extreme as the obtained in the sample, if the null is true. You don't need to obtain the exact p-value, but you are asked to remember that the probability that this t-statistic is larger than 1 is about 30%, of being larger than 2 is about 5%, and of being larger than 3 is less than 1% (from the $N(0,1)$).  
+4. Compute 95% confidence intervals as the range that will contain the true population parameter 95% of the time (by subtracting and adding $2\times SE(\widehat \beta)$ )
+
+
+---
+
+# Today and Tomorrow's Lecture
+
+- Regression Anatomy 
+
+- Regression Inference
+
+- Non-linearities:
+   - Logarithms
+   - Others 
+
+- Binary Outcomes
+
+- $R^2$
+
+
+
+---
+class: inverse, middle
+
+# Non-linearities
+
+
+---
+# Acknowledgments
+
+.pull-left[
+- [Ed Rubin's Graduate Econometrics](https://github.com/edrubin/EC607S21)
+- [Kyle Raze's Undergraduate Econometrics 1](https://github.com/kyleraze/EC320_Econometrics)
+- MM
+]
+.pull-right[
+
+]
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+pagedown::chrome_print("16_all_things_reg.html", output = "16_all_things_reg.pdf")
+```
