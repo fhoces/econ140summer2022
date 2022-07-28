@@ -197,6 +197,17 @@ tidy_table <- function(x, terms, highlight_row = 1, highlight_color = "black", h
 ```
 
 
+# Housekeeping 
+
+- Let's choose the chapter for the summary (still due Friday 5pm on gradescope) 
+
+- Practice questions are up. Midterm will follow similar questions (but not exactly the same ones). 
+  - Goal: if you understood the concepts behind the practice questions, you will do well in the midterm. 
+  
+- Switching the order of the review session: will do a review on Monday (before the midterm), and on Wednesday we will start with new material. Bring questions! (I will not bring new material, if we finish early we can watch the first part of Run Lola Run)
+
+---
+
 # Regression Journey
 
 - Regression as Matching on Groups. Ch2 of MM up to page 68 (not included).
@@ -226,60 +237,79 @@ tidy_table <- function(x, terms, highlight_row = 1, highlight_color = "black", h
 
 - Regression Inference
 
-- **Non-linearities:** 
-   **- Logarithms**
+- ** $R^2$ **
+
+- Non-linearities:
+   - Logarithms
    - Others 
 
 - Binary Outcomes
 
-- $R^2$
 
 
 ---
 
 # Analysis of Variance
 
-* Remember that $y_i = \widehat{y}_i + e_i$.
+* Remember that $Y_i = \widehat{Y_i} + e_i$.
 
-* We have the following decomposition:
-    $$\begin{align} Var(y) &= Var(\widehat{y} + e)\\&= Var(\widehat{y}) + Var(e) + 2 Cov(\widehat{y},e)\\&= Var(\widehat{y}) + Var(e)\end{align}$$
+* We have the following decomposition
+
+$$
+\begin{aligned}
+Var(Y) &= Var( \widehat Y + e) \\
+&= Var(\widehat Y ) + Var(e) + 2 Cov(\widehat Y,e) \\
+&= Var(\widehat Y ) + Var(e)
+\end{aligned}
+$$
+
+
+
     
+* __Total variation (SST) = Model explained (SSE) + Unexplained (SSR)__
+
 * Because:
   * $Var(x+y) = Var(x) + Var(y) + 2Cov(x,y)$
-  * $Cov(\hat{y},e)=0$
-
-* __Total variation (SST) = Model explained (SSE) + Unexplained (SSR)__
+  * $Cov(\hat{Y},e)=0$
 
 ---
 
 # Goodness of Fit
 
+.font90[
 * The __ $R^2$ __ measures how well the __model fits the data__.
-
+]
 --
 
+.font90[
+
+
 $$
+\begin{equation}
 R^2 = \frac{\text{variance explained}}{\text{total variance}} =     \frac{SSE}{SST} = 1 - \frac{SSR}{SST}\in[0,1]
+\end{equation}
 $$
+]
 
 --
-    
+.font90[    
 * $R^2$ close to $1$ indicates a __very ***high*** explanatory power__ of the model.
 
 * $R^2$ close to $0$ indicates a __very ***low*** explanatory power__ of the model.
+]
 
 --
-
+.font90[
 * *Interpretation:* an $R^2$ of 0.5, for example, means that the variation in $x$ "explains" 50% of the variation in $y$.
-
+]
 --
-    
+.font90[    
 * `r emo::ji("warning")` Low $R^2$ does __NOT__ mean it's a useless model! Remember that econometrics is interested in causal mechanisms, not prediction!
-
+]
 --
-    
+.font90[    
 * `r emo::ji("warning")` The $R^2$ is __NOT__ an indicator of whether a relationship is causal!
-
+]
 
 
 ---
@@ -323,7 +353,7 @@ OLS estimation can accommodate many, but not all, nonlinear relationships.
 
 - Nonlinear transformations of variables are okay.
 
-- We have already seen the most linear set of variables that you can imagine (binaries!) 
+- We have already seen the most nonlinear set of variables that you can imagine (binaries!) 
 
 ---
 # Linearity
@@ -471,6 +501,7 @@ df1 <- tibble(
 
 - We want to know how to interpret what is the associated increase in $Y$, when we increase $X$ in one unit.
 
+
 $$
 \begin{aligned}
 \log(Y_i) &= \beta_0 + \beta_1 X_i + e_i\\
@@ -567,7 +598,8 @@ $$
 \widetilde \log(Y_i) - \log(Y_i) &= \beta_1\\
 \widetilde \log(Y_i)  &= \log(Y_i) + \beta_1\\
 \widetilde \log(Y_i)  &\approx \log(Y_i)  + log(1+\beta_1) \\
-\widetilde \log(Y_i)  &\approx \log(Y_i(1+\beta_1))
+\widetilde \log(Y_i)  &\approx \log(Y_i(1+\beta_1))\\
+\widetilde Y_i  &\approx Y_i(1+\beta_1)
 \end{aligned}
 $$
 
@@ -633,7 +665,8 @@ $$
 \begin{aligned}
 \widetilde \log(Y_i)  &= \log(Y_i) + \beta_1\\
 \widetilde \log(Y_i)  &\approx \log(Y_i)  + log(1+\beta_1) \\
-\widetilde \log(Y_i)  &\approx \log(Y_i(1+\beta_1))
+\widetilde \log(Y_i)  &\approx \log(Y_i(1+\beta_1))\\
+\widetilde Y_i  &\approx Y_i(1+\beta_1)
 \end{aligned}
 $$
 ]
@@ -728,7 +761,7 @@ $$ \log(Y_i) = \beta_0 + \beta_1 \log(X_i) + e_i $$
 
 - A one-percent increase in the explanatory variable leads to a $\beta_1$-percent change in the outcome variable, on average.
 
-- This is the definition of an elasticity in economics ($\Delta\%Q/\Delta\%P$)
+- This is the definition of an elasticity in economics $(\Delta\%Q/\Delta\%P)$
 
 - *Example:* If $\log(\widehat{\text{Quantity Demanded}}_i) = 0.45 - 0.31 \cdot \log(\text{Income}_i)$, then each one-percent increase in income decreases quantity demanded by 0.31 percent.
 
@@ -934,7 +967,7 @@ cont_interp
 
 $$(\widehat{\text{Life Expectancy})_i} = `r round(a_lin, 2)` + `r round(b_lin, 4)` \cdot \text{GDP}_i \quad\quad R^2 = `r round(r2_lin, 2)`$$
 
-```{R, echo = F, dev = "svg", fig.height = 5.75}
+```{R, echo = F, dev = "svg", fig.height = 5}
 ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp)) +
 geom_point(alpha = 0.75) +
 scale_x_continuous("GDP per capita", label = scales::comma) +
@@ -955,7 +988,7 @@ r2_log_lin <- summary(reg_log_lin)$r.squared
 
 $$\log( \widehat{\text{Life Expectancy}_i}) = `r round(a_log_lin, 2)` + `r round(b_log_lin, 6)` \cdot \text{GDP}_i \quad\quad R^2 = `r round(r2_log_lin, 2)`$$
 
-```{R, echo = F, dev = "svg", fig.height = 5.75}
+```{R, echo = F, dev = "svg", fig.height = 5}
 ggplot(data = gapminder, aes(x = gdpPercap, y = log(lifeExp))) +
 geom_point(alpha = 0.75) +
 scale_x_continuous("GDP per capita", label = scales::comma) +
@@ -976,7 +1009,7 @@ r2_log <- summary(reg_log)$r.squared
 
 $$\log ( \widehat{\text{Life Expectancy}_i} ) = `r round(a_log, 2)` + `r round(b_log, 2)` \cdot \log \left( \text{GDP}_i \right) \quad\quad R^2 = `r round(r2_log, 2)`$$
 
-```{R, echo = F, dev = "svg", fig.height = 5.75}
+```{R, echo = F, dev = "svg", fig.height = 5}
 ggplot(data = gapminder, aes(x = log(gdpPercap), y = log(lifeExp))) +
 geom_point(alpha = 0.75) +
 scale_x_continuous("log(GDP per capita)", label = scales::comma) +
@@ -997,7 +1030,7 @@ r2_lin_log <- summary(reg_lin_log)$r.squared
 
 $$( \widehat{\text{Life Expectancy}})_i = `r round(a_lin_log, 2)` + `r round(b_lin_log, 2)` \cdot \log \left( \text{GDP}_i \right) \quad\quad R^2 = `r round(r2_lin_log, 2)`$$
 
-```{R, echo = F, dev = "svg", fig.height = 5.75}
+```{R, echo = F, dev = "svg", fig.height = 5}
 ggplot(data = gapminder, aes(x = log(gdpPercap), y = lifeExp)) +
 geom_point(alpha = 0.75) +
 scale_x_continuous("log(GDP per capita)", label = scales::comma) +
@@ -1046,7 +1079,7 @@ theme_pander(base_size = 20, base_family = "Fira Sans", fc = met_slate)
 
 
 ---
-# Final Message: Allways Plot Your Data (Anscombe's Quartet)
+# .font90[Final Message: Allways Plot Your Data (Anscombe's Quartet)]
 
 .center[**Four *"identical"* regressions:** Intercept .mono[=] 3, Slope .mono[=] 0.5, R.super[2] .mono[=] 0.67]
 
@@ -1074,10 +1107,22 @@ anscombe_m %>%
  - Polynomial regressors (not covered)
 
 ---
-# Binary dependent variable
+# Binary Dependent Variable
 
-- HISTORY
+.font80[
 
+- Previously, introductory courses spent significant time arguing that binary dependent outcomes invalidated regression. 
+
+- The two main reasons were: 
+  1. This is a highly non-linear relationship (draw plot)
+  2. The errors in this context have a variance that is correlated with the Xs (heteroskedasticity). 
+
+- The approach we follow here does not focus on spending much time addressing this concerns. Because
+  - Even if its non-linear, the CEF property #2 says that regression will find the best linear approximation. The key is to choose regressors well (in this case a collection of dummies probably will work better than a single slope). 
+  - We now use robust standard errors pretty much all the time. 
+  
+- Regression in this context takes the name Linear Probability Model (the other methods not covered here are Logit and Probit estimation). 
+]
 
 ---
 class: inverse, middle
@@ -1114,7 +1159,7 @@ theme_pander(base_size = 17, base_family = "Fira Sans", fc = met_slate)
 
 ---
 # Quadratic Regression  [NC]
-.font90[
+.font80[
 **Regression Model**
 
 $$Y_i = \beta_0 + \beta_1 X_i + \beta_2 X_i^2 + e_i$$
@@ -1125,13 +1170,7 @@ $$Y_i = \beta_0 + \beta_1 X_i + \beta_2 X_i^2 + e_i$$
 
 Sign of $\beta_2$ indicates whether the relationship is convex (.mono[+]) or concave (.mono[-])
 
-
-
-Sign of $\beta_1$?
-
-🤷
-
-
+Sign of $\beta_1$?  🤷
 
 Partial derivative of $Y$ with respect to $X$ is the .hi[marginal effect] of $X$ on $Y$:
 
@@ -1262,6 +1301,6 @@ $$X = -\dfrac{\hat{\beta}_1}{2\hat{\beta}_2}$$
 ]
 
 
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 pagedown::chrome_print("17_all_things_reg2.html", output = "17_all_things_reg2.pdf")
 ```

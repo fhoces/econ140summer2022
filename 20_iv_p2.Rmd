@@ -1,0 +1,508 @@
+---
+title: "Instrumental Variables"
+subtitle: "Part II"
+author: "Fernando Hoces la Guardia"
+date: "07/28/2022"
+output: 
+  xaringan::moon_reader:
+    footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
+    css: [default, metropolis, metropolis-fonts, "my-css.css"] 
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css">
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+</style>
+
+```{r , include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, viridis, knitr, extrafont, tidyverse, magrittr, latex2exp, 
+       parallel, Ecdat, wooldridge, dslabs, ggforce, emo, png, grid, pander, 
+       countdown, emoGG, haven, broom, ggridges, gridExtra, kableExtra, snakecase, 
+       janitor, data.table, lubridate, lfe, here, gapminder, AER, stargazer, margins, 
+       furrr)
+
+
+# Define pink color
+red_pink <- "#e64173"
+turquoise <- "#20B2AA"
+orange <- "#FFA500"
+red <- "#fb6107"
+blue <- "#3b3b9a"
+green <- "#8bb174"
+grey_light <- "grey70"
+grey_mid <- "grey50"
+grey_dark <- "grey20"
+purple <- "#6A5ACD"
+slate <- "#314f4f"
+# Dark slate grey: #314f4f
+
+options(htmltools.dir.version = FALSE)
+
+# define vars
+om = par("mar")
+lowtop = c(om[1],om[2],0.1,om[4])
+
+overwrite = FALSE
+
+
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#23373b" # metropolis font color
+# Notes directory
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  message = FALSE,
+  warning = FALSE,
+  dev = "svg",
+  cache = TRUE
+  #fig.width = 11,
+  #fig.height = 5
+)
+
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 14),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  legend.position = "none"
+)
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -0.5, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_simple <- theme_bw() + theme(
+  line = element_blank(),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text.x = element_text(size = 18, family = "STIXGeneral"),
+  axis.text.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  # plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_math <- theme_void() + theme(
+  text = element_text(family = "MathJax_Math"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_serif <- theme_void() + theme(
+  text = element_text(family = "MathJax_Main"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes <- theme_void() + theme(
+  text = element_text(family = "Fira Sans Book"),
+  axis.title = element_text(size = 18),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = grey_light,
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_set(theme_gray(base_size = 20))
+# Column names for regression results
+reg_columns <- c("Term", "Est.", "S.E.", "t stat.", "p-Value")
+# Function for formatting p values
+format_pvi <- function(pv) {
+  return(ifelse(
+    pv < 0.0001,
+    "<0.0001",
+    round(pv, 4) %>% format(scientific = F)
+  ))
+}
+format_pv <- function(pvs) lapply(X = pvs, FUN = format_pvi) %>% unlist()
+# Tidy regression results table
+tidy_table <- function(x, terms, highlight_row = 1, highlight_color = "black", highlight_bold = T, digits = c(NA, 3, 3, 2, 5), title = NULL) {
+  x %>%
+    tidy() %>%
+    select(1:5) %>%
+    mutate(
+      term = terms,
+      p.value = p.value %>% format_pv()
+    ) %>%
+    kable(
+      col.names = reg_columns,
+      escape = F,
+      digits = digits,
+      caption = title
+    ) %>%
+    kable_styling(font_size = 20) %>%
+    row_spec(1:nrow(tidy(x)), background = "white") %>%
+    row_spec(highlight_row, bold = highlight_bold, color = highlight_color)
+}
+
+
+```
+
+
+
+```{css, echo = F, eval = T}
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+```
+
+
+---
+# IV: Key Ideas (so far)
+
+---
+
+# .font90[Example #2: Solidifying Concepts and Exploring Selection Bias]
+
+- Policy issue: what was the most effective police response to reduce domestic violence in the US in the 1980s? 
+
+- Treatment: Advise or separate aggressor in case of domestic violence ("coddle").
+
+- Control: Arrest the aggressor
+
+- Outcome: 6-month recurrence of domestic violence in the same address (recidivism). 
+
+- Population: Minneapolis, 1980s, volunteer police, non-felony cases (probable cause for misdemeanor assault, not felonies).
+
+---
+
+# (Not so) Random Assigment
+
+- Random assignment was done with colored coded pad reports. Let's think of hypothetical arrival of the police to the scene of crime. 
+
+- Two reasons why treatment assigned (“offered” in the KIPP example) was not the same as treatment delivered (“attended” in KIPP example): 
+ 1. Some situations required judgment calls from police (e.g. arrest when assigned to coddle) and there was an understanding, between research team and the policy, that they could make such calls. 
+ 2. In some cases officers forgot their color coded report pads  (logistics matter!)
+
+
+
+---
+# Table 3.3 (Simplified)
+
+
+
+.font130[
+|                |              |  Delivered   |       |
+|----------------|:------------:|:------------:|-------|
+| **Assigned**   | Arrest <br> (D=0) | Coddle <br> (D=1) | total |
+|   Arrest (Z=0) |      91      |       1      |   92  |
+| percent of Z=0 |     0.99     |     0.01     |   1   |
+|   Coddle (Z=1) |      45      |      177     |  222  |
+| percent of Z=1 |     0.203    |     0.797    |   1   |
+
+]
+
+---
+# Non-Compliance
+
+.pull-left[
+
+- The problem is lack of perfect compliance, this looks like a problem that IV can fix. 
+- Subset of assigned coddlers that ended up arrested are a non random subset of coddlers (think specially aggressive individuals, and how this might relate to recidivism). 
+- Simple comparison between coddlers and arrested are contaminated by selection bias
+]
+
+.pull-right[
+
+
+|                |              |  Delivered   |       |
+|----------------|:------------:|:------------:|-------|
+| **Assigned**   | Arrest <br> (D=0) | Coddle <br> (D=1) | total |
+|   Arrest (Z=0) |      91      |       1      |   92  |
+| percent of Z=0 |     0.99     |     0.01     |   1   |
+|   Coddle (Z=1) |      **45**      |      177     |  222  |
+| percent of Z=1 |     **0.203**    |     0.797    |   1   |
+
+]
+
+---
+# Results: First Stage
+
+.font100[
+.pull-left[
+- In English: effect of instrument on treatment
+- Where is the instrument here? Where is the treatment? 
+- Where would you find the "average treatment, for those that received the instrument"? 
+- Now write it the term above as expectation. 
+- Repeat for "average treatment, for those that did not received the treatment"?
+
+
+
+]
+]
+
+.pull-right[
+
+|                |              |  Delivered   |       |
+|----------------|:------------:|:------------:|-------|
+| **Assigned**   | Arrest <br> (D=0) | Coddle <br> (D=1) | total |
+|   Arrest (Z=0) |      91           |       1           |   92  |
+| percent of Z=0 |     0.99          |     0.01      |   1   |
+|   Coddle (Z=1) |      45           |      177          |  222  |
+| percent of Z=1 |     0.203         |     0.797     |   1   |
+
+
+]
+
+
+---
+# Results: First Stage
+
+.font100[
+.pull-left[
+- In English: effect of instrument on treatment
+- Where is the instrument here? Where is the treatment? 
+- Where would you find the "average treatment, for those that received the instrument"? 
+- Now write it the term above as expectation. 
+- Repeat for "average treatment, for those that did not received the treatment"?
+
+
+
+]
+]
+
+.pull-right[
+
+|                |              |  Delivered   |       |
+|----------------|:------------:|:------------:|-------|
+| **Assigned**   | Arrest <br> (D=0) | Coddle <br> (D=1) | total |
+|   Arrest (Z=0) |      91           |       1           |   92  |
+| percent of Z=0 |     0.99          |     **0.01**      |   1   |
+|   Coddle (Z=1) |      45           |      177          |  222  |
+| percent of Z=1 |     0.203         |     **0.797**     |   1   |
+
+
+$$
+\begin{aligned}
+&E[D_i|Z_i = 1] - E[D_i|Z_i = 0] = \\
+&0.797 \quad \quad \quad - 0.011  \quad  \quad  \quad  = 0.786
+\end{aligned}
+$$
+]
+
+
+
+---
+# Results: Reduced Form
+
+- Average recidivism was 18% (18% in the sample addresses reported another incident of domestic violence in the following 6 months. 
+- Recidivism was larger for those *assigned* to coddled $(Z=1)$ than those *assigned* to arrested $(Z=0)$: 
+   - $E[Y|Z=1]  - E[Y|Z=0] = 0.211 - 0.097 = 0.114$
+   - Given the overall mean of 18%, a 11.4% reduction is substantial
+   
+- This effect mixes effect on compliers (lambda) plus effect  XXXXX
+- The effect of this intention to treat (assignment) is called Intention-to-treat effect (ITT) and is the difference in outcomes between group assigned and not assigned (regardless of actual delivery). In the case of IV for RCTs: ITT = Reduced Form 
+
+
+
+---
+# Results: LATE
+The LATE (effect on compliers) is : 
+
+$$
+\begin{aligned}
+\lambda = \frac{\rho}{\phi} &= \frac{E[Y_i|Z_i = 1] - E[Y_i|Z_i = 0]}{E[D_i|Z_i = 1] - E[D_i|Z_i = 0]}\\
+&= \frac{0.211 - 0.097}{0.797 - 0.011} = \frac{0.144}{0.786} = 0.145
+\end{aligned}
+$$
+- ITT is in general, smaller than LATE because it does not take non-compliance into account
+- (When we are on a situation with no “always-takers” $TOT  =  LATE$) REVIEW 
+
+
+
+---
+# How About a Regression
+
+
+.pull-left[
+- Write down reg
+- Match to CEs
+- Present result
+- Compare with reduced form
+- Point out that most of the difference comes from a higher fraction of recidivism among control group (arrested)
+- This is the type of selection bias that we where looking for, and didn't find, when comparing attendees with non-attendees in the KIPP study.
+]
+.pull-right[
+
+
+|                |              |  Delivered   |       |
+|----------------|:------------:|:------------:|-------|
+| **Assigned**   | Arrest <br> (D=0) | Coddle <br> (D=1) | total |
+|   Arrest (Z=0) |      91      |       1      |   92  |
+| percent of Z=0 |     0.99     |     0.01     |   1   |
+|   Coddle (Z=1) |      **45**      |      177     |  222  |
+| percent of Z=1 |     **0.203**    |     0.797    |   1   |
+
+]
+
+
+---
+# Example #3: Familiy Size and Years of Education
+
+- In economics there is an old (and potentially problematic) debate around whether families are choosing the "correct" number of children. 
+
+- "Quantity-quality trade-off" in family size: reduction in family size might lead to higher parental investment in children. 
+
+- One dimension where this can be measured is whether having larger families affect the highest level of education obtained by children. 
+
+- This example is useful for us in that it clearly shows how IV can be used outside of RCTs, but we should also think critically about its policy relevancy.
+
+---
+# Causal Question
+
+- What is the effect of having a larger family on the educational outcomes of the older child in that family? 
+
+- What's the problem with a simple difference in groups? (average education of older child in large families -  average education of older child in small families)
+--
+
+$$
+\begin{align}
+  \mathop{\mathbb{E}}(Y_i|D=1)-  \mathop{\mathbb{E}}(Y_i|D=0)&= \kappa + \underbrace{\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) - \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)}_\text{Selection bias} 
+\end{align}
+$$
+(assuming constant effects)
+- You can describe the same problem using OVB. Think of a variable like income.
+
+---
+
+# Using RCTs as a Though Experiment
+
+- How would an RCT look like in this case? 
+
+  1. Draw a sample of families with one child. 
+
+  2. In some of this families, randomly assign them a second child $(D_i = 1)$.  
+  
+  3. Wait 20-30 years and collect data on educational attainment of the firstborn (who did and did not got a second child)
+
+- Given randomization, $\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) = \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)$  and a simple difference in groups measures the causal effect: 
+
+$$
+\begin{align}
+  \mathop{\mathbb{E}}(Y_i|D=1)-  \mathop{\mathbb{E}}(Y_i|D=0)&= \kappa
+\end{align}
+$$
+---
+# What is an Instrument in This Case? 1/3
+
+- A good instrument must satisfy: 
+
+1. **Relevancy:** The instrument has a causal effect on the variable of interest. In this example: something that affects number of children in the family. 
+--
+
+2. **Independence:** The instrument is randomly assigned or “as good as randomly assigned”. Unrelated to omitted variables we might want to control for. In this example: the instrument must not be related to other factors that explain (a) number of children and (b) education of first born. **This is the main challenge.**
+--
+
+  
+3. **Exclusion Restriction:** the instrumented treatment (number of children) is the only channel through which the instrument affects the outcome. In this example: something that affects education only through its effect on family size. 
+
+
+---
+# What is an Instrument in This Case? 2/3
+
+- Instrument #1: having twins in the second birth.  
+
+- $Z_{1i} = 1$ if second birth consist of twins
+- $Z_{1i} = 0$ if second birth consist of one child (singleton)
+
+- **Relevancy:** twins affects number of children in the family. Very plausible and verifiable in the data: $E(D|Z_1 = 1) = 3.92$ while $E(D|Z_1 = 0) = 3.6$. Why is this? Why not 1 full child of a difference? 
+
+--
+
+- Some families that where planing for 2 end up with three, but other families that were plannig for 3 (or more) are not affected by the instrument. What are the names of these two groups? 
+
+---
+# What is an Instrument in This Case? 3/3
+
+- **Independence of Instrument #1:** plausible as twins occur more or less at random, but maybe not  because of age (also less plausible today due to IVF). 
+
+- **Exclusion restriction of Instrument #1:** twins affect education only through family size. Maybe? This would not work if, for example, there was a cultural belief that twins are, on average, better students that the rest of the population (in this case, positive stigma would create a link from twins to education in addition to the channel of family size).
+
+---
+# Results Using Twins IV
+
+- **First Stage:** $\phi = E(D|Z_1 = 1) - E(D|Z_1 = 0) = 3.92 - 3.6 = 0.32$.
+- **Reduce Form:** $\rho = E(Y|Z_1 = 1) - E(Y|Z_1 = 0) =$  zero (no $\widehat \rho$ provided).
+- **LATE:** $\lambda = \rho/\phi = 0/0.32 = 0$. 
+
+- Notice that treatment need not be binary (nor the instrument)
+- Given that having a zero reduce form implies zero LATE, it is come to present reduce form results first (if its 0 in the RF, it will also be in LATE).
+- It seems there is no quantity quality trade-off. **When increasing family size from 2 to 3 children, among the compliers.**  
+- An OLS estimate with Education $(Y_i)$ on treatment  $(D_i)$ and controls, yields $\widehat \beta = 0.25$. This is pure selection bias!
+
+---
+# Second Possible Instrument 1/3
+
+- Instrument #2: Cultural preference for mixed gender in children (girl-boy preferred to boy-boy or girl-girl)
+
+
+- $Z_{2i} = 1$ if second birth is same gender as first, and $Z_{1i} = 0$ if second birth is different gender than first.
+
+- **Relevancy:**  $E(D|Z_1 = 1) = 3.68$ while $E(D|Z_1 = 0) = 3.60$. Maybe?
+
+- **Independence:** similar rationale as twins (assuming no gender selective abortions).
+
+- **Exclusion:** Maybe? One possible additional channel is that same sex siblings share more resources (room, clothes, etc.) than mixed gender siblings. If this savings for the family affect education, then this assumption is violated. 
+
+---
+
+
+---
+# Acknowledgments
+
+- MM
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+pagedown::chrome_print("19_iv_p1.html", output = "19_iv_p1.pdf")
+```

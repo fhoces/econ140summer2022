@@ -148,10 +148,10 @@ The GSIs and the Instructors will work on developing a test bank associated with
 - **Friday, July 15th, 5pm: Submit PS 2**
 
 ## Week 5: July 18th - July 22nd; Ch 2 of MM
-- M: Regression III: Regression as Conditional Expectation and Binary Treatments and Regression Anatomy
+- M: Regression III: Regression as Conditional Expectation 
 - T: Regression IV: Omitted Variable Bias 
-- W: Regression V: All Else Regression (inference, levels/logs, non-linearities, fit)
-- Th: Collinearity
+- W: Regression V: All Things Regression I. Anatomy and Inference
+- Th: Regression VI: All Things Regression II. $R^2$, Non-linearities, Binary outcomes
 - **Friday, July 22n, 5pm: Submit Chapter Summary 1**
 
 ## Week 6: July 25th - July 29th; Ch 3 of MM  
@@ -161,15 +161,15 @@ The GSIs and the Instructors will work on developing a test bank associated with
 - Th: Instrumental Variables II
 - **Friday, July 29th, 5pm: Submit PS 3**
 
-## Week 7: August 1st - August 5th; Ch 4, 5 and 6 of MM
-- M: Regression discontinuity
-- T: External validity
+## Week 7: August 1st - August 5th; Ch 4 and 5 of MM
+- M: Regression Discontinuity I
+- T: Regression Discontinuity II
 - W: Difference in Differences I
 - Th: Difference in Differences II
 - **Friday, August 5th, 5pm: Submit Chapter Summary 2**
 
 
-## Week 8: August 8th - August 12th; Ch 7 of MM
+## Week 8: August 8th - August 12th; Ch 6 of MM
 - M: Applying all the tools
 - T: Non-standard topics: (i) Aggregation of evidence, and/or (ii) Narrative/exploratory approaches to causal questions (e.g, Desmond, Case & Deaton, Goldin, Sandel). 
 - W: Review 

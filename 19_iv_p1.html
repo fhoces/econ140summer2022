@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Instrumental Variables</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-07-27" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Instrumental Variables
+## Part I
+### Fernando Hoces la Guardia
+### 07/27/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+
+# Brief Reactions to Midterm 2 1/2
+
+- Let me repeat my expectations. If you: 
+  -  (1) actively engage with class material, **and** 
+  -  (2) read the book, **and**
+  -  (3) did section + practice questions, **and** 
+  -  (4) check with classmates and/or us in OH, 
+  **then**
+  - you should have done well in the midterm. 
+  
+- If you did this, and did not do well in the midterm, then I made some mistakes when 
+designing the midterm. 
+
+---
+# Brief Reactions to Midterm 2 2/2
+
+- Concerns over Midterm 2: time and clarity. 
+  - If the performance of Midterm 2 is substantially worse than Midterm 1, we will grade on a curve (upward). 
+  - I consider Midterm 1 a good test, and will make corrections on time and clarity so exam follows that template. 
+  - What will be different for the exam: 
+     -  We will look for classroom where you can take the exam over longer period of time without adding much more questions. (possibly 8:10am - 11am, Thursday August 11th). 
+     -  GSIs and I will work to further review and test the exam before administering it. 
+
+---
+# Suggestion on How to Approach the Exam
+
+- If you are doing (1) - (4) and feeling comfortable with the material don't change anything.
+
+- If you are struggling: think of the next two weeks as a very high intensity book club. Focus on reading Ch 3 - 6 in parallel to the lectures. 
+  - Write summaries.
+  - Bring questions to lecture and OH.
+  - Discuss with classmates. 
+  - Don't focus on the appendices.
+  - Focus on understanding the key concepts. Apply them to different examples.  
+  - 60-70% of the exam will be about these chapters, and 30-40% will be small variations from previous practice questions. 
+
+
+
+---
+
+# Motivation for the Last Third of the Course
+.font90[
+- So far we have explore:
+    - 1 big problem when answering causal questions (selection bias)
+    - 1 framework to understand causality (potential outcomes),
+    - 2 research design tools to disentangle causal effects from selection bias (RCTs and Regression). 
+
+- Up to here the scenario is a bit bleak as the two options have significant drawbacks: 
+    - In many cases RCTs can be prohibitively expensive, logistically impossible, and/or ethically wrong.
+    - Regression seems to require a very strong assumption: that we are controlling for all relevant variables, or put another way, that within each cell defined by the specific values of all controlling variables, we are conducting one RCT per-cell. 
+
+
+
+]
+---
+# Three Research Designs That Give Us Hope!
+
+- Today we start the last, and most hopeful, third of the course, where we explore three of the most commonly used research design tools to measure causality when the previous two fail. They are:
+
+  - Instrumental Variables
+  
+  - Regression Discontinuity Design
+  
+  - Differences in Differences. 
+
+- All three tools rely on finding a plausible story to justify that, at some point, the assignment of treatment was very similar to a randomized experiment. Hence they are usually referred to as quasi-experimental methods, or natural experiments. 
+
+---
+# Instrumental Variables 
+
+- We will learn about IV by looking at three examples: 
+  - Charter Schools and Test Scores.
+  - Policing and Domestic Violence.
+  - Family Size and Earnings. 
+
+- We start with IV as a solution to imperfect RCTs, solidify key concepts and then move into IV scenarios where there is not an explicit random assignment strategy, and use IV to find as-good-as-random variation in the real world. 
+
+- Data sets that come from studies that do not have randomization as an explicit strategy are called observational data. 
+
+---
+# IV As a Solution to RCTs With Imperfect Compliance 1/2
+
+ - General policy debate: increase or decrease the role of charter schools in the US. 
+ - Supporters: its additional flexibility allows them to provide high quality education to undeserved communities. 
+    - Evidence cited: simple difference in groups between charter and traditional public schools shows positive "effects" of charter on test scores. 
+ - Opponents: charters are basically selecting the more prepared students within this communities and distracting from the overall goal of high quality public education for all. 
+    - Interpretation of the evidence: selection bias!
+ 
+---
+# IV As a Solution to RCTs With Imperfect Compliance 2/2
+
+- Knowledge is Power Program (KIPP): Large charter school provider (140 schools). 
+    - No excuse philosophy, expand instruction time, non-unionized teachers 
+    - 95% black or hispanic.
+    - 80% qualifies for federal government's subsidized lunch program.
+- KIPP Lynn, MA
+    - Initially undersubscribed, later oversubscribed: lottery to assign slots. 
+    - **Winners were *offered* a slot, not all winners took it. Additionally some lottery losers managed to get in anyway.** 
+    
+---
+background-image: url("Images/MMFig31.png")
+background-size: 50%
+background-position: 50% 50%
+
+# Application and Enrollment to KIPP, Lynn 
+
+
+---
+background-image: url("Images/MMtbl31.png")
+background-size: 40%
+background-position: 50% 50%
+# Table 3.1
+
+---
+# A Note on Standarizing Outcomes
+
+- In many studies, it is increasingly common to standardize (non-binary) outcomes to facilitate interpretation and comparison across studies. 
+
+- The outcome `\(Y\)` is subtracted to have mean zero, and standard deviation of one. The mean and standard deviation can be those of the sample or of a target population. 
+
+- This is sounds similar to the process of standardizing a variable to compute the t-statistic, but is different in that the standard deviation corresponds to that of the underlying variable, **not** of the sample mean. 
+
+- As a result any change in the outcome now has the interpretation of "fraction of a standard deviation".
+
+---
+background-image: url("Images/MMtbl31_A1.png")
+background-size: 50%
+background-position: 50% 50%
+# Table 3.1: Comparison to Lynn and Balance
+
+---
+background-image: url("Images/MMtbl31_A1.png")
+background-size: 50%
+background-position: 100% 50%
+# Table 3.1: Comparison to Lynn and Balance. Notes
+.pull-left[
+- KIPP are different from rest of town: 
+  - more hispanic, more black, more female, 
+  - more low income, 
+  - slightly better scores in math, 
+  - substantially worse scores in verbal skills
+  
+- KIPP lottery winners and losers are indistinguishable from each other
+
+]
+---
+background-image: url("Images/MMtbl31_B1.png")
+background-size: 50%
+background-position: 50% 50%
+# Table 3.1: Effects of Treatment "Offer"
+
+---
+background-image: url("Images/MMtbl31_B1.png")
+background-size: 50%
+background-position: 100% 50%
+# Table 3.1: Effects of Treatment "Offer". Notes
+
+.pull-left[
+.font80[
+- This is an average causal effect of receiving an offer to go to KIPP
+- Balance in all pre-treatment characteristics 
+- Attended KIPP: 74 percentage points (pp) more to attend KIPP
+- Math score: `\(0.36\)` standard deviations `\((\sigma)\)`
+- Verbal score: `\(0.11\sigma\)`, but not statistically significant. 
+- Calculation of effects is done using regression that controls for year of application, sibling applicants and grade of application.  
+- But sometimes the key policy question is not the effect of an invitation, but the effect of receiving the actual treatment (attending KIPP in this case)
+]
+
+]
+---
+# Enter Instrumental Variables (IV)
+
+- What IV does, in this context, is that it takes these “effects of offers” and it transforms them into “effect of attendance”. 
+- The instrument in this case is the lottery result of being offer a slot at KIPP (or not). 
+- The effect of offers is `\(0.36\sigma\)` over the **entire population** of applicants
+- The fraction of applicants who ended up attending because of the offer is 74% of the population
+- This `\(0.36\sigma\)` combines a positive effect on the 74% above, and an likely zero effect on those unaffected by the offer. 
+- How do you think we can obtain the estimator for the effect of attending?
+
+---
+# Instrumental Variables Estimation 
+
+.font130[
+
+$$
+`\begin{equation}
+\text{Effect of offers on scores} = \\
+\left( \{\text{Effect of offers on attendance}\} \times\\
+\{\text{Effect of attendance on scores} \}\right)
+\end{equation}`
+$$
+Rearranging: 
+$$
+`\begin{equation}
+\text{Effect of attendance on scores} = \\
+\frac{ \{\text{Effect of offers on scores}\} }{
+\{ \text{Effect of offers on attendance} \} }
+\end{equation}`
+$$
+]
+
+---
+background-image: url("Images/MMFig32.png")
+background-size: 50%
+background-position: 50% 50%
+# Instrumental Variables Estimation 
+.pull-left[
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+`\(\text{Effect of attendance}\)`  
+`\(\text{on scores} =\)`
+
+]
+
+---
+# IV: Three Assumptions
+
+  1. **Relevancy:** The instrument has a causal effect on the variable of interest. In our example: offers have a causal effect on attendance. 
+  
+  2. **Independence:** The instrument is randomly assigned or “as good as randomly assigned”. Unrelated to omitted variables we might want to control for. In our example: the instrument is not related with other ommited variables because of randomization. 
+  
+  3. **Exclusion Restriction:** the instrumented treatment (attendance) is the only channel through which the instrument affects the outcome. In our example: this is equivalent to claiming that the entire effect of offers on scores `\((0.36\sigma)\)` is completely attributable to the difference in attendance (74%)
+
+---
+background-image: url("Images/MMtbl31_1.png")
+background-size: 15%
+background-position: 80% 50%
+# Estimating Effect of KIPP with OLS
+.font80[
+.pull-left[
+- Forget about offers and focus only on attendance.
+
+- If we run a regression on outcome, binary for attendance and same controls as before, we get the results from (4) and (5). 
+
+- This comparison effectively mixes the effects due to randomizing offers and the effects from parents that chose to ignore the lottery. Potential threat of selection bias. 
+
+- Given that (a) there is balance and (b) results are close to IV, we can argue that selection bias is not a threat **among applicants**. 
+]
+]
+
+---
+# IV: Definitions
+
+- We now take all the concepts explore in the KIPP example connect them to formal definitions in the IV framework. 
+
+- **Instrumental variable, `\(Z_i\)`:** variable that induces random ("exogenous") variation in the treatment of interest. In our example: result of the lottery. 
+
+- **Treatment variable, `\(D_i\)`:** variable that indicates treatment of interest (historically refer to as "endogenous variable of interest" in non-RCT settings). In the example: assisting to KIPP, Lynn. 
+
+- **Outcome Variable, `\(Y_i\)`:** variable where we are interested in evaluating the causal effects of the treatment. In the example: 5th grade scores (reading and math). 
+
+---
+# IV: Key Steps (Chain Reaction)
+
+- First check if there is a link from the instrument `\((Z_i)\)` to the treatment `\((D_i)\)`. This step is called the **first stage**.
+
+- Second check if there is a link from the instrument `\((Z_i)\)` to the main outcome `\((Y_i)\)`. This is called the **reduced form**.
+
+- Compute the causal effect of interest, the effect of `\(Z\)` on `\(Y\)` through `\(D\)`, as the ratio of the reduce form to the first stage. This effect estimates the causal effect for a specific group (comming up in a few slides), hence its named **Local Average Treatment Effect (LATE)**
+
+- All this steps can be represented using conditional expectations. 
+
+
+---
+# IV: Key Steps Using Conditional Expectations
+
+$$
+`\begin{equation}
+\text{THE FIRST STAGE:  } E[D_i|Z_i = 1] - E[D_i|Z_i = 0]; \text{call it } \phi 
+\end{equation}`
+$$
+- In the KIPP example this is the 74% difference in attendance. 
+--
+
+$$
+`\begin{equation}
+\text{THE REDUCED FORM:  } E[Y_i|Z_i = 1] - E[Y_i|Z_i = 0]; \text{call it } \rho 
+\end{equation}`
+$$
+- In the KIPP example this is the `\(0.36\sigma\)` effect on math scores. 
+--
+
+$$
+`\begin{equation}
+\text{THE LOCAL AVERAGE TREATMENT EFFECT (LATE):}\\
+\frac{\rho}{\phi} = \frac{E[Y_i|Z_i = 1] - E[Y_i|Z_i = 0]}{E[D_i|Z_i = 1] - E[D_i|Z_i = 0]} ; \text{call it } \lambda 
+\end{equation}`
+$$
+.font90[
+- In the KIPP example this is the `\(0.48\sigma\)` effect on math scores (Figure 3.2). 
+- Each of this expectations is estimated using sample averages or using regression and the correct standard errors to account for sampling variation (R and Stata do it!).   
+]
+---
+# .font90[Key Policy Question: Who Does This LATE Applies to? 1/3]
+
+- Four types of individuals from the perspective of the instrument and treatment: 
+
+  - **Always Takers:** goes to KIPP `\((D_i = 1)\)` regardless of lottery outcome `\((Z_i = 1, Z_i = 0)\)`. 
+  - **Never Takers:** does not go to KIPP `\((D_i = 0)\)` regardless of lottery outcomes `\((Z_i = 1, Z_i = 0)\)`. 
+ - **Compliers:** Goes to KIPP `\((D_i = 1)\)` only if wins the lottery `\((Z_i = 1)\)`. 
+Defiers: Goes to KIPP only if they lose the lottery. 
+
+ - **Defiers:**  Goes to KIPP `\((D_i = 1)\)`  only if loses the lottery  `\((Z_i = 0)\)` (!)
+
+---
+background-image: url("Images/MMtbl32.png")
+background-size: 50%
+background-position: 100% 50%
+# .font90[Key Policy Question: Who Does This LATE Applies to? 2/3]
+
+.pull-left[
+- *LATE property*: if an instrument has a non-zero first stage, has no defiers, and only affects outcome through treatment (exclusion restriction), then ratio of reduce to first stage captures the LATE, or the effect on compilers. 
+
+- For our purposes, this property says that when IV is well behaved, it measures the causal effect on compliers. 
+
+]
+
+---
+# Populations of Interest
+.font90[
+- Population of compilers is usually a population of interest from a policy perspective
+
+- Sometimes there is interest in other populations. For example we could care about the effect of the treatment in the entire treated  population (attended KIPP or `\(E[Y_{1i} - Y_{0i}|D_i=1])\)`. The corresponding estimate is called the Treatment on the Treated (TOT). 
+
+   - There are two ways to receive treatment: through `\(Z\)` (compliers) or regardless of `\(Z\)` (always takers). The TOT is a weighted average of LATE and effect on always takers. Depending on the story you have in mind `\(TOT \gtreqless LATE\)` (example: of parents that are willing to do anything to get their kids into KIPP could make TOT&gt;LATE)
+   
+- Beyond the specifics of TOT, the important takeaway is that IV measures different things and we always need to keep in mind whose causal effect are we measureing (i.e., who are the compliers)
+]
+
+---
+# External Validity
+.font90[
+- The effect of a similar treatment in different settings might not be the same, this is the issue of **external validity**. 
+- To assess external validity we need to think about what is behind the causal effect.
+- In the KIPP example: maybe a structured educational environment helps some but not all (fast learners for example might struggle with this).
+
+- To explore external validity we can: 
+  1. Explore how the effects vary across different characteristics (e.g., high/low math scores at baseline).  
+  2. Look for different instruments and how they affect different types of compliers. Similar to RCTs, the best comparisons here are those that have similar LATEs across populations. 
+]
+
+---
+# For Tomorrow:
+- We will start with example #2, but will not pay too much attention to how LATE is TOT in this case. 
+- We will use example #2 primarily to reinforce concepts and to see how selection bias can contaminate the simple difference (of outcomes from treatment and control) such that it differs drastically from IV estimates. 
+
+---
+# Acknowledgments
+
+- MM
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

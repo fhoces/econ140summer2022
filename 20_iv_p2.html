@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Instrumental Variables</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-07-28" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Instrumental Variables
+## Part II
+### Fernando Hoces la Guardia
+### 07/28/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+
+---
+# IV: Key Ideas (so far)
+
+---
+
+# .font90[Example #2: Solidifying Concepts and Exploring Selection Bias]
+
+- Policy issue: what was the most effective police response to reduce domestic violence in the US in the 1980s? 
+
+- Treatment: Advise or separate aggressor in case of domestic violence ("coddle").
+
+- Control: Arrest the aggressor
+
+- Outcome: 6-month recurrence of domestic violence in the same address (recidivism). 
+
+- Population: Minneapolis, 1980s, volunteer police, non-felony cases (probable cause for misdemeanor assault, not felonies).
+
+---
+
+# (Not so) Random Assigment
+
+- Random assignment was done with colored coded pad reports. Let's think of hypothetical arrival of the police to the scene of crime. 
+
+- Two reasons why treatment assigned (“offered” in the KIPP example) was not the same as treatment delivered (“attended” in KIPP example): 
+ 1. Some situations required judgment calls from police (e.g. arrest when assigned to coddle) and there was an understanding, between research team and the policy, that they could make such calls. 
+ 2. In some cases officers forgot their color coded report pads  (logistics matter!)
+
+
+
+---
+# Table 3.3 (Simplified)
+
+
+
+.font130[
+|                |              |  Delivered   |       |
+|----------------|:------------:|:------------:|-------|
+| **Assigned**   | Arrest &lt;br&gt; (D=0) | Coddle &lt;br&gt; (D=1) | total |
+|   Arrest (Z=0) |      91      |       1      |   92  |
+| percent of Z=0 |     0.99     |     0.01     |   1   |
+|   Coddle (Z=1) |      45      |      177     |  222  |
+| percent of Z=1 |     0.203    |     0.797    |   1   |
+
+]
+
+---
+# Non-Compliance
+
+.pull-left[
+
+- The problem is lack of perfect compliance, this looks like a problem that IV can fix. 
+- Subset of assigned coddlers that ended up arrested are a non random subset of coddlers (think specially aggressive individuals, and how this might relate to recidivism). 
+- Simple comparison between coddlers and arrested are contaminated by selection bias
+]
+
+.pull-right[
+
+
+|                |              |  Delivered   |       |
+|----------------|:------------:|:------------:|-------|
+| **Assigned**   | Arrest &lt;br&gt; (D=0) | Coddle &lt;br&gt; (D=1) | total |
+|   Arrest (Z=0) |      91      |       1      |   92  |
+| percent of Z=0 |     0.99     |     0.01     |   1   |
+|   Coddle (Z=1) |      **45**      |      177     |  222  |
+| percent of Z=1 |     **0.203**    |     0.797    |   1   |
+
+]
+
+---
+# Results: First Stage
+
+.font100[
+.pull-left[
+- In English: effect of instrument on treatment
+- Where is the instrument here? Where is the treatment? 
+- Where would you find the "average treatment, for those that received the instrument"? 
+- Now write it the term above as expectation. 
+- Repeat for "average treatment, for those that did not received the treatment"?
+
+
+
+]
+]
+
+.pull-right[
+
+|                |              |  Delivered   |       |
+|----------------|:------------:|:------------:|-------|
+| **Assigned**   | Arrest &lt;br&gt; (D=0) | Coddle &lt;br&gt; (D=1) | total |
+|   Arrest (Z=0) |      91           |       1           |   92  |
+| percent of Z=0 |     0.99          |     0.01      |   1   |
+|   Coddle (Z=1) |      45           |      177          |  222  |
+| percent of Z=1 |     0.203         |     0.797     |   1   |
+
+
+]
+
+
+---
+# Results: First Stage
+
+.font100[
+.pull-left[
+- In English: effect of instrument on treatment
+- Where is the instrument here? Where is the treatment? 
+- Where would you find the "average treatment, for those that received the instrument"? 
+- Now write it the term above as expectation. 
+- Repeat for "average treatment, for those that did not received the treatment"?
+
+
+
+]
+]
+
+.pull-right[
+
+|                |              |  Delivered   |       |
+|----------------|:------------:|:------------:|-------|
+| **Assigned**   | Arrest &lt;br&gt; (D=0) | Coddle &lt;br&gt; (D=1) | total |
+|   Arrest (Z=0) |      91           |       1           |   92  |
+| percent of Z=0 |     0.99          |     **0.01**      |   1   |
+|   Coddle (Z=1) |      45           |      177          |  222  |
+| percent of Z=1 |     0.203         |     **0.797**     |   1   |
+
+
+$$
+`\begin{aligned}
+&amp;E[D_i|Z_i = 1] - E[D_i|Z_i = 0] = \\
+&amp;0.797 \quad \quad \quad - 0.011  \quad  \quad  \quad  = 0.786
+\end{aligned}`
+$$
+]
+
+
+
+---
+# Results: Reduced Form
+
+- Average recidivism was 18% (18% in the sample addresses reported another incident of domestic violence in the following 6 months. 
+- Recidivism was larger for those *assigned* to coddled `\((Z=1)\)` than those *assigned* to arrested `\((Z=0)\)`: 
+   - `\(E[Y|Z=1]  - E[Y|Z=0] = 0.211 - 0.097 = 0.114\)`
+   - Given the overall mean of 18%, a 11.4% reduction is substantial
+   
+- This effect mixes effect on compliers (lambda) plus effect  XXXXX
+- The effect of this intention to treat (assignment) is called Intention-to-treat effect (ITT) and is the difference in outcomes between group assigned and not assigned (regardless of actual delivery). In the case of IV for RCTs: ITT = Reduced Form 
+
+
+
+---
+# Results: LATE
+The LATE (effect on compliers) is : 
+
+$$
+`\begin{aligned}
+\lambda = \frac{\rho}{\phi} &amp;= \frac{E[Y_i|Z_i = 1] - E[Y_i|Z_i = 0]}{E[D_i|Z_i = 1] - E[D_i|Z_i = 0]}\\
+&amp;= \frac{0.211 - 0.097}{0.797 - 0.011} = \frac{0.144}{0.786} = 0.145
+\end{aligned}`
+$$
+- ITT is in general, smaller than LATE because it does not take non-compliance into account
+- (When we are on a situation with no “always-takers” `\(TOT  =  LATE\)`) REVIEW 
+
+
+
+---
+# How About a Regression
+
+
+.pull-left[
+- Write down reg
+- Match to CEs
+- Present result
+- Compare with reduced form
+- Point out that most of the difference comes from a higher fraction of recidivism among control group (arrested)
+- This is the type of selection bias that we where looking for, and didn't find, when comparing attendees with non-attendees in the KIPP study.
+]
+.pull-right[
+
+
+|                |              |  Delivered   |       |
+|----------------|:------------:|:------------:|-------|
+| **Assigned**   | Arrest &lt;br&gt; (D=0) | Coddle &lt;br&gt; (D=1) | total |
+|   Arrest (Z=0) |      91      |       1      |   92  |
+| percent of Z=0 |     0.99     |     0.01     |   1   |
+|   Coddle (Z=1) |      **45**      |      177     |  222  |
+| percent of Z=1 |     **0.203**    |     0.797    |   1   |
+
+]
+
+
+---
+# Example #3: Familiy Size and Years of Education
+
+- In economics there is an old (and potentially problematic) debate around whether families are choosing the "correct" number of children. 
+
+- "Quantity-quality trade-off" in family size: reduction in family size might lead to higher parental investment in children. 
+
+- One dimension where this can be measured is whether having larger families affect the highest level of education obtained by children. 
+
+- This example is useful for us in that it clearly shows how IV can be used outside of RCTs, but we should also think critically about its policy relevancy.
+
+---
+# Causal Question
+
+- What is the effect of having a larger family on the educational outcomes of the older child in that family? 
+
+- What's the problem with a simple difference in groups? (average education of older child in large families -  average education of older child in small families)
+--
+
+$$
+`\begin{align}
+  \mathop{\mathbb{E}}(Y_i|D=1)-  \mathop{\mathbb{E}}(Y_i|D=0)&amp;= \kappa + \underbrace{\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) - \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)}_\text{Selection bias} 
+\end{align}`
+$$
+(assuming constant effects)
+- You can describe the same problem using OVB. Think of a variable like income.
+
+---
+
+# Using RCTs as a Though Experiment
+
+- How would an RCT look like in this case? 
+
+  1. Draw a sample of families with one child. 
+
+  2. In some of this families, randomly assign them a second child `\((D_i = 1)\)`.  
+  
+  3. Wait 20-30 years and collect data on educational attainment of the firstborn (who did and did not got a second child)
+
+- Given randomization, `\(\mathop{\mathbb{E}}(Y_{i0} | D_i = 1) = \mathop{\mathbb{E}}(Y_{i0} | D_i = 0)\)`  and a simple difference in groups measures the causal effect: 
+
+$$
+`\begin{align}
+  \mathop{\mathbb{E}}(Y_i|D=1)-  \mathop{\mathbb{E}}(Y_i|D=0)&amp;= \kappa
+\end{align}`
+$$
+---
+# What is an Instrument in This Case? 1/3
+
+- A good instrument must satisfy: 
+
+1. **Relevancy:** The instrument has a causal effect on the variable of interest. In this example: something that affects number of children in the family. 
+--
+
+2. **Independence:** The instrument is randomly assigned or “as good as randomly assigned”. Unrelated to omitted variables we might want to control for. In this example: the instrument must not be related to other factors that explain (a) number of children and (b) education of first born. **This is the main challenge.**
+--
+
+  
+3. **Exclusion Restriction:** the instrumented treatment (number of children) is the only channel through which the instrument affects the outcome. In this example: something that affects education only through its effect on family size. 
+
+
+---
+# What is an Instrument in This Case? 2/3
+
+- Instrument #1: having twins in the second birth.  
+
+- `\(Z_{1i} = 1\)` if second birth consist of twins
+- `\(Z_{1i} = 0\)` if second birth consist of one child (singleton)
+
+- **Relevancy:** twins affects number of children in the family. Very plausible and verifiable in the data: `\(E(D|Z_1 = 1) = 3.92\)` while `\(E(D|Z_1 = 0) = 3.6\)`. Why is this? Why not 1 full child of a difference? 
+
+--
+
+- Some families that where planing for 2 end up with three, but other families that were plannig for 3 (or more) are not affected by the instrument. What are the names of these two groups? 
+
+---
+# What is an Instrument in This Case? 3/3
+
+- **Independence of Instrument #1:** plausible as twins occur more or less at random, but maybe not  because of age (also less plausible today due to IVF). 
+
+- **Exclusion restriction of Instrument #1:** twins affect education only through family size. Maybe? This would not work if, for example, there was a cultural belief that twins are, on average, better students that the rest of the population (in this case, positive stigma would create a link from twins to education in addition to the channel of family size).
+
+---
+# Results Using Twins IV
+
+- **First Stage:** `\(\phi = E(D|Z_1 = 1) - E(D|Z_1 = 0) = 3.92 - 3.6 = 0.32\)`.
+- **Reduce Form:** `\(\rho = E(Y|Z_1 = 1) - E(Y|Z_1 = 0) =\)`  zero (no `\(\widehat \rho\)` provided).
+- **LATE:** `\(\lambda = \rho/\phi = 0/0.32 = 0\)`. 
+
+- Notice that treatment need not be binary (nor the instrument)
+- Given that having a zero reduce form implies zero LATE, it is come to present reduce form results first (if its 0 in the RF, it will also be in LATE).
+- It seems there is no quantity quality trade-off. **When increasing family size from 2 to 3 children, among the compliers.**  
+- An OLS estimate with Education `\((Y_i)\)` on treatment  `\((D_i)\)` and controls, yields `\(\widehat \beta = 0.25\)`. This is pure selection bias!
+
+---
+# Second Possible Instrument 1/3
+
+- Instrument #2: Cultural preference for mixed gender in children (girl-boy preferred to boy-boy or girl-girl)
+
+
+- `\(Z_{2i} = 1\)` if second birth is same gender as first, and `\(Z_{1i} = 0\)` if second birth is different gender than first.
+
+- **Relevancy:**  `\(E(D|Z_1 = 1) = 3.68\)` while `\(E(D|Z_1 = 0) = 3.60\)`. Maybe?
+
+- **Independence:** similar rationale as twins (assuming no gender selective abortions).
+
+- **Exclusion:** Maybe? One possible additional channel is that same sex siblings share more resources (room, clothes, etc.) than mixed gender siblings. If this savings for the family affect education, then this assumption is violated. 
+
+---
+
+
+---
+# Acknowledgments
+
+- MM
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
