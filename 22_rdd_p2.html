@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Regression Discontinuity</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-08-02" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Regression Discontinuity
+## Part II
+### Fernando Hoces la Guardia
+### 08/02/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+# Today's Lecture
+
+ - Finish Sharp RDD 
+    - Non-linearities
+    - Interpreting results
+ - Start Fuzzy RDD
+ 
+
+---
+background-image: url("Images/MMfig43.png")
+background-size:  400px
+background-position: 90% 0%
+
+# But Is There a Jump? 
+.font90[
+.pull-left[
+- The key question to identify causality, is whether relationship between running variable and outcome is well represented by a linear control on age. 
+- Two approaches to reduce the likelihood of mistakes when modeling this relationship: (i) modeling non-linear relationships, and (ii) focusing only on data around the cut-off. We will spend most of the time in (i). 
+- In addition to logs, non-linearities can be modeled with two additional tools: polynomials and interactions. 
+]
+]
+---
+# Modeling Non-Linear Relationships: Polynomials
+
+- Curves are usually modeled using polynomials (powers of the regressors). 
+- Higher polynomials (higher powers) introduce more flexibility but they are also likely to hide a disconitinuity when there is one. 
+- The choice of how much more flexibility is enough is a judgment call. 
+- Ideally the results should not vary much as you add higher order polynomials (powers of 3, 4 or more). 
+- In our example there might be a small curvature in the data, so we add a quadratic term for the running variable: 
+  
+  
+$$
+`\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma_1  a+ \gamma_2  a^2 + e_a
+\end{equation}`
+$$
+- We are not interested interpreting the effect of age, only on controlling for any non-linear behaviour. 
+
+
+---
+# Modeling Non-Linear Relationships: Interactions 1/3
+- An interaction is defined as the multiplication of two regressors. Where typically one is a binary regressor. 
+- Adding an interaction in any regression (or any equation) is a way of capturing changes in (regression) coefficients change for certain groups.
+    - Example with just a constant
+    - Example with constant and slope
+    - Example with both. 
+
+- In here we add an interaction and standardize the running variable, so `\(rho\)` can continue to be interpreted as the difference of average outcomes at the cutoff. 
+
+---
+# Modeling Non-Linear Relationships: Interactions 2/3
+
+- The standardization part might add some confusion, so first let's focus only on adding the interaction to capture a potential shift in the slope that connects age `\((a)\)` with mortality rates `\((\overline M_a)\)`: 
+
+$$
+`\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma  a+ \delta  a \times D_a+ e_a
+\end{equation}`
+$$
+- The goal of the standardization is to have an easy interpretation of `\(\rho\)` as the difference of mortality around the cut-off. We could define the a new variable `\(\widetilde a = a - 21\)`  which would represent the standardized age `\((a - 21)\)`. This would give us the regression: 
+
+$$
+`\begin{equation}
+\overline M_{ a} = \alpha +\rho D_{ a} + \gamma  \widetilde a+ \delta  \widetilde a \times D_a+ e_{ a}
+\end{equation}`
+$$
+---
+# Modeling Non-Linear Relationships: Interactions 3/3
+
+- A more generic version would allow for the cut-off to be any number so instead of 21, put `\(a_0\)`. Giving us the standardized formulation of the book: 
+$$
+`\begin{equation}
+\overline M_{ a} = \alpha +\rho D_{ a} + \gamma  (a - a_0)+ \delta  (a - a_0) \times D_a+ e_{ a}
+\end{equation}`
+$$
+- The most important part here is understanding the interactions, if you find the standardization distracting, focus on the first two equations but make sure to remember that "we standardize to be able to interpret `\(\rho\)` as the treatment effect" 
+
+- (If we want to extrapolate effects awway from the cut-off, we need to be aware that the treatment effect is `\(\rho + \delta (a - a_0)\)`)
+
+
+---
+# .font90[Non-Linear Relationships: Interactions And Polynomials]
+.font90[
+Here are polynomials: 
+$$
+`\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma_1  a+ \gamma_2  a^2 + e_a
+\end{equation}`
+$$
+]
+--
+.font90[
+Here are interactions: 
+$$
+`\begin{equation}
+\overline M_{ a} = \alpha +\rho D_{ a} + \gamma  (a - a_0)+ \delta  (a - a_0) \times D_a+ e_{ a}
+\end{equation}`
+$$
+]
+--
+.font90[
+Here are combined: 
+$$
+`\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma_1  (a - a_0)+ \gamma_2  (a - a_0)^2 +\\
+\delta_1\left[ (a - a_0) D_a\right] + \delta_2\left[ (a - a_0)^2 D_a\right] + e_a
+\end{equation}`
+$$
+
+We can now capture curvature and changing slopes in the relationship between `\(a\)` and `\((\overline M_a)\)`, reducing the risk that we incorrectly find a discontinuity where there is none (figure 4.3-C). 
+]
+
+
+---
+background-image: url("Images/MMfig44.png")
+background-size:  contain
+background-position: 100% 50%
+# The Result
+
+.pull-left[
+
+- Effect of 21st birthday seems robust to this new specifications. 
+
+- Effect also persist substantially up to the 23rd birthday suggesting lasting effects. 
+
+- This last point demonstrates the value of a visual inspection of RDD estimates. 
+]
+
+---
+background-image: url("Images/MMtbl41.png")
+background-size:  contain
+background-position: 50% 50%
+# Now All in One Table
+
+
+---
+background-image: url("Images/MMtbl41.png")
+background-size:  60%
+background-position: 50% 0%
+# Now All in One Table
+
+
+---
+background-image: url("Images/MMtbl41.png")
+background-size:  60%
+background-position: 50% -300px
+# Now All in One Table
+
+
+
+
+---
+# Non-Paramteric RDD
+
+- The second way in which can handle non-linearities is by removing parametrical assumptions (about the slopes and how they change). 
+- This involves either taking simple averages, or computing linear regressions but only arround on a narrow bandiwth around the cut-off. 
+- This approach does not have the problems trying to get the relationship between `\(a\)` and `\((\overline M_a)\)` right, but it discard a large amount of data (information). 
+- The main challenge is how to choose the bandwidth to balance the trade of between bias (incorrectly attributing discontinuities) and variance (due to smaller sample size). The choice of this bandwidth is a judgement call, and results should not rely on one specific choice. 
+- It also has several "fancy" (more complex) methodological challenges that we ignore for now. 
+
+
+---
+class: inverse, middle
+
+# Fuzzy RDD
+(Same content as MM 4.2, but different order)
+
+---
+# .font80[Policy Question: Effect of High Performing Peers on Math Scores? 1/2]
+
+- More specifically: Do students that attend the best exam school in Boston (Boston Latin School, or BLS) perform better because  of having better performing peers? This potential effect is known as "peer effect" in the (academic) literature. 
+
+- **Outcome `\((Y_i)\)`:** Math Score in 7th and 8th Grade (1 or 2 years after entering the exam school). Standardized.
+- **Treatment `\((\overline X_{(i)})\)`:** Average score of peers before entering the exam school (4th grade). Proxy measure of peer quality. 
+- **Running Variable `\((R_i)\)`:** Score in entrance exam, measured as distance to BLS cut-off threshold. 
+- **Discontinuity**: Crossing the eligibility threshold in entrance exame for elite school in Boston (BLS). 
+
+---
+# .font80[Policy Question: Effect of High Performing Peers on Math Scores? 2/2]
+
+- Regression: 
+
+$$
+`\begin{equation}
+Y_i =  \theta_0 + \theta_1 \overline X_{(i)} + \theta_2 X_i + u_i 
+\end{equation}`
+$$
+- OLS Regression estimates for `\(\theta_1 = 0.25\)`
+
+- Selection problem: these schools are by definition selecting the best students, so comparisons between peers in exam school versus the rest will be contaminated by selection bias. 
+
+- Let's use RDD to address this selection bias problem. 
+
+---
+background-image: url("Images/MMfig46.png")
+background-size:  50%
+background-position: 100% 50%
+# Fuzzy RDD is IV
+
+
+.pull-left[
+- Let's start with **a** discontinuity. 
+
+- Enrollment to BLS and distance from exam cut-off
+
+- This is not the discontinuity will end up focusing on, but it helps to illustrate the concept of Fuzzy RDD and how it connects with the notion of compliance. 
+]
+
+---
+background-image: url("Images/MMfig48.png")
+background-size:  50%
+background-position: 100% 50%
+# Fuzzy RDD is IV in Peer Effect Example 1/3
+
+.pull-left[
+- Now let's switch to figure 4.8, which shows the treatment we care about (peer effects) as a function of the running variable. 
+- (compliers here are harder to describe: “those with peers who notably improve their performance after crossing the BLS threshold”)
+- The **instrument** here is defined as the variable that captures crossing the threshold.
+]
+
+
+---
+background-image: url("Images/MMfig48.png")
+background-size:  50%
+background-position: 100% 50%
+# Fuzzy RDD is IV in Peer Effect Example 2/3
+.pull-left[
+- Beware of confusions: in sharp RDD this variable represents the treatment, in fuzzy represents the instrument (akin to the offers in KIPP and OHP examples). 
+- To add to the confusion the instrument here is labeled as `\(D_i\)` (instead of `\(Z_i\)`)
+- If this is the instrument, what is the first stage?
+]
+
+
+---
+# Fuzzy RDD is IV in Peer Effect Example 3/3
+
+- First Stage: 
+$$
+`\begin{equation}
+\overline X_{(i)}  = \alpha_1 + \phi D_i + \beta_1 R_i + e_{1i}
+\end{equation}`
+$$
+
+- Reduced Form: 
+--
+
+$$
+`\begin{equation}
+Y_i  = \alpha_0 + \rho D_i + \beta_0 R_i + e_{0i}
+\end{equation}`
+$$
+
+- Second Stage (for 2SLS): 
+--
+$$
+`\begin{equation}
+Y_i  = \alpha_2 + \lambda \widehat{\overline X_{(i)}}  + \beta_2 R_i + e_{2i}
+\end{equation}`
+$$
+---
+background-image: url("Images/MMfig48.png")
+background-size:  50%
+background-position: 100% 50%
+# IV Assumptions 
+
+--
+.font90[
+- **Relevancy:** See figure 4.8. Effect of   
+instrument on treatment is an increase  
+in `\(0.8\sigma\)` (very big)
+]
+--
+.font90[
+- **Independence:**  Yes for the same reason   
+that Sharp RDD does not have OVB:   
+Instrument is a deterministic function   
+of a running variable. 
+]
+--
+.font90[
+- **Exclusion (Restriction):** the cut-off   
+variable (instrument) is influencing the math   
+scores (outcome) only through peer quality   
+(treatment). There are probably other channels,   
+so this assumption probably doesn’t hold. 
+
+]
+---
+background-image: url("Images/MMfig49.png")
+background-size:  50%
+background-position: 100% 50%
+# Results 
+
+- First Stage: `\(\phi  = 0.8\)`   
+(no SE reported). Strong first stage. 
+
+--
+
+- Reduced Form: `\(\rho  = -0.02\)`   
+(SE = `\(0.1\)`). Statistical zero.   
+
+--
+
+- 2SLS LATE: `\(\lambda = -0.023\)`   
+(SE = `\(0.132\)`). Zero again. 
+
+- OLS: `\(\theta_1 = 0.25\)`   
+(no SE reported). Strong positvie "effect"
+
+---
+# Back to the Exclusion Restriction
+
+- We saw that the exclusion assumption probably doesn't hold, so why bother with the estimation?
+
+- The key is that the reduce form has zero effect.
+
+- Whatever other channels (of the same instrument) will be captured in the reduce form. 
+
+- So no effect in the reduce form for this instrument, means no effect for any treatment/channel this instrument is instrumenting. 
+
+- Additionally, the an OVB analysis of the OLS estimates shows us that most (all?) potentially omitted variables produce `\(OVB&gt;0\)` (practice question for the exam!). Hence, peer effects are probably overestimated. 
+
+
+
+---
+# RDD: Final Considerations 1/2
+- Visual inspection of RDD estimates are important but remember to keep an eye on the range of the y-axis
+
+- Notice here that we cannot interpret the result of regression as a matched group, because we do not have individuals in the same cell (say age 20) with both treatment and control. The validity of RDD depends on our willingness to extrapolate across the running variable, at least around a narrow neighborhood around the cut-off. 
+
+- This extrapolation limits the policy questions that can be answered with RDD evidence. RDD can answer questions about changes in the margin (from 21 to 22 or 19) but not complete rearrangements of a policy (prohibiting or eliminating restrictions completely). 
+
+---
+# RDD: Final Considerations 2/2
+
+- There is one important assumption for RDD that MM does not discuss, and it is pretty important (but I will not test you on it): RDD works as long as the threshold cannot be manipulated. This means that individuals cannot place themselves on either side of the threshold at will. This probably can be connected to the exclusion restriction, but requires a deeper dive into Fuzzy RDD. For those interested in more RDD I suggest following up this class from [Andrew Heiss](https://evalsp22.classes.andrewheiss.com/content/12-content/).
+
+
+---
+# Acknowledgments
+
+- MM
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

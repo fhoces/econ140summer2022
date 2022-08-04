@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Instrumental Variables and Regression Discontinuity</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-08-01" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Instrumental Variables and Regression Discontinuity
+### Fernando Hoces la Guardia
+### 08/01/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+
+# Housekeeping
+
+- Midterm 2 Grades Wednesday.
+- Midterm 2 Solutions: Today.
+- Practice questions for new material: collection of reading comprehension questions at the end of each chapter (will post IV today).
+
+---
+# Combining IV and Regression: 2SlS
+
+- Two reasons to combine IV with regression: 
+
+ 1. Sometimes we might have more than one instrument and combining them in one regression improves statistical precision (because of a smaller variance in the residual). 
+ 
+ 2. Our instruments might not be "as-good-as-random" but might achieve independence after controlling for a few observable characteristics (e.g. age of the mother in case of the twins instrument).
+
+- The procedure that combines regression and IV is called **Two Stage Least Squares (2SLS)**
+
+
+---
+# First Stage and Reduce Form in Regression
+
+- For the case of a binary instrument, we can write the first stage and reduce form as the following regression (end of lecture on CEF): 
+
+
+$$
+`\begin{aligned}
+\text{THE FIRST STAGE:  }&amp; \quad D_i = \alpha_1 + \phi Z_i + e_{1i}\\
+\text{THE REDUCED FORM:  }&amp; \quad Y_i = \alpha_0 + \rho Z_i + e_{0i}\\
+\end{aligned}`
+$$
+- Where we can evaluate each conditional expectation from the previous formulation (of FS and RF) and obtain: 
+
+$$
+`\begin{aligned}
+\text{THE FIRST STAGE:  }&amp; \quad E[D_i|Z_i = 1] - E[D_i|Z_i = 0] = \phi\\
+\text{THE REDUCED FORM:  }&amp; \quad E[Y_i|Z_i = 1] - E[Y_i|Z_i = 0] = \rho\\
+\end{aligned}`
+$$
+- Where `\(LATE = \lambda\)` is the ratio the slopes of both regressions. 
+- 2SLS offers an alternative way of computing this ratio (and getting the SEs right!)
+
+---
+# 2SLS Procedure
+
+- First step: estimate the regression equation for the first stage and generate fitted values `\(\widehat D_i\)`: 
+
+$$
+`\begin{equation}
+\widehat D_i = \alpha_1 + \phi Z_i
+\end{equation}`
+$$
+- Second step: regress `\(Y_i\)` on `\(\widehat D_i\)`: 
+
+$$
+`\begin{equation}
+ Y_i = \alpha_2 + \lambda_{2SLS} \widehat D_i + e_{2i}
+\end{equation}`
+$$
+- The regression estimate for `\(\lambda_{2SLS}\)` is **identical** to the ratio `\(\rho/\phi\)`! (proved in the appendix of Ch3) 
+
+---
+# 2SLS With Multiple Regressors
+
+- Now that we have the regression setup ready, it is straight forward to add control. 
+- The most important thing to remember is that you need to include the additional controls in all the equations (otherwise we would be inducing a type of OVB). 
+- Using the example of the additional control of maternal age, `\(A_i\)`:
+
+$$
+`\begin{aligned}
+\text{THE FIRST STAGE:  }&amp; \quad D_i = \alpha_1 + \phi Z_i + \gamma_1 A_i + e_{1i}\\
+\text{THE REDUCED FORM:  }&amp; \quad Y_i = \alpha_0 + \rho Z_i  + \gamma_0 A_i + e_{0i}\\
+\end{aligned}`
+$$
+And in the 2SLS estimate: 
+$$
+`\begin{aligned}
+\text{FIRST STAGE FITS:  }&amp; \quad \widehat D_i = \alpha_1 + \phi Z_i + \gamma_1 A_i\\
+\text{SECOND STAGE:  }&amp; \quad Y_i = \alpha_2 + \lambda_{2SLS}\widehat D_i + \gamma_2 A_i + e_{2i}\\
+\end{aligned}`
+$$
+- 2SLS gets the SEs right for `\(\lambda_{2SLS}\)` (more on appendix of Ch3). 
+
+---
+# 2SLS With Multiple Instruments
+
+- In addition the twins instrument `\((Z_i)\)`, we can add now the siblings gender instrument. Let's label this last one `\(W_i\)` to avoid confusions. We can also bring the additional controls (Age, `\(A_i\)`, First born boy `\(B_i\)`) and get new first stage: 
+
+$$
+`\begin{aligned}
+\text{FIRST STAGE:  }&amp; \quad D_i = \alpha_1 + \phi_t Z_i + \phi_s W_i+ \gamma_1 A_i + \delta_1 B_i+ e_{1i}\\
+\text{REDUCED FORM:  }&amp; \quad Y_i = \alpha_0 + \rho_t Z_i + \rho_s W_i +  \gamma_0 A_i + \delta_0 B_i + e_{0i}\\
+\end{aligned}`
+$$
+- And the corresponding 2SLS estimation: 
+$$
+`\begin{aligned}
+\text{FIRST STAGE FITS:  }&amp; \quad \widehat D_i = \alpha_1 + \phi_t Z_i + \phi_s W_i+ \gamma_1 A_i + \delta_1 B_i\\
+\text{SECOND STAGE:  }&amp; \quad Y_i = \alpha_2 + \lambda_{2SLS}\widehat D_i + \gamma_2 A_i + \delta_2 B_i+ e_{2i}\\
+\end{aligned}`
+$$
+- Ready to read results from most IV papers! 
+
+---
+background-image: url("Images/MMtbl34.png")
+background-size: contain
+background-position: 50% 20%
+# .font90[IV Results for Family Size and Education: First Stage]
+
+
+---
+background-image: url("Images/MMtbl35.png")
+background-size: contain
+background-position: 50% 20%
+# .font90[IV Results for Family Size and Education: Second Stage + OLS]
+
+---
+background-image: url("Images/MMtbl35.png")
+background-size: 80%
+background-position: 50% 20%
+# .font90[IV Results for Family Size and Education: Second Stage + OLS]
+
+---
+
+# IV - Final Considerations 1/2
+
+- Quick intuitions why SE of `\(\lambda_{2SLS}\)` are wrong if estimated with OLS: `\(\widehat D_i\)` is an estimated variable that has more uncertainty that `\(D_i\)`, we know that, but the software doesn't. Hence it generates fictitiously small SEs (SE from 2SLS &gt; SE from OLS). 
+- When assessing the relevance of one instrument use t-test as usual. When assessing the relevance of multiple `\((K)\)` instruments use a joint hypothesis test `\(\phi_1 = \phi_2= \phi_K = 0\)`. The rule of thumb here is that the F-statistic reported for these type of tests has to be greater than 10 (p-hacking alert!). 
+- Beware of studies that are *instrument driven* ("I just found a new cool and clever instrument! Now, which policy could I use this instrument for?") as oppose to *policy driven* ("Policy X is of high relvance, let's look for IVs to identify its causal effect"). 
+
+---
+background-image: url("Images/in_mice.png")
+background-size: 50%
+background-position: 100% 20%
+# IV - Final Considerations 2/2
+
+.pull-left[
+- When it comes to external validity never forget that LATE is the effect on compliers (MM constantly does!). 
+
+- There is a twitter account that emphasizes this extrapolation problem in bio-medical sciences by adding the proper caveat at the end of each new flashy result: 
+]
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+- We need something similar for the social sciences such that after each new IV study, it adds... in compliers!
+
+
+---
+class: inverse, middle
+
+# Regression Discontinuity Design
+
+---
+# Regression Discontinuity Design
+
+- Many policy decisions (interventions) are assign over the basis of strict rules. For example:  
+  - California limits the elementary class size at 32.
+  - The US federal pensions system (Social Security) starts providing pensions no earlier than at age 62. 
+  - In order to qualify for certain government programs (e.g. Medicaid in California) families must have an income below a specific threshold. 
+- Even though these rules seem strict and the opposite of random assignment, we can use them with our fourth research design tool, **Regression Discontinuity Design**, to identify causal effects.
+
+---
+# Example: Minimum Legal Drinking Age in the US
+
+- Minimum legal drinking age (MLDA) in the US is 21. Is it too high (or too low)?
+
+  - Advocates: of the current age limit of 21 years old: in some extend reduces access to alcohol, hence preventing harm. 
+  
+  - Opponents: reducing the drinking age to 18 could discourage binge drinking and promotes a culture of mature alcohol consumption. 
+---
+background-image: url("Images/MMfig41.png")
+background-size: contain
+background-position: 50% 50%
+
+# Deaths and Distance from Birthdays
+
+
+---
+background-image: url("Images/MMfig41.png")
+background-size: 50%
+background-position: 100% 50%
+
+# Deaths and Distance from Birthdays. Notes
+.font80[
+.pull-left[
+- Figure shows number of deaths among Americans ages 20-22 between 1997 and 2003. Plotted by day relative to the birthdays. So if somebody was born on January 1st 1990,  and died on January 4th 2021, is counted among the deaths of the 21 year old on day 3.  
+- We will explore this potential effect using RDD 
+- Spike of about 100 additional deaths per day on the day following the 21st birthday. Over a baseline of 150 deaths (before the spike)
+- Nothing similar around other close birthdays (20th or 22nd). We still need to argue that this age-21 effect can be attributed to the Minimum legal drinking age (MLDA) and that it lasts long enough to be worth worrying about. 
+]
+]
+
+
+---
+background-image: url("Images/MMfig42.png")
+background-size: 50%
+background-position: 100% 50%
+# First Exploration of RDD
+.font80[
+.pull-left[
+- Our RDD analysis will focus on these data: 
+  - Average monthly death rates
+  - Months are defined as 30-day intervals, centered around the 21st birthday.
+- There is monthly variation but rarely going over 95 deaths per month before the 21st birthday. 
+- After the 21st birthday, there seems to be an upward shift. 
+- Also, looking at trends before and after the shift, death rates seem to be decreasing with age. Extrapolating, we should expect deaths (without intervention, or `\(Y_{0i}\)` ) to be around 92 (per 100,000) right after the 21st birthdays. They jump instead to around 100.
+]
+]  
+
+---
+# RDD Definitions
+
+- **Treatment variable** is `\(D_a\)`, where 1 indicates crossing the legal drinking age (21) and 0 otherwise. 
+
+  - Treatment status is a deterministic function of age `\((a)\)`
+  
+  - Treatment status is a discontinuous function of `\(a\)`. 
+
+- The variable that determines treatment in RDD, age in this case, is called the **running variable**. 
+
+- In a **Sharp RDD** there is a clean switch from control to treatment after crossing a threshold, nobody under the cutoff gets the treatment, and everybody after the cut-off gets it. In fuzzy RD (tomorrow) we will explore the case where the probability of treatment changes at the cutoff. 
+
+
+---
+# The Regression part of RDD
+
+- The outcome of average mortality for month of age `\(a\)` `\((\overline M_a)\)` changes with the running variable for reasons that have nothing to do with the treatment. 
+- One way to control for this smooth relationship is to add it as a control in a regression like the following: 
+
+$$
+`\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma  a + e_a
+\end{equation}`
+$$
+- Estimate of `\(\rho =\)` 7.7. Relative to baseline death rate of 95 (without the intervention)
+
+- Is there OVB here? 
+
+--
+
+- Given that treatment is a deterministic function of the running variable we know that there is nothing else that affects treatment (so `\(\pi_1=0\)` in the auxiliary OVB regression). 
+
+---
+background-image: url("Images/MMfig43.png")
+background-size:  400px
+background-position: 90% 0%
+
+# But Is There a Jump? 
+.font90[
+.pull-left[
+- The key question to identify causality, is whether relationship between running variable and outcome is well represented by a linear control on age. 
+- Two approaches to reduce the likelihood of mistakes when modeling this relationship: (i) modeling non-linear relationships, and (ii) focusing only on data around the cut-off. We will spend most of the time in (i). 
+- In addition to logs, non-linearities can be modeled with two additional tools: polynomials and interactions. 
+]
+]
+---
+# Modeling Non-Linear Relationships: Polynomials
+
+- Curves are usually modeled using polynomials (powers of the regressors). 
+- Higher polynomials (higher powers) introduce more flexibility but they are also likely to hide a disconitinuity when there is one. 
+- The choice of how much more flexibility is enough is a judgment call. 
+- Ideally the results should not vary much as you add higher order polynomials (powers of 3, 4 or more). 
+- In our example there might be a small curvature in the data, so we add a quadratic term for the running variable: 
+  
+  
+$$
+`\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma_1  a+ \gamma_2  a^2 + e_a
+\end{equation}`
+$$
+- We are not interested interpreting the effect of age, only on controlling for any non-linear behaviour. 
+
+
+---
+# Modeling Non-Linear Relationships: Interactions 1/3
+- An interaction is defined as the multiplication of two regressors. Where typically one is a binary regressor. 
+- Adding an interaction in any regression (or any equation) is a way of capturing changes in (regression) coefficients change for certain groups.
+    - Example with just a constant
+    - Example with constant and slope
+    - Example with both. 
+
+- In here we add an interaction and standardize the running variable, so `\(rho\)` can continue to be interpreted as the difference of average outcomes at the cutoff. 
+
+---
+# Modeling Non-Linear Relationships: Interactions 2/3
+
+- The standardization part might add some confusion, so first let's focus only on adding the interaction to capture a potential shift in the slope that connects age `\((a)\)` with mortality rates `\((\overline M_a)\)`: 
+
+$$
+`\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma  a+ \delta  a \times D_a+ e_a
+\end{equation}`
+$$
+- The goal of the standardization is to have an easy interpretation of `\(\rho\)` as the difference of mortality around the cut-off. We could define the a new variable `\(\widetilde a = a - 21\)`  which would represent the standardized age `\((a - 21)\)`. This would give us the regression: 
+
+$$
+`\begin{equation}
+\overline M_{ a} = \alpha +\rho D_{ a} + \gamma  \widetilde a+ \delta  \widetilde a \times D_a+ e_{ a}
+\end{equation}`
+$$
+---
+# Modeling Non-Linear Relationships: Interactions 3/3
+
+- A more generic version would allow for the cut-off to be any number so instead of 21, put `\(a_0\)`. Giving us the standardized formulation of the book: 
+$$
+`\begin{equation}
+\overline M_{ a} = \alpha +\rho D_{ a} + \gamma  (a - a_0)+ \delta  (a - a_0) \times D_a+ e_{ a}
+\end{equation}`
+$$
+- The most important part here is understanding the interactions, if you find the standardization distracting, focus on the first two equations but make sure to remember that "we standardize to be able to interpret `\(\rho\)` as the treatment effect" 
+
+- (If we want to extrapolate effects awway from the cut-off, we need to be aware that the treatment effect is `\(\rho + \delta (a - a_0)\)`)
+
+
+---
+# .font90[Non-Linear Relationships: Interactions And Polynomials]
+.font90[
+Here are polynomials: 
+$$
+`\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma_1  a+ \gamma_2  a^2 + e_a
+\end{equation}`
+$$
+]
+--
+.font90[
+Here are interactions: 
+$$
+`\begin{equation}
+\overline M_{ a} = \alpha +\rho D_{ a} + \gamma  (a - a_0)+ \delta  (a - a_0) \times D_a+ e_{ a}
+\end{equation}`
+$$
+]
+--
+.font90[
+Here are combined: 
+$$
+`\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma_1  (a - a_0)+ \gamma_2  (a - a_0)^2 +\\
+\delta_1\left[ (a - a_0) D_a\right] + \delta_2\left[ (a - a_0)^2 D_a\right] + e_a
+\end{equation}`
+$$
+
+We can now capture curvature and changing slopes in the relationship between `\(a\)` and `\((\overline M_a)\)`, reducing the risk that we incorrectly find a discontinuity where there is none (figure 4.3-C). 
+]
+
+
+---
+background-image: url("Images/MMfig44.png")
+background-size:  contain
+background-position: 100% 50%
+# The Result
+
+.pull-left[
+
+- Effect of 21st birthday seems robust to this new specifications. 
+
+- Effect also persist substantially up to the 23rd birthday suggesting lasting effects. 
+
+- This last point demonstrate the value of a visual inspection of RDD estimates. 
+]
+
+---
+background-image: url("Images/MMtbl41.png")
+background-size:  contain
+background-position: 50% 50%
+# Now All in One Table
+
+
+---
+background-image: url("Images/MMtbl41.png")
+background-size:  60%
+background-position: 50% 0%
+# Now All in One Table
+
+
+---
+background-image: url("Images/MMtbl41.png")
+background-size:  60%
+background-position: 50% -300px
+# Now All in One Table
+
+
+
+
+---
+# Non-Paramteric RDD
+
+- The second way in which can handle non-linearities is by removing parametrical assumptions (about the slopes and how they change). 
+- This involves either taking simple averages, or computing linear regressions but only arround on a narrow bandiwth around the cut-off. 
+- This approach does not have the problems trying to get the relationship between `\(a\)` and `\((\overline M_a)\)` right, but it discard a large amount of data (information). 
+- The main challenge is how to choose the bandwidth to balance the trade of between bias (incorrectly attributing discontinuities) and variance (due to smaller sample size). The choice of this bandwidth is a judgement call, and results should not rely on one specific choice. 
+- It also has several "fancy" (more complex) methodological challenges that we ignore for now. 
+
+---
+# RDD: Final Considerations
+- Visual inspection of RDD estimates are important but remember to keep an eye on the range of the y-axis
+- Notice here that we cannot interpret the result of regression as a matched group, because we do not have individuals in the same cell (say age 20) with both treatment and control. The validity of RDD depends on our willingness to extrapolate across the running variable, at least around a narrow neighborhood around the cut-off. 
+- This extrapolation limits the policy questions that can be answered with RDD evidence. RDD can answer questions about changes in the margin (from 21 to 22 or 19) but not complete rearrangements of a policy (prohibiting or eliminating restrictions completely). 
+
+
+
+
+
+
+---
+# Acknowledgments
+
+- MM
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

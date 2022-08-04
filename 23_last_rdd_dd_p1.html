@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Regression Discontinuity and Differences in Differences</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-08-03" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Regression Discontinuity and Differences in Differences
+### Fernando Hoces la Guardia
+### 08/03/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+# Today's Lecture
+
+ - Finish Fuzzy RDD
+ 
+ - Start Differences in Differences
+ 
+
+---
+background-image: url("Images/MMfig48.png")
+background-size:  50%
+background-position: 100% 50%
+# Fuzzy RDD is IV in Peer Effect Example 2/3
+.pull-left[
+- Beware of confusions: in sharp RDD this variable represents the treatment, in fuzzy represents the instrument (akin to the offers in KIPP and OHP examples). 
+- To add to the confusion the instrument here is labeled as `\(D_i\)` (instead of `\(Z_i\)`)
+- If this is the instrument, what is the first stage?
+]
+
+
+---
+# Fuzzy RDD is IV in Peer Effect Example 3/3
+
+- First Stage: 
+$$
+`\begin{equation}
+\overline X_{(i)}  = \alpha_1 + \phi D_i + \beta_1 R_i + e_{1i}
+\end{equation}`
+$$
+
+- Reduced Form: 
+--
+
+$$
+`\begin{equation}
+Y_i  = \alpha_0 + \rho D_i + \beta_0 R_i + e_{0i}
+\end{equation}`
+$$
+
+- Second Stage (for 2SLS): 
+--
+$$
+`\begin{equation}
+Y_i  = \alpha_2 + \lambda \widehat{\overline X_{(i)}}  + \beta_2 R_i + e_{2i}
+\end{equation}`
+$$
+---
+background-image: url("Images/MMfig48.png")
+background-size:  50%
+background-position: 100% 50%
+# IV Assumptions 
+
+--
+.font90[
+- **Relevancy:** See figure 4.8. Effect of   
+instrument on treatment is an increase  
+in `\(0.8\sigma\)` (very big)
+]
+--
+.font90[
+- **Independence:**  Yes for the same reason   
+that Sharp RDD does not have OVB:   
+Instrument is a deterministic function   
+of a running variable. 
+]
+--
+.font90[
+- **Exclusion (Restriction):** the cut-off   
+variable (instrument) is influencing the math   
+scores (outcome) only through peer quality   
+(treatment). There are probably other channels,   
+so this assumption probably doesn’t hold. 
+
+]
+---
+background-image: url("Images/MMfig49.png")
+background-size:  50%
+background-position: 100% 50%
+# Results 
+
+- First Stage: `\(\phi  = 0.8\)`   
+(no SE reported). Strong first stage. 
+
+--
+
+- Reduced Form: `\(\rho  = -0.02\)`   
+(SE = `\(0.1\)`). Statistical zero.   
+
+--
+
+- 2SLS LATE: `\(\lambda = -0.023\)`   
+(SE = `\(0.132\)`). Zero again. 
+
+- OLS: `\(\theta_1 = 0.25\)`   
+(no SE reported). Strong positvie "effect"
+
+---
+# Back to the Exclusion Restriction
+
+- We saw that the exclusion assumption probably doesn't hold, so why bother with the estimation?
+
+- The key is that the reduce form has zero effect.
+
+- Whatever other channels (of the same instrument) will be captured in the reduce form. 
+
+- So no effect in the reduce form for this instrument, means no effect for any treatment/channel this instrument is instrumenting. 
+
+- Additionally, an OVB analysis of the OLS estimates shows us that most (all?) potentially omitted variables produce `\(OVB&gt;0\)` (practice question for the exam!). Hence, peer effects are probably overestimated. 
+
+
+
+---
+# RDD: Final Considerations 1/2
+- Visual inspection of RDD estimates are important but remember to keep an eye on the range of the y-axis
+
+- Notice here that we cannot interpret the result of regression as a matched group, because we do not have individuals in the same cell (say age 20) with both treatment and control. The validity of RDD depends on our willingness to extrapolate across the running variable, at least around a narrow neighborhood around the cut-off. 
+
+- This extrapolation limits the policy questions that can be answered with RDD evidence. RDD can answer questions about changes in the margin (from 21 to 22 or 19) but not complete rearrangements of a policy (prohibiting or eliminating restrictions completely). 
+
+---
+# RDD: Final Considerations 2/2
+
+- There is one important assumption for RDD that MM does not discuss, and it is pretty important (but I will not test you on it): RDD works as long as the threshold cannot be manipulated. This means that individuals cannot place themselves on either side of the threshold at will. This probably can be connected to the exclusion restriction, but requires a deeper dive into Fuzzy RDD. For those interested in more RDD I suggest following up this class from [Andrew Heiss](https://evalsp22.classes.andrewheiss.com/content/12-content/).
+
+---
+class: inverse, middle
+
+# Differences-in-Differences
+
+---
+# Differences-in-Differences (DD)
+
+- Our fifth and last research design tool!
+
+- Aka DD, Diff-in-Diff, Diff-Diff, etc. 
+
+- Based on the assumption that sometimes even though treatment and control might differ in unobservables, these differences will be constant over time.
+
+---
+
+# .font90[Policy Example: Effect of Monetary Policy in Times of Crisis 1/3]
+
+- Context: Great depression (1930s) in the US. 
+
+- Bank runs where a widespread problem during this time
+
+  - A bank run occurs when there is a sudden drop in trust towards the bank's capability to pay back its deposits. No bank holds all its deposits so in the case of a bank run any bank run can go bankrupt.
+  
+  - Nowadays there is a clear role for the central banks as lenders of last resort. Back in the 1930s the decision was more discretionary.  
+
+---
+
+# .font90[Policy Example: Effect of Monetary Policy in Times of Crisis 2/3]
+ 
+- To avoid bank runs central banks can provide credit to banks at a very low cost. 
+
+- The problem with this are two: 
+  - (i) it prevents the bankruptcy of underperforming (insolvent) banks, at the costs of government funds. 
+  - (ii) it encourages excessively risky behavior of banks in the future (moral hazard).  
+- The US Federal Reserve System (Monetary authority in the US)  has 12 separate districts, each run by a Federal Reserve Bank. 
+- In the 1930 each of these banks had significant autonomy in deciding its monetary policy.  
+
+---
+
+# .font90[Policy Example: Effect of Monetary Policy in Times of Crisis 3/3]
+
+- In December 1930, there was a major bank run in Mississippi (US State).  
+
+- It so happens that Missipi’s monetary jurisdiction is split between two of the 12 Federal Reserve Authorities: the 6th and the 8th district. 
+
+- It also happens that this authorities reacted very differently to the bank run: 
+
+  - 6th District (treatment): made available cheap credit to banks.  Expanded bank lending by 40%. 
+  
+  - 8th District (control): restricted the bank lending by 10%. 
+
+---
+
+# Difference in Difference Estimator
+
+- The DD estimator is defined as the change in outcomes (1st difference) of one group (treatment) over one dimension (typically time) compared to (2nd difference) the same change in another group (control).  
+
+$$
+`\begin{equation}
+\delta_{DD}  = (\overline Y_{T,t+1} - \overline  Y_{T,t})  - (\overline  Y_{C,t+1} - \overline  Y_{C,t})
+\end{equation}`
+$$
+
+- In this example: 
+  - Outcomes: Number of banks (later will add number of firms and sales volumes).
+  - Groups: 6th and 8th districts. 
+  - Dimension of change: time.
+
+---
+
+# Difference in Difference Estimator: Example
+
+- Change in outcomes of one group over one dimension: `\(\overline Y_{6th,1931} - \overline  Y_{6th,1930}\)`
+- Same change in another group: `\(\overline Y_{8th,1931} - \overline  Y_{8th,1930}\)`
+- Comparing those two: 
+$$
+`\begin{aligned}
+\delta_{DD}  &amp;= (\overline Y_{6th,1931} - \overline  Y_{6th,1930})  - (\overline Y_{8th,1931} - \overline  Y_{8th,1930})\\
+ &amp;= (121 - 135) \quad \quad \quad \quad - (132 - 165) \\
+&amp;= -14  \quad \quad \quad \quad \quad \quad \quad - (-33)\\
+&amp;= 19
+\end{aligned}`
+$$
+
+
+- Equivalently this can be expressed as the change in comparisons between treatment and control, over time. 
+- Compare this with a simple difference (in groups, but here each group just has one observation): `\(Y_{6th,1931}  - \overline Y_{8th,1931} = -11\)` 
+
+
+---
+background-image: url("Images/MMfig51.png")
+background-size:  50%
+background-position: 100% 50%
+
+# Graphically
+
+
+.pull-left[
+- “The DD tool amounts to a comparison of trends over time” (MM)
+
+- Think of what is the counterfactual of the treatment group ( `\(Y_0\)` in the terminology of potential outcomes)
+
+]
+
+---
+# Key Assumption: Common Trends
+
+- Also known as Parallel Trends Assumption.
+
+- In the absence of an intervention, the treatment and control group would have had the same trend over time. 
+
+- In the example: absence the more aggressive lending, the trends in the 6th district would have been the trends of the 8th. 
+
+- This is a strong assumption, but can be tested in the data. 
+  - To test it, we look for trends where the treatments must not have an effect: before the intervention, or after the control group reverse its policy to imitate the treatment (1931)   
+
+---
+background-image: url("Images/MMfig52.png")
+background-size:  contain
+background-position: 50% 50%
+# Common Trends Graphically
+
+---
+# DD and Regression 1/2
+
+- Benefits of using regression: 
+  - Allows to fit any number of observations (not only 4 points!)
+  - Allows to implement DD with more than two entities (districts in this example)
+  - Facilitates statistical inference. 
+- Components: 
+  - (i) A binary variable `\(TREAT_d\)` that identifies the treated districts *regardless* if the treatment was assign already or not (i.e. `\(TREAT_t=1\)` for all `\(t\)`). 
+  - (ii) A binary variable `\(POST_t\)` that identifies the time period is post treatment or pre-treatment *regardless* of treatment assignment (i.e. `\(POST_t=1\)` for controls in the post period too). 
+  - (iii) The interaction between these two binaries `\(TREAT_d \times POST_t\)`; the coefficient on this variable is the DD causal effect. 
+  
+---
+# DD and Regression 2/2  
+  
+- Regression equation:
+
+$$
+`\begin{equation}
+Y_{dt} = \alpha + \beta TREAT_d + \gamma POST_t +\delta_{DD} (TREAT_d \times POST_t) + e_{dt}
+\end{equation}`
+$$
+--
+
+- Regression estimates: 
+$$
+`\begin{aligned}
+Y_{dt} = 167 - &amp;29 TREAT_d - 49 POST_t +20.5 (TREAT_d \times POST_t) + e_{dt}\\
+  &amp;(8.8) \quad\quad \quad\quad(7.6) \quad \quad\quad(10.7)
+\end{aligned}`
+$$
+- Standard errors of a OLS regression will be to small (overestimate precision) as they assume independent observations. 
+
+- Within a unit (district) observations will not be independent, making it less information that with 12 fully independent observations. 
+ 
+---
+background-image: url("Images/MMtbl51.png")
+background-size:  50%
+background-position: 100% 50%
+# DD Estimates Using Real Outputs
+.pull-left[
+- Beyond number of banks what matters most is a measure of economic activity 
+- Here there is more limited data (back to the world of 4 points) so we inspect the results without regression. 
+- DD estimate on number of wholesale firms: 181
+- DD estimate on net wholesale sales ($ millions): 81 
+]
+
+---
+# Acknowledgments
+
+- MM
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

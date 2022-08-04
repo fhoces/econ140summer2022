@@ -1,0 +1,612 @@
+---
+title: "Instrumental Variables and Regression Discontinuity"
+subtitle: ""
+author: "Fernando Hoces la Guardia"
+date: "08/01/2022"
+output: 
+  xaringan::moon_reader:
+    footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
+    css: [default, metropolis, metropolis-fonts, "my-css.css"] 
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css">
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+</style>
+
+```{r , include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, viridis, knitr, extrafont, tidyverse, magrittr, latex2exp, 
+       parallel, Ecdat, wooldridge, dslabs, ggforce, emo, png, grid, pander, 
+       countdown, emoGG, haven, broom, ggridges, gridExtra, kableExtra, snakecase, 
+       janitor, data.table, lubridate, lfe, here, gapminder, AER, stargazer, margins, 
+       furrr)
+
+
+# Define pink color
+red_pink <- "#e64173"
+turquoise <- "#20B2AA"
+orange <- "#FFA500"
+red <- "#fb6107"
+blue <- "#3b3b9a"
+green <- "#8bb174"
+grey_light <- "grey70"
+grey_mid <- "grey50"
+grey_dark <- "grey20"
+purple <- "#6A5ACD"
+slate <- "#314f4f"
+# Dark slate grey: #314f4f
+
+options(htmltools.dir.version = FALSE)
+
+# define vars
+om = par("mar")
+lowtop = c(om[1],om[2],0.1,om[4])
+
+overwrite = FALSE
+
+
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#23373b" # metropolis font color
+# Notes directory
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  message = FALSE,
+  warning = FALSE,
+  dev = "svg",
+  cache = TRUE
+  #fig.width = 11,
+  #fig.height = 5
+)
+
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 14),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  legend.position = "none"
+)
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -0.5, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_simple <- theme_bw() + theme(
+  line = element_blank(),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text.x = element_text(size = 18, family = "STIXGeneral"),
+  axis.text.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  # plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_math <- theme_void() + theme(
+  text = element_text(family = "MathJax_Math"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_serif <- theme_void() + theme(
+  text = element_text(family = "MathJax_Main"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes <- theme_void() + theme(
+  text = element_text(family = "Fira Sans Book"),
+  axis.title = element_text(size = 18),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = grey_light,
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_set(theme_gray(base_size = 20))
+# Column names for regression results
+reg_columns <- c("Term", "Est.", "S.E.", "t stat.", "p-Value")
+# Function for formatting p values
+format_pvi <- function(pv) {
+  return(ifelse(
+    pv < 0.0001,
+    "<0.0001",
+    round(pv, 4) %>% format(scientific = F)
+  ))
+}
+format_pv <- function(pvs) lapply(X = pvs, FUN = format_pvi) %>% unlist()
+# Tidy regression results table
+tidy_table <- function(x, terms, highlight_row = 1, highlight_color = "black", highlight_bold = T, digits = c(NA, 3, 3, 2, 5), title = NULL) {
+  x %>%
+    tidy() %>%
+    select(1:5) %>%
+    mutate(
+      term = terms,
+      p.value = p.value %>% format_pv()
+    ) %>%
+    kable(
+      col.names = reg_columns,
+      escape = F,
+      digits = digits,
+      caption = title
+    ) %>%
+    kable_styling(font_size = 20) %>%
+    row_spec(1:nrow(tidy(x)), background = "white") %>%
+    row_spec(highlight_row, bold = highlight_bold, color = highlight_color)
+}
+
+
+```
+
+
+
+```{css, echo = F, eval = T}
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+```
+
+
+# Housekeeping
+
+- Midterm 2 Grades Wednesday.
+- Midterm 2 Solutions: Today.
+- Practice questions for new material: collection of reading comprehension questions at the end of each chapter (will post IV today).
+
+---
+# Combining IV and Regression: 2SlS
+
+- Two reasons to combine IV with regression: 
+
+ 1. Sometimes we might have more than one instrument and combining them in one regression improves statistical precision (because of a smaller variance in the residual). 
+ 
+ 2. Our instruments might not be "as-good-as-random" but might achieve independence after controlling for a few observable characteristics (e.g. age of the mother in case of the twins instrument).
+
+- The procedure that combines regression and IV is called **Two Stage Least Squares (2SLS)**
+
+
+---
+# First Stage and Reduce Form in Regression
+
+- For the case of a binary instrument, we can write the first stage and reduce form as the following regression (end of lecture on CEF): 
+
+
+$$
+\begin{aligned}
+\text{THE FIRST STAGE:  }& \quad D_i = \alpha_1 + \phi Z_i + e_{1i}\\
+\text{THE REDUCED FORM:  }& \quad Y_i = \alpha_0 + \rho Z_i + e_{0i}\\
+\end{aligned}
+$$
+- Where we can evaluate each conditional expectation from the previous formulation (of FS and RF) and obtain: 
+
+$$
+\begin{aligned}
+\text{THE FIRST STAGE:  }& \quad E[D_i|Z_i = 1] - E[D_i|Z_i = 0] = \phi\\
+\text{THE REDUCED FORM:  }& \quad E[Y_i|Z_i = 1] - E[Y_i|Z_i = 0] = \rho\\
+\end{aligned}
+$$
+- Where $LATE = \lambda$ is the ratio the slopes of both regressions. 
+- 2SLS offers an alternative way of computing this ratio (and getting the SEs right!)
+
+---
+# 2SLS Procedure
+
+- First step: estimate the regression equation for the first stage and generate fitted values $\widehat D_i$: 
+
+$$
+\begin{equation}
+\widehat D_i = \alpha_1 + \phi Z_i
+\end{equation}
+$$
+- Second step: regress $Y_i$ on $\widehat D_i$: 
+
+$$
+\begin{equation}
+ Y_i = \alpha_2 + \lambda_{2SLS} \widehat D_i + e_{2i}
+\end{equation}
+$$
+- The regression estimate for $\lambda_{2SLS}$ is **identical** to the ratio $\rho/\phi$! (proved in the appendix of Ch3) 
+
+---
+# 2SLS With Multiple Regressors
+
+- Now that we have the regression setup ready, it is straight forward to add control. 
+- The most important thing to remember is that you need to include the additional controls in all the equations (otherwise we would be inducing a type of OVB). 
+- Using the example of the additional control of maternal age, $A_i$:
+
+$$
+\begin{aligned}
+\text{THE FIRST STAGE:  }& \quad D_i = \alpha_1 + \phi Z_i + \gamma_1 A_i + e_{1i}\\
+\text{THE REDUCED FORM:  }& \quad Y_i = \alpha_0 + \rho Z_i  + \gamma_0 A_i + e_{0i}\\
+\end{aligned}
+$$
+And in the 2SLS estimate: 
+$$
+\begin{aligned}
+\text{FIRST STAGE FITS:  }& \quad \widehat D_i = \alpha_1 + \phi Z_i + \gamma_1 A_i\\
+\text{SECOND STAGE:  }& \quad Y_i = \alpha_2 + \lambda_{2SLS}\widehat D_i + \gamma_2 A_i + e_{2i}\\
+\end{aligned}
+$$
+- 2SLS gets the SEs right for $\lambda_{2SLS}$ (more on appendix of Ch3). 
+
+---
+# 2SLS With Multiple Instruments
+
+- In addition the twins instrument $(Z_i)$, we can add now the siblings gender instrument. Let's label this last one $W_i$ to avoid confusions. We can also bring the additional controls (Age, $A_i$, First born boy $B_i$) and get new first stage: 
+
+$$
+\begin{aligned}
+\text{FIRST STAGE:  }& \quad D_i = \alpha_1 + \phi_t Z_i + \phi_s W_i+ \gamma_1 A_i + \delta_1 B_i+ e_{1i}\\
+\text{REDUCED FORM:  }& \quad Y_i = \alpha_0 + \rho_t Z_i + \rho_s W_i +  \gamma_0 A_i + \delta_0 B_i + e_{0i}\\
+\end{aligned}
+$$
+- And the corresponding 2SLS estimation: 
+$$
+\begin{aligned}
+\text{FIRST STAGE FITS:  }& \quad \widehat D_i = \alpha_1 + \phi_t Z_i + \phi_s W_i+ \gamma_1 A_i + \delta_1 B_i\\
+\text{SECOND STAGE:  }& \quad Y_i = \alpha_2 + \lambda_{2SLS}\widehat D_i + \gamma_2 A_i + \delta_2 B_i+ e_{2i}\\
+\end{aligned}
+$$
+- Ready to read results from most IV papers! 
+
+---
+background-image: url("Images/MMtbl34.png")
+background-size: contain
+background-position: 50% 20%
+# .font90[IV Results for Family Size and Education: First Stage]
+
+
+---
+background-image: url("Images/MMtbl35.png")
+background-size: contain
+background-position: 50% 20%
+# .font90[IV Results for Family Size and Education: Second Stage + OLS]
+
+---
+background-image: url("Images/MMtbl35.png")
+background-size: 80%
+background-position: 50% 20%
+# .font90[IV Results for Family Size and Education: Second Stage + OLS]
+
+---
+
+# IV - Final Considerations 1/2
+
+- Quick intuitions why SE of $\lambda_{2SLS}$ are wrong if estimated with OLS: $\widehat D_i$ is an estimated variable that has more uncertainty that $D_i$, we know that, but the software doesn't. Hence it generates fictitiously small SEs (SE from 2SLS > SE from OLS). 
+- When assessing the relevance of one instrument use t-test as usual. When assessing the relevance of multiple $(K)$ instruments use a joint hypothesis test $\phi_1 = \phi_2= \phi_K = 0$. The rule of thumb here is that the F-statistic reported for these type of tests has to be greater than 10 (p-hacking alert!). 
+- Beware of studies that are *instrument driven* ("I just found a new cool and clever instrument! Now, which policy could I use this instrument for?") as oppose to *policy driven* ("Policy X is of high relvance, let's look for IVs to identify its causal effect"). 
+
+---
+background-image: url("Images/in_mice.png")
+background-size: 50%
+background-position: 100% 20%
+# IV - Final Considerations 2/2
+
+.pull-left[
+- When it comes to external validity never forget that LATE is the effect on compliers (MM constantly does!). 
+
+- There is a twitter account that emphasizes this extrapolation problem in bio-medical sciences by adding the proper caveat at the end of each new flashy result: 
+]
+
+<br><br><br><br><br><br><br><br><br><br>
+
+- We need something similar for the social sciences such that after each new IV study, it adds... in compliers!
+
+
+---
+class: inverse, middle
+
+# Regression Discontinuity Design
+
+---
+# Regression Discontinuity Design
+
+- Many policy decisions (interventions) are assign over the basis of strict rules. For example:  
+  - California limits the elementary class size at 32.
+  - The US federal pensions system (Social Security) starts providing pensions no earlier than at age 62. 
+  - In order to qualify for certain government programs (e.g. Medicaid in California) families must have an income below a specific threshold. 
+- Even though these rules seem strict and the opposite of random assignment, we can use them with our fourth research design tool, **Regression Discontinuity Design**, to identify causal effects.
+
+---
+# Example: Minimum Legal Drinking Age in the US
+
+- Minimum legal drinking age (MLDA) in the US is 21. Is it too high (or too low)?
+
+  - Advocates: of the current age limit of 21 years old: in some extend reduces access to alcohol, hence preventing harm. 
+  
+  - Opponents: reducing the drinking age to 18 could discourage binge drinking and promotes a culture of mature alcohol consumption. 
+---
+background-image: url("Images/MMfig41.png")
+background-size: contain
+background-position: 50% 50%
+
+# Deaths and Distance from Birthdays
+
+
+---
+background-image: url("Images/MMfig41.png")
+background-size: 50%
+background-position: 100% 50%
+
+# Deaths and Distance from Birthdays. Notes
+.font80[
+.pull-left[
+- Figure shows number of deaths among Americans ages 20-22 between 1997 and 2003. Plotted by day relative to the birthdays. So if somebody was born on January 1st 1990,  and died on January 4th 2021, is counted among the deaths of the 21 year old on day 3.  
+- We will explore this potential effect using RDD 
+- Spike of about 100 additional deaths per day on the day following the 21st birthday. Over a baseline of 150 deaths (before the spike)
+- Nothing similar around other close birthdays (20th or 22nd). We still need to argue that this age-21 effect can be attributed to the Minimum legal drinking age (MLDA) and that it lasts long enough to be worth worrying about. 
+]
+]
+
+
+---
+background-image: url("Images/MMfig42.png")
+background-size: 50%
+background-position: 100% 50%
+# First Exploration of RDD
+.font80[
+.pull-left[
+- Our RDD analysis will focus on these data: 
+  - Average monthly death rates
+  - Months are defined as 30-day intervals, centered around the 21st birthday.
+- There is monthly variation but rarely going over 95 deaths per month before the 21st birthday. 
+- After the 21st birthday, there seems to be an upward shift. 
+- Also, looking at trends before and after the shift, death rates seem to be decreasing with age. Extrapolating, we should expect deaths (without intervention, or $Y_{0i}$ ) to be around 92 (per 100,000) right after the 21st birthdays. They jump instead to around 100.
+]
+]  
+
+---
+# RDD Definitions
+
+- **Treatment variable** is $D_a$, where 1 indicates crossing the legal drinking age (21) and 0 otherwise. 
+
+  - Treatment status is a deterministic function of age $(a)$
+  
+  - Treatment status is a discontinuous function of $a$. 
+
+- The variable that determines treatment in RDD, age in this case, is called the **running variable**. 
+
+- In a **Sharp RDD** there is a clean switch from control to treatment after crossing a threshold, nobody under the cutoff gets the treatment, and everybody after the cut-off gets it. In fuzzy RD (tomorrow) we will explore the case where the probability of treatment changes at the cutoff. 
+
+
+---
+# The Regression part of RDD
+
+- The outcome of average mortality for month of age $a$ $(\overline M_a)$ changes with the running variable for reasons that have nothing to do with the treatment. 
+- One way to control for this smooth relationship is to add it as a control in a regression like the following: 
+
+$$
+\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma  a + e_a
+\end{equation}
+$$
+- Estimate of $\rho =$ 7.7. Relative to baseline death rate of 95 (without the intervention)
+
+- Is there OVB here? 
+
+--
+
+- Given that treatment is a deterministic function of the running variable we know that there is nothing else that affects treatment (so $\pi_1=0$ in the auxiliary OVB regression). 
+
+---
+background-image: url("Images/MMfig43.png")
+background-size:  400px
+background-position: 90% 0%
+
+# But Is There a Jump? 
+.font90[
+.pull-left[
+- The key question to identify causality, is whether relationship between running variable and outcome is well represented by a linear control on age. 
+- Two approaches to reduce the likelihood of mistakes when modeling this relationship: (i) modeling non-linear relationships, and (ii) focusing only on data around the cut-off. We will spend most of the time in (i). 
+- In addition to logs, non-linearities can be modeled with two additional tools: polynomials and interactions. 
+]
+]
+---
+# Modeling Non-Linear Relationships: Polynomials
+
+- Curves are usually modeled using polynomials (powers of the regressors). 
+- Higher polynomials (higher powers) introduce more flexibility but they are also likely to hide a disconitinuity when there is one. 
+- The choice of how much more flexibility is enough is a judgment call. 
+- Ideally the results should not vary much as you add higher order polynomials (powers of 3, 4 or more). 
+- In our example there might be a small curvature in the data, so we add a quadratic term for the running variable: 
+  
+  
+$$
+\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma_1  a+ \gamma_2  a^2 + e_a
+\end{equation}
+$$
+- We are not interested interpreting the effect of age, only on controlling for any non-linear behaviour. 
+
+
+---
+# Modeling Non-Linear Relationships: Interactions 1/3
+- An interaction is defined as the multiplication of two regressors. Where typically one is a binary regressor. 
+- Adding an interaction in any regression (or any equation) is a way of capturing changes in (regression) coefficients change for certain groups.
+    - Example with just a constant
+    - Example with constant and slope
+    - Example with both. 
+
+- In here we add an interaction and standardize the running variable, so $rho$ can continue to be interpreted as the difference of average outcomes at the cutoff. 
+
+---
+# Modeling Non-Linear Relationships: Interactions 2/3
+
+- The standardization part might add some confusion, so first let's focus only on adding the interaction to capture a potential shift in the slope that connects age $(a)$ with mortality rates $(\overline M_a)$: 
+
+$$
+\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma  a+ \delta  a \times D_a+ e_a
+\end{equation}
+$$
+- The goal of the standardization is to have an easy interpretation of $\rho$ as the difference of mortality around the cut-off. We could define the a new variable $\widetilde a = a - 21$  which would represent the standardized age $(a - 21)$. This would give us the regression: 
+
+$$
+\begin{equation}
+\overline M_{ a} = \alpha +\rho D_{ a} + \gamma  \widetilde a+ \delta  \widetilde a \times D_a+ e_{ a}
+\end{equation}
+$$
+---
+# Modeling Non-Linear Relationships: Interactions 3/3
+
+- A more generic version would allow for the cut-off to be any number so instead of 21, put $a_0$. Giving us the standardized formulation of the book: 
+$$
+\begin{equation}
+\overline M_{ a} = \alpha +\rho D_{ a} + \gamma  (a - a_0)+ \delta  (a - a_0) \times D_a+ e_{ a}
+\end{equation}
+$$
+- The most important part here is understanding the interactions, if you find the standardization distracting, focus on the first two equations but make sure to remember that "we standardize to be able to interpret $\rho$ as the treatment effect" 
+
+- (If we want to extrapolate effects awway from the cut-off, we need to be aware that the treatment effect is $\rho + \delta (a - a_0)$)
+
+
+---
+# .font90[Non-Linear Relationships: Interactions And Polynomials]
+.font90[
+Here are polynomials: 
+$$
+\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma_1  a+ \gamma_2  a^2 + e_a
+\end{equation}
+$$
+]
+--
+.font90[
+Here are interactions: 
+$$
+\begin{equation}
+\overline M_{ a} = \alpha +\rho D_{ a} + \gamma  (a - a_0)+ \delta  (a - a_0) \times D_a+ e_{ a}
+\end{equation}
+$$
+]
+--
+.font90[
+Here are combined: 
+$$
+\begin{equation}
+\overline M_a = \alpha +\rho D_a + \gamma_1  (a - a_0)+ \gamma_2  (a - a_0)^2 +\\
+\delta_1\left[ (a - a_0) D_a\right] + \delta_2\left[ (a - a_0)^2 D_a\right] + e_a
+\end{equation}
+$$
+
+We can now capture curvature and changing slopes in the relationship between $a$ and $(\overline M_a)$, reducing the risk that we incorrectly find a discontinuity where there is none (figure 4.3-C). 
+]
+
+
+---
+background-image: url("Images/MMfig44.png")
+background-size:  contain
+background-position: 100% 50%
+# The Result
+
+.pull-left[
+
+- Effect of 21st birthday seems robust to this new specifications. 
+
+- Effect also persist substantially up to the 23rd birthday suggesting lasting effects. 
+
+- This last point demonstrate the value of a visual inspection of RDD estimates. 
+]
+
+---
+background-image: url("Images/MMtbl41.png")
+background-size:  contain
+background-position: 50% 50%
+# Now All in One Table
+
+
+---
+background-image: url("Images/MMtbl41.png")
+background-size:  60%
+background-position: 50% 0%
+# Now All in One Table
+
+
+---
+background-image: url("Images/MMtbl41.png")
+background-size:  60%
+background-position: 50% -300px
+# Now All in One Table
+
+
+
+
+---
+# Non-Paramteric RDD
+
+- The second way in which can handle non-linearities is by removing parametrical assumptions (about the slopes and how they change). 
+- This involves either taking simple averages, or computing linear regressions but only arround on a narrow bandiwth around the cut-off. 
+- This approach does not have the problems trying to get the relationship between $a$ and $(\overline M_a)$ right, but it discard a large amount of data (information). 
+- The main challenge is how to choose the bandwidth to balance the trade of between bias (incorrectly attributing discontinuities) and variance (due to smaller sample size). The choice of this bandwidth is a judgement call, and results should not rely on one specific choice. 
+- It also has several "fancy" (more complex) methodological challenges that we ignore for now. 
+
+---
+# RDD: Final Considerations
+- Visual inspection of RDD estimates are important but remember to keep an eye on the range of the y-axis
+- Notice here that we cannot interpret the result of regression as a matched group, because we do not have individuals in the same cell (say age 20) with both treatment and control. The validity of RDD depends on our willingness to extrapolate across the running variable, at least around a narrow neighborhood around the cut-off. 
+- This extrapolation limits the policy questions that can be answered with RDD evidence. RDD can answer questions about changes in the margin (from 21 to 22 or 19) but not complete rearrangements of a policy (prohibiting or eliminating restrictions completely). 
+
+
+
+
+
+
+---
+# Acknowledgments
+
+- MM
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+pagedown::chrome_print("21_2sls_rdd_p1.html", output = "21_2sls_rdd_p1.pdf")
+```

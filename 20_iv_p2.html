@@ -43,11 +43,6 @@ class: center, middle, inverse, title-slide
 &lt;/style&gt;
 
 
----
-# IV: Key Ideas (so far)
-
----
-
 # .font90[Example #2: Solidifying Concepts and Exploring Selection Bias]
 
 - Policy issue: what was the most effective police response to reduce domestic violence in the US in the 1980s? 
@@ -186,7 +181,6 @@ $$
    - `\(E[Y|Z=1]  - E[Y|Z=0] = 0.211 - 0.097 = 0.114\)`
    - Given the overall mean of 18%, a 11.4% reduction is substantial
    
-- This effect mixes effect on compliers (lambda) plus effect  XXXXX
 - The effect of this intention to treat (assignment) is called Intention-to-treat effect (ITT) and is the difference in outcomes between group assigned and not assigned (regardless of actual delivery). In the case of IV for RCTs: ITT = Reduced Form 
 
 
@@ -198,11 +192,11 @@ The LATE (effect on compliers) is :
 $$
 `\begin{aligned}
 \lambda = \frac{\rho}{\phi} &amp;= \frac{E[Y_i|Z_i = 1] - E[Y_i|Z_i = 0]}{E[D_i|Z_i = 1] - E[D_i|Z_i = 0]}\\
-&amp;= \frac{0.211 - 0.097}{0.797 - 0.011} = \frac{0.144}{0.786} = 0.145
+&amp;= \frac{0.211 - 0.097}{0.797 - 0.011} = \frac{0.114}{0.786} = 0.145
 \end{aligned}`
 $$
 - ITT is in general, smaller than LATE because it does not take non-compliance into account
-- (When we are on a situation with no “always-takers” `\(TOT  =  LATE\)`) REVIEW 
+- (When we are on a situation with no “always-takers” `\(TOT  =  LATE\)`)  
 
 
 
@@ -284,11 +278,12 @@ $$
 - A good instrument must satisfy: 
 
 1. **Relevancy:** The instrument has a causal effect on the variable of interest. In this example: something that affects number of children in the family. 
+
 --
 
 2. **Independence:** The instrument is randomly assigned or “as good as randomly assigned”. Unrelated to omitted variables we might want to control for. In this example: the instrument must not be related to other factors that explain (a) number of children and (b) education of first born. **This is the main challenge.**
---
 
+--
   
 3. **Exclusion Restriction:** the instrumented treatment (number of children) is the only channel through which the instrument affects the outcome. In this example: something that affects education only through its effect on family size. 
 
@@ -324,10 +319,10 @@ $$
 - Notice that treatment need not be binary (nor the instrument)
 - Given that having a zero reduce form implies zero LATE, it is come to present reduce form results first (if its 0 in the RF, it will also be in LATE).
 - It seems there is no quantity quality trade-off. **When increasing family size from 2 to 3 children, among the compliers.**  
-- An OLS estimate with Education `\((Y_i)\)` on treatment  `\((D_i)\)` and controls, yields `\(\widehat \beta = 0.25\)`. This is pure selection bias!
+- An OLS estimate with Education `\((Y_i)\)` on treatment  `\((D_i)\)` and controls, yields `\(\widehat \beta = - 0.25\)`. This is pure selection bias!
 
 ---
-# Second Possible Instrument 1/3
+# Second Possible Instrument 
 
 - Instrument #2: Cultural preference for mixed gender in children (girl-boy preferred to boy-boy or girl-girl)
 
@@ -340,7 +335,165 @@ $$
 
 - **Exclusion:** Maybe? One possible additional channel is that same sex siblings share more resources (room, clothes, etc.) than mixed gender siblings. If this savings for the family affect education, then this assumption is violated. 
 
+
 ---
+# Intrument #2: How to Check for Exclusion Restriction 1/2
+
+- To check for relevancy: look in the data if there instrument explains the treatment variable. 
+- To check for independence: similar to RCTs check for balance in covariates (covariates = regressors or characteristics).
+- The check for exclusion restriction: cannot be done directly. Look for an effect where there shouldn't be one: 
+  - Focus on groups where there is no link between instrument and treatment (e.g. always-takers)
+  - If the instrument is still having an effect on the outcome, this would  suggest that there is an additional channel connecting instrument and outcome and this assumption is violated.  
+  
+
+---
+# Intrument #2: How to Check for Exclusion Restriction 2/2
+
+- Example: religious families are more likely to have three or more children (always takers). Or highly educated families are less likely to have more than one child (never takers). 
+- Effects of `\(Z\)` on `\(Y\)` (reduced form) in samples with few compliers are suggestive evidence that that exclusion does not hold. 
+- Looking at the formula for LATE: `\(\lambda = \rho/\phi\)`, rearranging  `\(\lambda\phi = \rho\)`. Hence, when there is not first stage `\((\phi=0)\)`, there should not be a reduce form effect either `\((\rho=0)\)`. Observing no first stage with a strong reduce form relationship is suggestive evidence that exclusion is not holding (other factors behind the reduce form link).
+- The study that used Instrument #2 did this check and found no reduce form effects. Hinting at exclusion holding. 
+
+---
+# Combining IV and Regression: 2SlS
+
+- Two reasons to combine IV with regression: 
+
+ 1. Sometimes we might have more than one instrument and combining them in one regression improves statistical precision (because of a smaller variance in the residual). 
+ 
+ 2. Our instruments might not be "as-good-as-random" but might achieve independence after controlling for a few observable characteristics (e.g. age of the mother in case of the twins instrument).
+
+- The procedure that combines regression and IV is called **Two Stage Least Squares (2SLS)**
+
+
+---
+# First Stage and Reduce Form in Regression
+
+- For the case of a binary instrument, we can write the first stage and reduce form as the following regression (end of lecture on CEF): 
+
+
+$$
+`\begin{aligned}
+\text{THE FIRST STAGE:  }&amp; \quad D_i = \alpha_1 + \phi Z_i + e_{1i}\\
+\text{THE REDUCED FORM:  }&amp; \quad Y_i = \alpha_0 + \rho Z_i + e_{0i}\\
+\end{aligned}`
+$$
+- Where we can evaluate each conditional expectation from the previous formulation (of FS and RF) and obtain: 
+
+$$
+`\begin{aligned}
+\text{THE FIRST STAGE:  }&amp; \quad E[D_i|Z_i = 1] - E[D_i|Z_i = 0] = \phi\\
+\text{THE REDUCED FORM:  }&amp; \quad E[Y_i|Z_i = 1] - E[Y_i|Z_i = 0] = \rho\\
+\end{aligned}`
+$$
+- Where `\(LATE = \lambda\)` is the ratio the slopes of both regressions. 
+- 2SLS offers an alternative way of computing this ratio (and getting the SEs right!)
+
+---
+# 2SLS Procedure
+
+- First step: estimate the regression equation for the first stage and generate fitted values `\(\widehat D_i\)`: 
+
+$$
+`\begin{equation}
+\widehat D_i = \alpha_1 + \phi Z_i
+\end{equation}`
+$$
+- Second step: regress `\(Y_i\)` on `\(\widehat D_i\)`: 
+
+$$
+`\begin{equation}
+\widehat Y_i = \alpha_2 + \lambda_{2SLS} \widehat D_i + e_{2i}
+\end{equation}`
+$$
+- The regression estimate for `\(\lambda_{2SLS}\)` is **identical** to the ratio `\(\rho/\phi\)`! (proved in the appendix of Ch3) 
+
+---
+# 2SLS With Multiple Regressors
+
+- Now that we have the regression setup ready, it is straight forward to add control. 
+- The most important thing to remember is that you need to include the additional controls in all the equations (otherwise we would be inducing a type of OVB). 
+- Using the example of the additional control of maternal age, `\(A_i\)`:
+
+$$
+`\begin{aligned}
+\text{THE FIRST STAGE:  }&amp; \quad D_i = \alpha_1 + \phi Z_i + \gamma_1 A_i + e_{1i}\\
+\text{THE REDUCED FORM:  }&amp; \quad Y_i = \alpha_0 + \rho Z_i  + \gamma_0 A_i + e_{0i}\\
+\end{aligned}`
+$$
+And in the 2SLS estimate: 
+$$
+`\begin{aligned}
+\text{FIRST STAGE FITS:  }&amp; \quad \widehat D_i = \alpha_1 + \phi Z_i + \gamma_1 A_i\\
+\text{SECOND STAGE:  }&amp; \quad Y_i = \alpha_2 + \lambda_{2SLS}\widehat D_i + \gamma_2 A_i + e_{2i}\\
+\end{aligned}`
+$$
+- 2SLS gets the SEs right for `\(\lambda_{2SLS}\)` (more on appendix of Ch3). 
+
+---
+# 2SLS With Multiple Instruments
+
+- In addition the twins instrument `\((Z_i)\)`, we can add now the siblings gender instrument. Let's label this last one `\(W_i\)` to avoid confusions. We can also bring the additional controls (Age, `\(A_i\)`, First born boy `\(B_i\)`) and get new first stage: 
+
+$$
+`\begin{aligned}
+\text{FIRST STAGE:  }&amp; \quad D_i = \alpha_1 + \phi_t Z_i + \phi_s W_i+ \gamma_1 A_i + \delta_1 B_i+ e_{1i}\\
+\text{REDUCED FORM:  }&amp; \quad Y_i = \alpha_0 + \rho_t Z_i + \rho_s W_i +  \gamma_0 A_i + \delta_0 B_i + e_{0i}\\
+\end{aligned}`
+$$
+- And the corresponding 2SLS estimation: 
+$$
+`\begin{aligned}
+\text{FIRST STAGE FITS:  }&amp; \quad \widehat D_i = \alpha_1 + \phi_t Z_i + \phi_s W_i+ \gamma_1 A_i + \delta_1 B_i\\
+\text{SECOND STAGE:  }&amp; \quad Y_i = \alpha_2 + \lambda_{2SLS}\widehat D_i + \gamma_2 A_i + \delta_2 B_i+ e_{2i}\\
+\end{aligned}`
+$$
+- Ready to read results from most IV papers! 
+
+---
+background-image: url("Images/MMtbl34.png")
+background-size: contain
+background-position: 50% 20%
+# .font90[IV Results for Family Size and Education: First Stage]
+
+
+---
+background-image: url("Images/MMtbl35.png")
+background-size: contain
+background-position: 50% 20%
+# .font90[IV Results for Family Size and Education: Second Stage + OLS]
+
+---
+background-image: url("Images/MMtbl35.png")
+background-size: 80%
+background-position: 50% 20%
+# .font90[IV Results for Family Size and Education: Second Stage + OLS]
+
+---
+
+# IV - Final Considerations 1/2
+
+- Quick intuitions why SE of `\(\lambda_{2SLS}\)` are wrong if estimated with OLS: `\(\widehat D_i\)` is an estimated variable that has more uncertainty that `\(D_i\)`, we know that, but the software doesn't. Hence it generates fictitiously small SEs (SE from 2SLS &gt; SE from OLS). 
+- When assessing the relevance of one instrument use t-test as usual. When assessing the relevance of multiple `\((K)\)` instruments use a joint hypothesis test `\(\phi_1 = \phi_2= \phi_K = 0\)`. The rule of thumb here is that the F-statistic reported for these type of tests has to be greater than 10 (p-hacking alert!). 
+- Beware of studies that are *instrument driven* ("I just found a new cool and clever instrument! Now, which policy could I use this instrument for?") as oppose to *policy driven* ("Policy X is of high relvance, let's look for IVs to identify its causal effect"). 
+
+---
+background-image: url("Images/in_mice.png")
+background-size: 50%
+background-position: 100% 20%
+# IV - Final Considerations 2/2
+
+.pull-left[
+- When it comes to external validity never forget that LATE is the effect on compliers (MM constantly does!). 
+
+- There is a twitter account that emphasizes this extrapolation problem in bio-medical sciences by adding the proper caveat at the end of each new flashy result: 
+]
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+- We need something similar for the social sciences such that after each new IV study, it adds... in compliers!
+
+
 
 
 ---
