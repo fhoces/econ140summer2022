@@ -107,7 +107,8 @@ theme_empty <- theme_bw() + theme(
 
 ---
 # Data
-.font80[
+.pull-left[
+.font60[
 ```{r, echo=FALSE, eval=TRUE}
 data(wage1)
 wage1 <- select(wage1, wage, educ, tenure, female, nonwhite) %>%
@@ -116,7 +117,7 @@ DT::datatable(
   wage1,
   caption = c("Sample of US workers (Current Population Survey, 1976)"),
   colnames = c('<span style="color: #007935 !important">Wage</span>', '<span style="color: #007935 !important">Education</span>', '<span style="color: #007935 !important">Tenure</span>', '<span style="color: #007935 !important">Female?</span>', '<span style="color: #007935 !important">Non-white?</span>'),
-  fillContainer = FALSE, options = list(pageLength = 6, lengthChange = FALSE, searching = FALSE), escape = FALSE) %>%
+  fillContainer = FALSE, options = list(pageLength = 12, lengthChange = FALSE, searching = FALSE), escape = FALSE) %>%
   DT::formatStyle('wage', color = '#9370DB') %>%
   DT::formatStyle('educ', color = '#9370DB') %>%
   DT::formatStyle('tenure', color = '#9370DB') %>%
@@ -125,7 +126,7 @@ DT::datatable(
   DT::formatStyle(0, color = '#FD5F00')
 ```
 ]
-
+]
 
 ---
 # But What Can We Do With Data?

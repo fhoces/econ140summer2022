@@ -1,0 +1,608 @@
+---
+title: "All Together"
+subtitle: "Part I"
+author: "Fernando Hoces la Guardia"
+date: "08/8/2022"
+output: 
+  xaringan::moon_reader:
+    footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
+    css: [default, metropolis, metropolis-fonts, "my-css.css"] 
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css">
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+</style>
+
+```{r , include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(ggthemes, viridis, knitr, extrafont, tidyverse, magrittr, latex2exp, 
+       parallel, Ecdat, wooldridge, dslabs, ggforce, emo, png, grid, pander, 
+       countdown, emoGG, haven, broom, ggridges, gridExtra, kableExtra, snakecase, 
+       janitor, data.table, lubridate, lfe, here, gapminder, AER, stargazer, margins, 
+       furrr)
+
+
+# Define pink color
+red_pink <- "#e64173"
+turquoise <- "#20B2AA"
+orange <- "#FFA500"
+red <- "#fb6107"
+blue <- "#3b3b9a"
+green <- "#8bb174"
+grey_light <- "grey70"
+grey_mid <- "grey50"
+grey_dark <- "grey20"
+purple <- "#6A5ACD"
+slate <- "#314f4f"
+# Dark slate grey: #314f4f
+
+options(htmltools.dir.version = FALSE)
+
+# define vars
+om = par("mar")
+lowtop = c(om[1],om[2],0.1,om[4])
+
+overwrite = FALSE
+
+
+# Define colors
+red_pink <- "#e64173"
+met_slate <- "#23373b" # metropolis font color
+# Notes directory
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  #dpi = 300,
+  #cache = T,
+  message = FALSE,
+  warning = FALSE,
+  dev = "svg",
+  cache = TRUE
+  #fig.width = 11,
+  #fig.height = 5
+)
+
+theme_simple <- theme_bw() + theme(
+  axis.line = element_line(color = met_slate),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  text = element_text(family = "Fira Sans", color = met_slate, size = 14),
+  axis.text.x = element_text(size = 12),
+  axis.text.y = element_text(size = 12),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  legend.position = "none"
+)
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -0.5, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_simple <- theme_bw() + theme(
+  line = element_blank(),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text.x = element_text(size = 18, family = "STIXGeneral"),
+  axis.text.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  # plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_math <- theme_void() + theme(
+  text = element_text(family = "MathJax_Math"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_serif <- theme_void() + theme(
+  text = element_text(family = "MathJax_Main"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes <- theme_void() + theme(
+  text = element_text(family = "Fira Sans Book"),
+  axis.title = element_text(size = 18),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = grey_light,
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_set(theme_gray(base_size = 20))
+# Column names for regression results
+reg_columns <- c("Term", "Est.", "S.E.", "t stat.", "p-Value")
+# Function for formatting p values
+format_pvi <- function(pv) {
+  return(ifelse(
+    pv < 0.0001,
+    "<0.0001",
+    round(pv, 4) %>% format(scientific = F)
+  ))
+}
+format_pv <- function(pvs) lapply(X = pvs, FUN = format_pvi) %>% unlist()
+# Tidy regression results table
+tidy_table <- function(x, terms, highlight_row = 1, highlight_color = "black", highlight_bold = T, digits = c(NA, 3, 3, 2, 5), title = NULL) {
+  x %>%
+    tidy() %>%
+    select(1:5) %>%
+    mutate(
+      term = terms,
+      p.value = p.value %>% format_pv()
+    ) %>%
+    kable(
+      col.names = reg_columns,
+      escape = F,
+      digits = digits,
+      caption = title
+    ) %>%
+    kable_styling(font_size = 20) %>%
+    row_spec(1:nrow(tidy(x)), background = "white") %>%
+    row_spec(highlight_row, bold = highlight_bold, color = highlight_color)
+}
+
+
+```
+
+
+
+```{css, echo = F, eval = T}
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+```
+
+# Story
+
+---
+# Data
+
+.font110[
+```{r, echo=FALSE, eval=TRUE}
+data(wage1)
+
+df <- data.frame("pot_out_oc_0" = c( rep("A", 8) , rep("B", 2) ), 
+                 "pot_out_oc_1" = c( rep("A", 2) , rep("B", 8) ),
+                 "pot_out_w_0" = c( rep(1, 2) , rep(0, 6), rep(4, 2)), 
+                 "pot_out_w_1" = c( rep(1, 2) , rep(2, 6), rep(4, 2)))
+
+df <- df %>% mutate("indiv_te" = pot_out_w_1 - pot_out_w_0, 
+              "treat" = rep(c(0,1), 5), 
+              "ocup" = if_else(treat == 1, pot_out_oc_1, pot_out_oc_0),
+              "wage" = if_else(treat == 1, pot_out_w_1, pot_out_w_0))
+      
+wage1 <- select(wage1, wage, educ, tenure, female, nonwhite) %>%
+  mutate(wage = round(wage, 2))
+DT::datatable(
+  df,
+  colnames = c(
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i1}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i1}\\)</span>', 
+    '<span style="color: #007935 !important">\\(TE_{i}\\)</span>',
+    '<span style="color: #007935 !important">\\(D\\)</span>', 
+    '<span style="color: #007935 !important">\\(OC_{i}\\)</span>', 
+    '<span style="color: #007935 !important">\\(Y^{w}_{i}\\)</span>'
+  ), 
+  fillContainer = FALSE, options = list(pageLength = 3,
+                                       lengthChange = FALSE,
+                                       searching = FALSE), escape = FALSE) %>% 
+  DT::formatStyle(0, color = '#FD5F00')
+```
+]
+
+---
+
+# Data
+
+.font80[
+```{r, echo=FALSE, eval=TRUE}
+
+DT::datatable(
+  df,
+  colnames = c(
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i1}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i1}\\)</span>', 
+    '<span style="color: #007935 !important">\\(TE_{i}\\)</span>',
+    '<span style="color: #007935 !important">\\(D\\)</span>', 
+    '<span style="color: #007935 !important">\\(OC_{i}\\)</span>', 
+    '<span style="color: #007935 !important">\\(Y^{w}_{i}\\)</span>'
+  ), 
+  fillContainer = FALSE, options = list(pageLength = 10,
+                                       lengthChange = FALSE,
+                                       searching = FALSE), escape = FALSE) %>% 
+  DT::formatStyle(0, color = '#FD5F00')
+```
+]
+
+
+
+
+
+---
+# Data
+
+.left-thin[
+- Average wage for treatment group: 
+$(\overline Y^{w}|D = 1) = `r mean(df$wage[df$treat==1])`$
+- Average wage for control group: 
+$(\overline Y^{w}|D = 0) = `r mean(df$wage[df$treat==0])`$
+- Average causal effect: 
+$(\overline Y^{w}|D = 1) -$  
+$(\overline Y^{w}|D = 0) = `r mean(df$wage[df$treat==1]) - mean(df$wage[df$treat==0])`$
+]
+
+
+.right-wide[
+.font70[
+```{r, echo=FALSE, eval=TRUE}
+
+DT::datatable(
+  df,
+  colnames = c(
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i1}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i1}\\)</span>', 
+    '<span style="color: #007935 !important">\\(TE_{i}\\)</span>',
+    '<span style="color: #007935 !important">\\(D\\)</span>', 
+    '<span style="color: #007935 !important">\\(OC_{i}\\)</span>', 
+    '<span style="color: #007935 !important">\\(Y^{w}_{i}\\)</span>'
+  ), 
+  fillContainer = FALSE, options = list(pageLength = 10,
+                                       lengthChange = FALSE,
+                                       searching = FALSE), escape = FALSE) %>% 
+  DT::formatStyle(0, color = '#FD5F00')
+```
+]
+]
+
+
+---
+# Data
+
+.left-thin[
+- Average wage for treatment group, **in occupation A:** 
+$(\overline Y^{w}|D = 1, OC=A) = `r mean(df$wage[df$treat==1 & df$ocup=="A"])`$
+- Average wage for control group, **in occupation A:**
+$(\overline Y^{w}|D = 0, OC=A) = `r mean(df$wage[df$treat==0 & df$ocup=="A"])`$
+- Average causal effect, **in occupation A:**: 
+$(\overline Y^{w}|D = 1, OC=A) -$  
+$(\overline Y^{w}|D = 0, OC=A) = `r mean(df$wage[df$treat==1 & df$ocup=="A"]) - mean(df$wage[df$treat==0 & df$ocup=="A"])`$
+]
+
+
+.right-wide[
+.font70[
+```{r, echo=FALSE, eval=TRUE}
+
+DT::datatable(
+  df,
+  colnames = c(
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i1}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i1}\\)</span>', 
+    '<span style="color: #007935 !important">\\(TE_{i}\\)</span>',
+    '<span style="color: #007935 !important">\\(D\\)</span>', 
+    '<span style="color: #007935 !important">\\(OC_{i}\\)</span>', 
+    '<span style="color: #007935 !important">\\(Y^{w}_{i}\\)</span>'
+  ), 
+  fillContainer = FALSE, options = list(pageLength = 10,
+                                       lengthChange = FALSE,
+                                       searching = FALSE), escape = FALSE) %>% 
+  DT::formatStyle(0, color = '#FD5F00')
+```
+]
+]
+
+
+---
+# Data
+
+.left-thin[
+- Average wage for treatment group, **in occupation B:** 
+$(\overline Y^{w}|D = 1, OC=B) = `r mean(df$wage[df$treat==1 & df$ocup=="B"])`$
+- Average wage for control group, **in occupation B:**
+$(\overline Y^{w}|D = 0, OC=B) = `r mean(df$wage[df$treat==0 & df$ocup=="B"])`$
+- Average causal effect, **in occupation B:**: 
+$(\overline Y^{w}|D = 1, OC=B) -$  
+$(\overline Y^{w}|D = 0, OC=B) = `r mean(df$wage[df$treat==1 & df$ocup=="B"]) - mean(df$wage[df$treat==0 & df$ocup=="B"])`$
+]
+
+
+.right-wide[
+.font70[
+```{r, echo=FALSE, eval=TRUE}
+
+DT::datatable(
+  df,
+  colnames = c(
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i1}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i1}\\)</span>', 
+    '<span style="color: #007935 !important">\\(TE_{i}\\)</span>',
+    '<span style="color: #007935 !important">\\(D\\)</span>', 
+    '<span style="color: #007935 !important">\\(OC_{i}\\)</span>', 
+    '<span style="color: #007935 !important">\\(Y^{w}_{i}\\)</span>'
+  ), 
+  fillContainer = FALSE, options = list(pageLength = 10,
+                                       lengthChange = FALSE,
+                                       searching = FALSE), escape = FALSE) %>% 
+  DT::formatStyle(0, color = '#e64173')
+
+red_pink <- "#e64173"
+turquoise <- "#20B2AA"
+orange <- "#FFA500"
+red <- "#fb6107"
+```
+]
+]
+
+
+
+---
+# Summing Up
+
+- We have treatment that we know has some positive effect on most of the population $(Y_{1i} - Y_{0i} = 2)$ and null for the rest $(Y_{1i} - Y_{0i} = 0)$. In a setting with random assignment the simple difference in groups is the average causal effect for the entire population: $(\overline Y^{w}|D = 1) - (\overline Y^{w}|D = 0) = `r mean(df$wage[df$treat==1]) - mean(df$wage[df$treat==0])`$
+  
+- But after we control for occupation, a variable that is also affected by the treatment, the simple difference for each sub-group is contaminated by selection bias: $(\overline Y^{w}|D = 0, OC=A) = `r mean(df$wage[df$treat==1 & df$ocup=="A"]) - mean(df$wage[df$treat==0 & df$ocup=="A"])`$  and  $(\overline Y^{w}|D = 0, OC=B) = `r mean(df$wage[df$treat==1 & df$ocup=="B"]) - mean(df$wage[df$treat==0 & df$ocup=="B"])`$
+
+- This happens because the treatment affects the composition groups $A$ and $B$ in terms of wages.   
+
+
+---
+# Composition Effects
+
+.pull-left[
+- Without the treatment the potential outcomes for occupation and wages are such that most low wages are in occupation A. So the average wages for groups A and B are:
+
+- $(\overline Y_{0}^{w}|OC=A) = `r mean(df$pot_out_w_0[df$pot_out_oc_0=="A"])`$
+- $(\overline Y_{0}^{w}|OC=B) = `r mean(df$pot_out_w_0[df$pot_out_oc_0=="B"])`$
+]
+
+
+.pull-right[
+.font80[
+```{r, echo=FALSE, eval=TRUE}
+df1 <- df %>%  select(pot_out_oc_0, pot_out_oc_1, pot_out_w_0, pot_out_w_1)
+DT::datatable(
+  df1,
+  colnames = c(
+    '<span style="color: #fb6107 !important">\\(Y^{oc}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i1}\\)</span>',
+    '<span style="color: #fb6107 !important">\\(Y^{w}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i1}\\)</span>'
+  ), 
+  fillContainer = FALSE, options = list(pageLength = 10,
+                                       lengthChange = FALSE,
+                                       searching = FALSE), escape = FALSE) %>% 
+  DT::formatStyle('pot_out_oc_0', color = red) %>%
+  DT::formatStyle('pot_out_w_0', color = red) %>%
+  DT::formatStyle(0, color = '#e64173')
+
+```
+]
+]
+
+
+---
+# Composition Effects
+
+.pull-left[
+- With the treatment the potential outcomes for occupation and wages are such that most who had were low wages before the treatment are now in occupation B. So the average wages for groups A and B are:
+
+- $(\overline Y_{1}^{w}|OC=A) = `r mean(df$pot_out_w_1[df$pot_out_oc_1=="A"])`$
+- $(\overline Y_{1}^{w}|OC=B) = `r mean(df$pot_out_w_1[df$pot_out_oc_1=="B"])`$
+]
+
+
+.pull-right[
+.font80[
+```{r, echo=FALSE, eval=TRUE}
+df1 <- df %>%  select(pot_out_oc_0, pot_out_oc_1, pot_out_w_0, pot_out_w_1)
+DT::datatable(
+  df1,
+  colnames = c(
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i0}\\)</span>',
+    '<span style="color: #fb6107 !important">\\(Y^{oc}_{i1}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i0}\\)</span>',
+    '<span style="color: #fb6107 !important">\\(Y^{w}_{i1}\\)</span>'
+  ), 
+  fillContainer = FALSE, options = list(pageLength = 10,
+                                       lengthChange = FALSE,
+                                       searching = FALSE), escape = FALSE) %>% 
+  DT::formatStyle('pot_out_oc_1', color = red) %>%
+  DT::formatStyle('pot_out_w_1', color = red) %>%
+  DT::formatStyle(0, color = '#e64173')
+
+```
+]
+]
+
+---
+# Composition Effects
+
+.pull-left[
+- And when comparing average potential outcomes within occupational groups we get:
+
+$(\overline Y_{1}^{w}|OC=A) - (\overline Y_{0}^{w}|OC=A) = `r mean(df$pot_out_w_1[df$pot_out_oc_1=="A"]) - mean(df$pot_out_w_0[df$pot_out_oc_0=="A"])`$  
+$(\overline Y_{1}^{w}|OC=B) - (\overline Y_{0}^{w}|OC=B) = `r mean(df$pot_out_w_1[df$pot_out_oc_1=="B"]) - mean(df$pot_out_w_0[df$pot_out_oc_0=="B"])`$
+
+- Notice that to show this last part we didn't need the treatment assignment and effective outcomes. This is why skips all of it (but I hope it adds a bit more intuition!). 
+
+]
+
+
+.pull-right[
+.font80[
+```{r, echo=FALSE, eval=TRUE}
+df1 <- df %>%  select(pot_out_oc_0, pot_out_oc_1, pot_out_w_0, pot_out_w_1)
+DT::datatable(
+  df1,
+  colnames = c(
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i0}\\)</span>',
+    '<span style="color: #fb6107 !important">\\(Y^{oc}_{i1}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i0}\\)</span>',
+    '<span style="color: #fb6107 !important">\\(Y^{w}_{i1}\\)</span>'
+  ), 
+  fillContainer = FALSE, options = list(pageLength = 10,
+                                       lengthChange = FALSE,
+                                       searching = FALSE), escape = FALSE) %>% 
+  DT::formatStyle('pot_out_oc_1', color = red) %>%
+  DT::formatStyle('pot_out_w_1', color = red) %>%
+  DT::formatStyle(0, color = '#e64173')
+
+```
+]
+]
+
+---
+# Composition Effects
+
+.pull-left[
+- To mapp this toy data to the Table 6.1 in the book: 
+
+- Keep one of each type of response to treatments (keep rows 1, 3, 9). 
+
+- Assume a constant treatment effects of $500 for all. 
+
+- And change the values of wages for $Y_0$ to $1000, $2000, and $3000.  
+
+]
+
+
+.pull-right[
+.font80[
+```{r, echo=FALSE, eval=TRUE}
+df1 <- df %>%  select(pot_out_oc_0, pot_out_oc_1, pot_out_w_0, pot_out_w_1)
+DT::datatable(
+  df1,
+  colnames = c(
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i1}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i1}\\)</span>'
+  ), 
+  fillContainer = FALSE, options = list(pageLength = 10,
+                                       lengthChange = FALSE,
+                                       searching = FALSE), escape = FALSE) %>% 
+  DT::formatStyle(0, color = '#e64173')
+
+
+
+
+```
+]
+]
+
+---
+# Composition Effects
+
+.pull-left[
+- To mapp this toy data to the Table 6.1 in the book: 
+
+- Keep one of each type of response to treatments (keep rows 1, 3, 9). 
+
+- Assume a constant treatment effects of $500 for all. 
+
+- And change the values of wages for $Y_0$ to $1000, $2000, and $3000.  
+
+]
+
+
+.pull-right[
+.font80[
+```{r, echo=FALSE, eval=TRUE}
+df2 <- data.frame("pot_out_oc_0" = c( "A", "A", "B"), 
+                 "pot_out_oc_1" = c( "A", "B", "B" ),
+                 "pot_out_w_0" = c( 1000, 2000, 3000), 
+                 "pot_out_w_1" =  c( 1000, 2000, 3000) +500 )
+DT::datatable(
+  df2,
+  colnames = c(
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i1}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i1}\\)</span>'
+  ), 
+  fillContainer = FALSE, options = list(pageLength = 10,
+                                       lengthChange = FALSE,
+                                       searching = FALSE), escape = FALSE) %>% 
+  DT::formatStyle(0, color = '#e64173')
+
+```
+]
+]
+
+---
+# But Why Did We Just Spent So Much Time on This?
+
+- Bad Controls are a very important topic for several reasons: 
+
+  1. Even thought is fairly simple (after you understand it!) it is a fairly new development in econometrics, and its great to see how we continue to learn new (simple and useful) things. 
+  
+--
+  2. To improve our causal identification correcting flawed analysis (this what we have been doing throughout this course). When analysts/researchers or commentators disregards or are indifferent to such flaws, they are supporting or spreading BS. 
+  
+--
+  3. Last but not least it will help us uncover the BS in a important policy debate... 
+
+
+---
+# Acknowledgments
+
+- MM
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+pagedown::chrome_print("25_last_p1.html", output = "25_last_p1.pdf")
+```

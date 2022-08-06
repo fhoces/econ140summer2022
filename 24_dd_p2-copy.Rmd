@@ -1,8 +1,8 @@
 ---
-title: "Differences in Differences"
-subtitle: "Part II"
+title: "All Together"
+subtitle: "Part I"
 author: "Fernando Hoces la Guardia"
-date: "08/04/2022"
+date: "08/8/2022"
 output: 
   xaringan::moon_reader:
     footer: "These slides available at https://fhoces.github.io/econ140summer2022/"
@@ -197,39 +197,131 @@ tidy_table <- function(x, terms, highlight_row = 1, highlight_color = "black", h
 ```
 
 
-# DD and Regression 2/2  
-  
-- Regression equation:
+# Data
 
-$$
-\begin{equation}
-Y_{dt} = \alpha + \beta TREAT_d + \gamma POST_t +\delta_{DD} (TREAT_d \times POST_t) + e_{dt}
-\end{equation}
-$$
---
+.font110[
+```{r, echo=FALSE, eval=TRUE}
+data(wage1)
 
-- Regression estimates: 
-$$
-\begin{aligned}
-Y_{dt} = 167 - &29 TREAT_d - 49 POST_t +20.5 (TREAT_d \times POST_t) + e_{dt}\\
-  &(8.8) \quad\quad \quad\quad(7.6) \quad \quad\quad(10.7)
-\end{aligned}
-$$
-- Standard errors of a OLS regression will be to small (overestimate precision) as they assume independent observations. 
+df <- data.frame("pot_out_oc_0" = c( rep("A", 8) , rep("B", 2) ), 
+                 "pot_out_oc_1" = c( rep("A", 2) , rep("B", 8) ),
+                 "pot_out_w_0" = c( rep(1, 2) , rep(0, 6), rep(4, 2)), 
+                 "pot_out_w_1" = c( rep(1, 2) , rep(2, 6), rep(4, 2)))
 
-- Within a unit (district) observations will not be independent, making it less information that with 12 fully independent observations. 
- 
----
-background-image: url("Images/MMtbl51.png")
-background-size:  50%
-background-position: 100% 50%
-# DD Estimates Using Real Outputs
-.pull-left[
-- Beyond number of banks what matters most is a measure of economic activity 
-- Here there is more limited data (back to the world of 4 points) so we inspect the results without regression. 
-- DD estimate on number of wholesale firms: 181
-- DD estimate on net wholesale sales ($ millions): 81 
+df <- df %>% mutate("indiv_te" = pot_out_w_1 - pot_out_w_0, 
+              "treat" = rep(c(0,1), 5), 
+              "ocup" = if_else(treat == 1, pot_out_oc_1, pot_out_oc_0),
+              "wage" = if_else(treat == 1, pot_out_w_1, pot_out_w_0))
+      
+wage1 <- select(wage1, wage, educ, tenure, female, nonwhite) %>%
+  mutate(wage = round(wage, 2))
+DT::datatable(
+  df,
+  colnames = c(
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i1}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i1}\\)</span>', 
+    '<span style="color: #007935 !important">\\(TE_{i}\\)</span>',
+    '<span style="color: #007935 !important">\\(Treat\\)</span>', 
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i}\\)</span>', 
+    '<span style="color: #007935 !important">\\(Y^{w}_{i}\\)</span>'
+  ), 
+  fillContainer = FALSE, options = list(pageLength = 3,
+                                       lengthChange = FALSE,
+                                       searching = FALSE), escape = FALSE) %>% 
+  DT::formatStyle(0, color = '#FD5F00')
+```
 ]
+
+---
+
+# Data
+
+.font100[
+```{r, echo=FALSE, eval=TRUE}
+data(wage1)
+
+df <- data.frame("pot_out_oc_0" = c( rep("A", 8) , rep("B", 2) ), 
+                 "pot_out_oc_1" = c( rep("A", 2) , rep("B", 8) ),
+                 "pot_out_w_0" = c( rep(1, 2) , rep(0, 6), rep(4, 2)), 
+                 "pot_out_w_1" = c( rep(1, 2) , rep(2, 6), rep(4, 2)))
+
+df <- df %>% mutate("indiv_te" = pot_out_w_1 - pot_out_w_0, 
+              "treat" = rep(c(0,1), 5), 
+              "ocup" = if_else(treat == 1, pot_out_oc_1, pot_out_oc_0),
+              "wage" = if_else(treat == 1, pot_out_w_1, pot_out_w_0))
+      
+wage1 <- select(wage1, wage, educ, tenure, female, nonwhite) %>%
+  mutate(wage = round(wage, 2))
+DT::datatable(
+  df,
+  colnames = c(
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i1}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i1}\\)</span>', 
+    '<span style="color: #007935 !important">\\(TE_{i}\\)</span>',
+    '<span style="color: #007935 !important">\\(Treat\\)</span>', 
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i}\\)</span>', 
+    '<span style="color: #007935 !important">\\(Y^{w}_{i}\\)</span>'
+  ), 
+  fillContainer = FALSE, options = list(pageLength = 10,
+                                       lengthChange = FALSE,
+                                       searching = FALSE), escape = FALSE) %>% 
+  DT::formatStyle(0, color = '#FD5F00')
+```
+]
+
+
+
+
+
+---
+# Data
+
+.left-thin[
+- asd
+]
+
+
+.right-wide[
+.font70[
+```{r, echo=FALSE, eval=TRUE}
+data(wage1)
+
+df <- data.frame("pot_out_oc_0" = c( rep("A", 8) , rep("B", 2) ), 
+                 "pot_out_oc_1" = c( rep("A", 2) , rep("B", 8) ),
+                 "pot_out_w_0" = c( rep(1, 2) , rep(0, 6), rep(4, 2)), 
+                 "pot_out_w_1" = c( rep(1, 2) , rep(2, 6), rep(4, 2)))
+
+df <- df %>% mutate("indiv_te" = pot_out_w_1 - pot_out_w_0, 
+              "treat" = rep(c(0,1), 5), 
+              "ocup" = if_else(treat == 1, pot_out_oc_1, pot_out_oc_0),
+              "wage" = if_else(treat == 1, pot_out_w_1, pot_out_w_0))
+      
+wage1 <- select(wage1, wage, educ, tenure, female, nonwhite) %>%
+  mutate(wage = round(wage, 2))
+DT::datatable(
+  df,
+  colnames = c(
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i1}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i0}\\)</span>',
+    '<span style="color: #007935 !important">\\(Y^{w}_{i1}\\)</span>', 
+    '<span style="color: #007935 !important">\\(TE_{i}\\)</span>',
+    '<span style="color: #007935 !important">\\(Treat\\)</span>', 
+    '<span style="color: #007935 !important">\\(Y^{oc}_{i}\\)</span>', 
+    '<span style="color: #007935 !important">\\(Y^{w}_{i}\\)</span>'
+  ), 
+  fillContainer = FALSE, options = list(pageLength = 10,
+                                       lengthChange = FALSE,
+                                       searching = FALSE), escape = FALSE) %>% 
+  DT::formatStyle(0, color = '#FD5F00')
+```
+]
+]
+
 
 ---
 # Acknowledgments
@@ -238,5 +330,5 @@ background-position: 100% 50%
 
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
-pagedown::chrome_print("23_last_rdd_dd_p1.html", output = "23_last_rdd_dd_p1.pdf")
+pagedown::chrome_print("24_dd_p2.html", output = "24_dd_p2.pdf")
 ```

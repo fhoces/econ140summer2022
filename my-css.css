@@ -144,13 +144,13 @@
 }
 
 .right-thin {
-  width: 35%;
+  width: 40%;
   float: right;
 }
 
 /* Two-column layout (wide left col) */
 .right-wide {
-  width: 65%;
+  width: 60%;
   float: right;
 }
 

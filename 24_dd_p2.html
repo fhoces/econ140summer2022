@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Differences in Differences</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <meta name="date" content="2022-08-04" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Differences in Differences
+## Part II
+### Fernando Hoces la Guardia
+### 08/04/2022
+
+---
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+# Housekeeping
+
+- Midterm 2 grades by Friday at the latest.
+- PS4 is cancelled. PS1-PS3 will represent 20% of the grade. 
+- Let's select the chapter for the summary due tomorrow (5pm, gradescope, 300 word limit)
+
+
+---
+# DD and Regression 2/2  
+  
+- Regression equation (show how `\(+\delta_{DD}\)` is the DD):
+
+$$
+`\begin{equation}
+Y_{dt} = \alpha + \beta TREAT_d + \gamma POST_t +\delta_{DD} (TREAT_d \times POST_t) + e_{dt}
+\end{equation}`
+$$
+--
+
+- Regression estimates: 
+$$
+`\begin{aligned}
+Y_{dt} = 167 - &amp;29 TREAT_d - 49 POST_t +20.5 (TREAT_d \times POST_t) + e_{dt}\\
+  &amp;(8.8) \quad\quad \quad\quad(7.6) \quad \quad\quad(10.7)
+\end{aligned}`
+$$
+- Standard errors of a OLS regression will be to small (overestimate precision) as they assume independent observations. 
+
+- Within a unit (district) observations will not be independent, making it less information that with 12 fully independent observations. 
+ 
+---
+background-image: url("Images/MMtbl51.png")
+background-size:  50%
+background-position: 100% 50%
+# DD Estimates Using Real Outputs
+.pull-left[
+- Beyond number of banks what matters most is a measure of economic activity 
+- Here there is more limited data (back to the world of 4 points) so we inspect the results without regression. 
+- DD estimate on number of wholesale firms: 181
+- DD estimate on net wholesale sales ($ millions): 81 
+]
+
+
+---
+# Back to Minimum Legal Drinking Age (MLDA)
+
+- Wide range of state rules regarding MLDA over time: 
+  - 1933: After Prohibition Era ended, most states set MLDA at 21. 
+      - Some exceptions: Kansas, New York, North Carolina.
+  - 1971: most states lower MLDA to 18.
+      - Some exceptions: Arkansas, California, Pennsylvania. 
+  - 1984-88: All states transition back to 21. But at different times.  
+
+- So much variation at the state level! (makes sense that the DD method was [formally developed in the US](https://eml.berkeley.edu/~card/papers/train-prog-estimates.pdf))
+
+
+---
+# Regression for MLDA using two states
+- To illustrate: let's start with a setup equivalent to the Mississippi Study. 
+
+- Two states:
+  - Alabama (treatment): lower MLDA to 19 in 1975.
+  - Arkansas (control): MLDA at 21 since 1933.
+- Outcome `\((Y_{st})\)`: death rates per state `\((s)\)` for 18-20-year-olds from 1970 to 1983 `\((t)\)`. 
+
+$$
+`\begin{equation}
+Y_{st} = \alpha + \beta TREAT_s + \gamma POST_t +\delta_{DD} (TREAT_s \times POST_t) + e_{st}
+\end{equation}`
+$$
+--
+
+- Where `\(TREAT_s\)` is a binary variable that takes the value 1 for Alabana and 0 for Arkansas. And `\(POST_t\)` is a binary variable that takes the value 1 from the year 1975 onwards and 0 otherwise. 
+
+
+
+---
+# Regression Using All States 1/3
+ 
+- But why stop there? There are other "experiments" in other states (e.g. Tennessee's MLDA drop to 18 in 1971, then up to 19 in 1979) 
+
+- Two state regression requires some changes: 
+  - There are many post treatment periods, so instead of `\(POST_t\)`, we control for each year by including a binary per year `\(YEAR_{jt}\)` (leaving out one year as the category of reference). 
+      - E.g., `\(YEAR_{1972,t}\)` is a binary variable that takes the value of 1 when the observation, indexed by `\(t\)`, is in the year 1972 and 0 otherwise. 
+      - This variables that capture the effects that are fixed within a year, are called year fixed effects. 
+
+
+---
+# Regression Using All States 2/3
+- More changes to the two state regression:  
+  - Before the variable `\(TREAT_s\)` effectively was controlling for the differences between the two states in the regression. 
+  - Now there are many states, and each vary in treatment type, but we still want to control for the effect of each state.  What should we do?
+--
+  
+  - Instead of `\(TREAT_s\)` we control for each state by incluiding a binary per state `\(STATE_{ks}\)` (leaving out one state as the category of reference). 
+      - E.g., `\(STATE_{CA,s}\)` is a binary variable that takes the value of 1 when the observation, indexed by `\(s\)`, is in the state of California and 0 otherwise.
+
+
+---
+# Regression Using All States 3/3
+- More changes to the two state regression:      
+  - Finally, there are two variations required regarding the measurement of treatment (captured before by the interaction `\(TREAT_s \times POST_t)\)`:
+      - Time and location of treatment application cannot be pinned down with one single interaction
+      - Treatment intensity varies across states and time: 
+          - Some states went form 21 to 18 (similar to `\(TREAT_s \times POST_t = 1\)` before) 
+          - Other states went, for example, from 18 to 19. 
+          - To capture this new treatment we defined `\(LEGAL_{st}\)` as the fraction of the population with ages between 18 - 20 that were legaly allowed to drink   in state `\(s\)` at time `\(t\)`. 
+  
+  
+---
+count: false
+# Regression Equation
+
+- Given the definitions for `\(LEGAL_{st}, STATE_{ks}, YEAR_{j,t}\)` , and of an outcome `\(Y_{st}\)` that measures the death rates for 18 - 20 years-olds in state `\(s\)` at time `\(t\)` our regression equations for the period 1970 to 1983 is: 
+--
+
+
+$$
+`\begin{equation}
+Y_{st}  = \alpha  + \delta_{DD} LEGAL_{st} +...
+\end{equation}`
+$$
+
+---
+count: false
+# Regression Equation
+
+- Given the definitions for `\(LEGAL_{st}, STATE_{ks}, YEAR_{j,t}\)` , and of an outcome `\(Y_{st}\)` that measures the death rates for 18 - 20 years-olds in state `\(s\)` at time `\(t\)` our regression equations for the period 1970 to 1983 is: 
+
+
+
+$$
+`\begin{equation}
+Y_{st}  = \alpha  + \delta_{DD} LEGAL_{st} + \sum_{k = Alaska}^{Wyoming} \beta_k STATE_{ks} + ...
+\end{equation}`
+$$
+
+---
+count: true
+# Regression Equation 
+
+- Given the definitions for `\(LEGAL_{st}, STATE_{ks}, YEAR_{j,t}\)` , and of an outcome `\(Y_{st}\)` that measures the death rates for 18 - 20 years-olds in state `\(s\)` at time `\(t\)` our regression equations for the period 1970 to 1983 is: 
+
+
+
+$$
+`\begin{equation}
+Y_{st}  = \alpha  + \delta_{DD} LEGAL_{st} + \sum_{k = Alaska}^{Wyoming} \beta_k STATE_{ks} + \sum_{j = 1971}^{1983} \gamma_{j} YEAR_{jt} + e_{st}
+\end{equation}`
+$$
+
+
+---
+# Two-Way Fixed Effect = Generalized DD
+
+$$
+`\begin{equation}
+Y_{st}  = \alpha  + \delta_{DD} LEGAL_{st} + \sum_{k = Alaska}^{Wyoming} \beta_k STATE_{ks} + \sum_{j = 1971}^{1983} \gamma_{j} YEAR_{jt} + e_{st}
+\end{equation}`
+$$
+
+- The variables `\(STATE_{ks}, YEAR_{j,t}\)` are known as state and year fixed effects. Combined in one regression equation are sometimes called two-way fixed effect model.  
+--
+
+- This data structure where there are observations across an entity dimension (state) and another dimension (typically time), is called a **panel data**. 
+--
+
+- We have just seen how panel data estimation with fixed effects for its two dimensions, is a generalized version of the DD estimation method!
+- The books makes this connection but it does not emphasize it enough (given the widespread use of "FE" terminology in economics these days).
+
+
+---
+background-image: url("Images/MMtbl52.png")
+background-size:  contain
+background-position: 100% 50%
+# Results
+
+.pull-left[
+- Focus on column 1 for now. 
+- Qualitatively similar effect to the RDD study (7.7-9.6) for all deaths. 
+- Slightly larger effects on MVA deaths than RDD study (4.5 - 5.9)
+- Smaller effects on suicide deaths
+- Similar effects on internal deaths (non alcohol related)
+]
+
+
+---
+# Relaxing the parallel trends assumption
+- Whenever there is more data on previous trends (before the treatment), the parallel trends assumption can be relaxed by controlling for a different slope for each state over time. 
+
+- When relaxing this assumption DD will only be able to identify large and sharp effects. If the effects are small and/or appear in the outcomes slowly over time, this modification will not find it. 
+
+
+
+$$
+`\begin{equation}
+Y_{st}  = \alpha  + \delta_{DD} LEGAL_{st} + \sum_{k = Alaska}^{Wyoming} \beta_k STATE_{ks} + \sum_{j = 1971}^{1983} \gamma_{j} YEAR_{jt} + \\
+\sum_{k = Alaska}^{Wyoming} \theta_k (STATE_{ks} \times t)  + e_{st}
+\end{equation}`
+$$
+
+---
+background-image: url("Images/MMfig54.png")
+background-size:  contain
+background-position: 100% 50%
+# Illustration of Parallel Trends
+
+---
+background-image: url("Images/MMfig55.png")
+background-size:  contain
+background-position: 100% 50%
+# Illustration of No Parallel Trends: No Effect
+
+.pull-left[
+- Here, the DD estimation without trends would find an effect where there is none. 
+
+- There DD estimation with the   
+trends will find no effect. 
+]
+
+---
+background-image: url("Images/MMfig56.png")
+background-size:  contain
+background-position: 100% 50%
+# Illustration of No Parallel Trends: Positive Effect
+
+.pull-left[
+- Here, both the DD estimation   
+with and without trends would   
+find an effect. 
+
+- The effect with trend would  
+more smaller and more   
+accurate. 
+]
+
+---
+background-image: url("Images/MMfig57.png")
+background-size:  contain
+background-position: 50% 50%
+# Snow example
+
+---
+# Minimum Wage Example
+
+- Paper [here](https://davidcard.berkeley.edu/papers/njmin-aer.pdf) 
+- Slides from another course [here](https://nickch-k.github.io/introcausality/Lectures/Lecture_21_Difference_in_Differences.html#/example)
+---
+# Mariel Boatlift Example
+
+- Paper [here](https://davidcard.berkeley.edu/papers/mariel-impact.pdf)
+- Slides from another course [here](https://evalsp22.classes.andrewheiss.com/slides/08-slides.html#56) or [here](https://raw.githack.com/ScPoEcon/ScPoEconometrics-Slides/master/chapter_did/chapter_did.html#16)
+
+
+---
+# .font80[Final Condideration of DD: The Key Requirement Variation Over Time] 
+- Remember the short description of MM about DD: “The DD tool amounts to a comparison of trends over time” 
+
+- Implicit in this statement is that DD depends on variation in the changes of a variable over time (in addition to betwen treatment and control). 
+
+- This approach has the big benefit of removing any OVB that is constant over time. But it comes at the costs of loosing all the variation within a specific time period. 
+
+- Less variation in the data will imply larger SEs, hence it will be harder to detect significance (or easier to not reject the null). 
+
+
+---
+# Acknowledgments
+
+- MM
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
