@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>All Together</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Hoces la Guardia" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# All Together
+## Part II
+### Fernando Hoces la Guardia
+### 08/9/2022
+
+---
+
+count:false
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 1em 1em 1em;
+}
+&lt;/style&gt;
+
+
+
+
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+# Today's and Tomorrow's Lecture
+
+- Review most of our tools for causal inference applying them to one policy issue:
+  - The effect of education on earnings
+
+We will do this in three steps: 
+
+- First we will use selection bias, potential outcomes, RCTs and regression to frame this causal question. 
+
+- Then we will learn our last important concept: bad controls.
+
+- Finally we will see how we can use IV, DD and RDD to answers this question. 
+
+---
+# Today's and Tomorrow's Lecture
+
+- Review most of our tools for causal inference applying them to one policy issue:
+  - The effect of education on earnings
+
+We will do this in three steps: 
+
+- First we will use selection bias, potential outcomes, RCTs and regression to frame this causal question. 
+
+- Then we will learn our last important concept: bad controls.
+
+- **Finally we will see how we can use IV, DD and RDD to answers this question.**
+
+  
+---
+#  Use IV, DD and RDD to Answers This Question.
+
+ - Study 1 (Reg + IV): Twins, Ability, and Measurement Error
+ 
+ - Study 2 (IV +DD): Compulsory Schooling in the Early 20th Century
+ 
+ - Study 3 (IV): QOB and Schooling
+ 
+ - Study 4 (RDD): Degree Completion and Earnings
+  
+   
+---
+# Study 1 (Reg + IV): Twins, Schooling and Ability
+
+- As we discuss yesterday and OLS regression with schooling and earnings is probably contaminated by OVB from factors like ability and/or privileged. 
+
+- One approach to control for those factors is to look at twins: 
+  - Share similar upbringing. 
+  - Share genetic backgrounds. 
+  - Any difference in schooling between two twins is unrelated to this commonly shared characteristics. 
+
+- We can remove the OVB of this other factors by taking the differences between twins. 
+  
+---
+# Twin Differences: Regression 1/2
+
+Given that we are interested in variables at the familiy leve `\((f)\)` and at the twin level `\((i)\)`, the long equation for this setting: 
+
+$$
+`\begin{equation}
+ln Y_{if} =  \alpha^l + \rho^l S_{if} + \lambda A_{if} + e^{l}_{if}
+\end{equation}`
+$$
+What this study assumes is that this other `\((A_{if})\)` are constant within a family (they don't vary between individual `\(i\)` within family `\(f)\)`. Given this, we can look at the regression equation of each twin: 
+
+$$
+`\begin{aligned}
+ln Y_{1f} =  \alpha^l + \rho^l S_{1f} + \lambda A_{f} + e^{l}_{1f}\\
+ln Y_{2f} =  \alpha^l + \rho^l S_{2f} + \lambda A_{f} + e^{l}_{2f}
+\end{aligned}`
+$$
+- Subtracting the equation of one twin from the other: 
+
+---
+background-image: url("Images/MMtbl62.png")
+background-size:  contain
+background-position: 100% 50%
+
+# Twin Differences: Regression 2/2
+
+.pull-left[
+$$
+`\begin{equation}
+ln Y_{1f} - ln Y_{2f} =  \rho^l (S_{1f} - S_{2f}) + e^{l}_{1f} - e^{l}_{2f}
+\end{equation}`
+$$
+- No OVB!
+- Column 1: Levels.
+- Column 2: Differences.
+- OLS points again to 11% return on additional year.
+- Difference approach suggest 6%.
+- But: all the variation comes from differences in schooling between to twins. 
+]
+
+---
+# Twin Differences: Measurement Error
+
+- One interpretation of the drop from 11% to 6% is that the latter has much more measurement error in the measure of schooling.
+
+- Twins tend to have similar schooling. Differences can emerge for (a) random reasons or (b) misreporting of years of education. 
+
+- Measurement error in the regressor of interest (treatment variable) leads to attenuation bais (appendix in Ch6). 
+
+- To address this bias, the authors of the study suggest using an instrument that is unlikely to have the same bias: the years of education of one sibling as reported by the other sibling. 
+
+
+
+---
+# Twin Differences IV 1/2
+
+- Is the sibling's report on the other sibling's education a good instrument (for the education of an individual)?
+- Relevant: yes, the report of the sibling is probably good at explaining the education of the individual. 
+- Independent: it definitively is not random, but the argument here is that it is independent to the measurement error. 
+- Exclusion: probably yes, as the report on education probably affects earnings throught education alone. 
+
+- The key idea here is that the reduce form and first stage still suffer from attenuation bias, but this bias cancels out when computing the LATE. 
+
+---
+background-image: url("Images/MMtbl62.png")
+background-size:  contain
+background-position: 100% 50%
+# Twin Differences IV 2/2
+
+.pull-left[
+- Columns 3 and 4
+- 2SLS estimates
+- After correcting for measurement error we are almost back to the OLS estimate!
+- In this sample, there doesn't seem to be much of an ability/privilege bias that is common across siblings. 
+]
+
+
+
+---
+# .font80[Study 2 (IV+DD): Compulsory Schooling in the Early 20th Century (US)]
+
+---
+# Acknowledgments
+
+
+
+
+- MM
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

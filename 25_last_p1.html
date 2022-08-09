@@ -52,23 +52,23 @@ class: center, middle, inverse, title-slide
 
 # Today's and Tomorrow's Lecture
 
-- Review most of our tools for causal inference applyingt them to one policy issue:
+- Review most of our tools for causal inference applying them to one policy issue:
   - The effect of education on earnings
 
 We will do this in three steps: 
 
-- First we will use potential outcomes, RCTs and regression to frame this causal question. 
+- First we will use selection bias, potential outcomes, RCTs and regression to frame this causal question. 
 
 - Then we will learn our last important concept: bad controls.
 
-- Finally we will how we can use IV, DD and RDD to answers this question. 
+- Finally we will see how we can use IV, DD and RDD to answers this question. 
   
 
 ---
 # Earnings and Schooling
 
 - Understanding what is behind a persons' earnings is a core question in economics: 
-    - From a economic growth perspective, its important to understand what drive growth in individual income. 
+    - From a economic growth perspective, its important to understand what drives growth in individual incomes. 
     - From as distributional perspective, its important to understand why some earn so much more than others.
 - One possible channel that could help us understand what causes income (growth and inequality) is education. Let's go ahead and define our causal question: 
    - What is the effect of one additional year of schooling `\((S_i)\)` on earnings `\((Y_i)\)` in the US? 
@@ -87,7 +87,7 @@ We will do this in three steps:
 
 ---
 count: false
-# Answering the Causal Question
+# Answering the Causal Question: Before Expectations
 
 - Simple difference in groups between individuals with one year difference in education.  For example between 13 and 12 years of education:  
 $$
@@ -106,7 +106,7 @@ $$
 \end{aligned}`
 $$
 ---
-# Answering the Causal Question
+# Answering the Causal Question: Before Expectations
 
 - Simple difference in groups between individuals with one year difference in education.  For example between 13 and 12 years of education:  
 $$
@@ -132,7 +132,7 @@ $$
 
 ---
 count:false
-# Answering the Causal Question
+# Expectations, Selection Bias &amp; Potential Outcomes
 
 
 - Expected value of simple difference in groups between individuals with one year difference in education (now for any given one year difference, `\(s+1\)` and `\(s)\)`: 
@@ -146,7 +146,7 @@ $$
 
 
 ---
-# Answering the Causal Question
+# Expectations, Selection Bias &amp; Potential Outcomes
 
 - Expected value of simple difference in groups between individuals with one year difference in education (now for any given one year difference, `\(s+1\)` and `\(s)\)`: 
 $$
@@ -160,7 +160,7 @@ $$
 - If the answer is no, then we have selection bias. 
 
 ---
-# Answering the Causal Question
+# Regression and CEF
 - We can also rewrite the expected SDG as using regression (exactly if CEF is linear, as with a binary regressors, or with the best approximation if CEF is not linear): 
 $$
 `\begin{aligned}
@@ -179,7 +179,7 @@ $$
 - And to interpret `\(\rho\)` as percentage change (or "return") in earnings (from a 1-unit change in schooling), we replace the dependent variable with its logs `\((lnY_i)\)`
 
 ---
-# Answering the Causal Question
+# Regression as Matching and OVB
 .font90[
 - For example, maybe excluding experience `\((X_i)\)` is creating some OVB. If the regression above is the short equation `\((ln Y_i  = \alpha^s + \rho^s S_i + e^s_i)\)`, what would be the long equation, auxiliary and OVB?
 ]
@@ -198,7 +198,7 @@ $$
 - Given that on-the-job skills improve with experience we should expect a positive relationship between `\(lnY_i\)` and `\(X_i\)` (up to a point), hence `\(\beta_1&gt;0\)`. This implies that `\(\pi_1\beta_1&lt;0\)` and  `\(\rho^s - \rho^l&lt;0\)`, or that `\(\rho^s&lt;\rho^l\)`. Given that `\(\rho^s&gt;0\)`, this means that the short regresssion is underestimating the causal effect. ]
 
 ---
-# Answering the Causal Question
+# Results
 
 - First estimates of this kind were produce by Jacob Mincer for a sample of 31,000 men in the US in the 1960s:
 
@@ -286,22 +286,22 @@ $$
 ]
 
 ---
-# Data
+# Toy Data for Bad Controls 1/2
 
 - In this setting we know the potential outcomes of all individuals, and we randomly assign some to a treatment of one additional year of schooling and some to no additional schooling. Assuming a population of 10 we could have the following:
 
 .font110[
-<div id="htmlwidget-9364b0d48129bb90b3bc" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9364b0d48129bb90b3bc">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4],[0,0,2,2,2,2,2,2,0,0],[0,1,0,1,0,1,0,1,0,1],["BC","BC","BC","WC","BC","WC","BC","WC","WC","WC"],[1,1,0,2,0,2,0,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(TE_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(D\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(OC_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":3,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#FD5F00'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-90eb840a12773f2750a4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-90eb840a12773f2750a4">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4],[0,0,2,2,2,2,2,2,0,0],[0,1,0,1,0,1,0,1,0,1],["BC","BC","BC","WC","BC","WC","BC","WC","WC","WC"],[1,1,0,2,0,2,0,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(TE_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(D\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(OC_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":3,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#FD5F00'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 ]
 
 ---
 
-# Data
+# Toy Data for Bad Controls 2/2
 
 .font80[
-<div id="htmlwidget-aceade5cd0ec4473beba" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-aceade5cd0ec4473beba">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4],[0,0,2,2,2,2,2,2,0,0],[0,1,0,1,0,1,0,1,0,1],["BC","BC","BC","WC","BC","WC","BC","WC","WC","WC"],[1,1,0,2,0,2,0,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(TE_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(D\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(OC_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#FD5F00'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-9f05de2b0f0f50988f50" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9f05de2b0f0f50988f50">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4],[0,0,2,2,2,2,2,2,0,0],[0,1,0,1,0,1,0,1,0,1],["BC","BC","BC","WC","BC","WC","BC","WC","WC","WC"],[1,1,0,2,0,2,0,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(TE_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(D\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(OC_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#FD5F00'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 ]
 
 
@@ -309,7 +309,7 @@ $$
 
 
 ---
-# Data
+# Estimating Average Treatment Effects Without Controls
 
 .left-thin[
 - Average wage for treatment group: 
@@ -324,21 +324,21 @@ $$
 
 .right-wide[
 .font70[
-<div id="htmlwidget-dcc00caebe2712d9943a" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-dcc00caebe2712d9943a">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4],[0,0,2,2,2,2,2,2,0,0],[0,1,0,1,0,1,0,1,0,1],["BC","BC","BC","WC","BC","WC","BC","WC","WC","WC"],[1,1,0,2,0,2,0,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(TE_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(D\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(OC_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#FD5F00'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-5cdb1efeecf788553bcf" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5cdb1efeecf788553bcf">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4],[0,0,2,2,2,2,2,2,0,0],[0,1,0,1,0,1,0,1,0,1],["BC","BC","BC","WC","BC","WC","BC","WC","WC","WC"],[1,1,0,2,0,2,0,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(TE_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(D\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(OC_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#FD5F00'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 ]
 ]
 
 
 ---
-# Data
+# .font90[Estimating Average Treatment Effects With Bad Controls 1/2]
 
 .left-thin[
-- Average wage for treatment group, **in occupation A:** 
+- Average wage for treatment group, **in occupation BC:** 
 `\((\overline Y^{w}|D = 1, OC=BC) = 1\)`
-- Average wage for control group, **in occupation A:**
+- Average wage for control group, **in occupation BC:**
 `\((\overline Y^{w}|D = 0, OC=BC) = 0.25\)`
-- Average causal effect, **in occupation A:**: 
+- Average causal effect, **in occupation BC:**: 
 `\((\overline Y^{w}|D = 1, OC=BC) -\)`  
 `\((\overline Y^{w}|D = 0, OC=BC) = 0.75\)`
 ]
@@ -346,21 +346,21 @@ $$
 
 .right-wide[
 .font70[
-<div id="htmlwidget-58c8eda532a43e91eacd" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-58c8eda532a43e91eacd">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4],[0,0,2,2,2,2,2,2,0,0],[0,1,0,1,0,1,0,1,0,1],["BC","BC","BC","WC","BC","WC","BC","WC","WC","WC"],[1,1,0,2,0,2,0,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(TE_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(D\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(OC_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#FD5F00'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-c81fcff7cc3f0d1425f2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c81fcff7cc3f0d1425f2">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4],[0,0,2,2,2,2,2,2,0,0],[0,1,0,1,0,1,0,1,0,1],["BC","BC","BC","WC","BC","WC","BC","WC","WC","WC"],[1,1,0,2,0,2,0,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(TE_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(D\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(OC_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#FD5F00'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 ]
 ]
 
 
 ---
-# Data
+# .font90[Estimating Average Treatment Effects With Bad Controls 2/2]
 
 .left-thin[
-- Average wage for treatment group, **in occupation B:** 
+- Average wage for treatment group, **in occupation WC:** 
 `\((\overline Y^{w}|D = 1, OC=WC) = 2.5\)`
-- Average wage for control group, **in occupation B:**
+- Average wage for control group, **in occupation WC:**
 `\((\overline Y^{w}|D = 0, OC=WC) = 4\)`
-- Average causal effect, **in occupation B:**: 
+- Average causal effect, **in occupation WC:**: 
 `\((\overline Y^{w}|D = 1, OC=WC) -\)`  
 `\((\overline Y^{w}|D = 0, OC=WC) = -1.5\)`
 ]
@@ -368,8 +368,8 @@ $$
 
 .right-wide[
 .font70[
-<div id="htmlwidget-475a1ed5f34652a9528e" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-475a1ed5f34652a9528e">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4],[0,0,2,2,2,2,2,2,0,0],[0,1,0,1,0,1,0,1,0,1],["BC","BC","BC","WC","BC","WC","BC","WC","WC","WC"],[1,1,0,2,0,2,0,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(TE_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(D\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(OC_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#e64173'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-82347f59fd975ef1e9f4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-82347f59fd975ef1e9f4">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4],[0,0,2,2,2,2,2,2,0,0],[0,1,0,1,0,1,0,1,0,1],["BC","BC","BC","WC","BC","WC","BC","WC","WC","WC"],[1,1,0,2,0,2,0,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(TE_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(D\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(OC_{i}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#e64173'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 ]
 ]
 
@@ -382,14 +382,14 @@ $$
   
 - But after we control for occupation, a variable that is also affected by the treatment, the simple difference for each sub-group is contaminated by selection bias: `\((\overline Y^{w}|D = 0, OC=BC) = 0.75\)`  and  `\((\overline Y^{w}|D = 0, OC=WC) = -1.5\)`
 
-- This happens because the treatment affects the composition groups `\(A\)` and `\(B\)` in terms of wages.   
+- This happens because the treatment affects the composition groups `\(BC\)` and `\(WC\)` in terms of wages.   
 
 
 ---
-# Composition Effects
+# Composition Effects 1/3
 
 .pull-left[
-- Without the treatment the potential outcomes for occupation and wages are such that most low wages are in occupation A. So the average wages for groups A and B are:
+- Without the treatment the potential outcomes for occupation and wages are such that most low wages are in occupation BC. So the average wages for groups BC and WC are:
 
 - `\((\overline Y_{0}^{w}|OC=BC) = 0.25\)`
 - `\((\overline Y_{0}^{w}|OC=WC) = 4\)`
@@ -398,17 +398,17 @@ $$
 
 .pull-right[
 .font80[
-<div id="htmlwidget-bdecc78dae518eea1f5c" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-bdecc78dae518eea1f5c">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #fb6107 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #fb6107 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'color':'#fb6107'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'color':'#fb6107'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#e64173'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-5209375a52779296692c" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5209375a52779296692c">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #fb6107 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #fb6107 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'color':'#fb6107'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'color':'#fb6107'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#e64173'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 ]
 ]
 
 
 ---
-# Composition Effects
+# Composition Effects 2/3
 
 .pull-left[
-- With the treatment the potential outcomes for occupation and wages are such that most who had were low wages before the treatment are now in occupation B. So the average wages for groups A and B are:
+- With the treatment the potential outcomes for occupation and wages are such that most who had were low wages before the treatment are now in occupation WC. So the average wages for groups BC and WC are:
 
 - `\((\overline Y_{1}^{w}|OC=BC) = 1\)`
 - `\((\overline Y_{1}^{w}|OC=WC) = 2.5\)`
@@ -417,13 +417,13 @@ $$
 
 .pull-right[
 .font80[
-<div id="htmlwidget-e5be8fff3095d89b01b7" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e5be8fff3095d89b01b7">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #fb6107 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #fb6107 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'color':'#fb6107'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'color':'#fb6107'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#e64173'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-4092cf2ca3dc908ca958" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4092cf2ca3dc908ca958">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #fb6107 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #fb6107 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'color':'#fb6107'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'color':'#fb6107'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#e64173'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 ]
 ]
 
 ---
-# Composition Effects
+# Composition Effects 3/3
 
 .pull-left[
 - And when comparing average potential outcomes within occupational groups we get:
@@ -438,13 +438,13 @@ $$
 
 .pull-right[
 .font80[
-<div id="htmlwidget-6b56b01dad30621ecf96" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6b56b01dad30621ecf96">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #fb6107 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #fb6107 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'color':'#fb6107'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'color':'#fb6107'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#e64173'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-c7a0bb99f043087abea9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c7a0bb99f043087abea9">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #fb6107 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #fb6107 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'color':'#fb6107'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'color':'#fb6107'});\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#e64173'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 ]
 ]
 
 ---
-# Composition Effects
+# Connecting This Example With MM's Example
 
 .pull-left[
 - To map this toy data to the Table 6.1 in the book: 
@@ -460,8 +460,8 @@ $$
 
 .pull-right[
 .font80[
-<div id="htmlwidget-5134204e004bac2885e2" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5134204e004bac2885e2">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#e64173'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-c6dd7f6dc761b69a57c9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c6dd7f6dc761b69a57c9">{"x":{"filter":"none","vertical":false,"fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["BC","BC","BC","BC","BC","BC","BC","BC","WC","WC"],["BC","BC","WC","WC","WC","WC","WC","WC","WC","WC"],[1,1,0,0,0,0,0,0,4,4],[1,1,2,2,2,2,2,2,4,4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{oc}_{i1}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i0}\\)<\/span><\/th>\n      <th><span style=\"color: #007935 !important\">\\(Y^{w}_{i1}\\)<\/span><\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"lengthChange":false,"searching":false,"columnDefs":[{"className":"dt-right","targets":[3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'color':'#e64173'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 ]
 ]
 
@@ -493,10 +493,6 @@ count:true
 - Interviewee response:
     - "Multivariate analysis of the pay gap indicates that it doesn't exist"
     - "If you are a social scientist word your salt, you never do a univariate analysis [...]. You break it down by age, by occupation, interest, personality [and the gap disappears]"
-
-- **Good news:** this course will give you the tools to detect where is the BS in his argument.
-- **Bad news:** the answer will be completely clear by the last lecture!
-
 ]
 ]
 .right[  
@@ -512,22 +508,71 @@ count:true
 # .font90[BS in The Argument That There is No Gender Wage Gap]
 
 - This course has given us the tools to clearly defined all the pieces   
-a policy debates like this one. 
+a policy debates like this one.   
 
+--
 - First, we identify all the elements, then we can clearly see where   
-is the BS component. 
+is the BS component.   
 
-- Original statement
+--
+- Original statement  
 
+--
 - Commentators critique: 
-- multivariate
-- OVB
+    - multivariate
+    - OVB  
+    
+--
+- Can you point to where is the problem with?  
 
-- Can you point to where is the problem with?
+--
+- In addition to this point another likely point of BS has to do with the auxiliary and long regression in OVB for personality.   
 
-- In addition to this point another likely point of BS has to do with the auxiliary regression in OVB for personality. 
-
+--
 - Why are we calling it BS and not wrong? Or a lie?
+
+
+---
+count:true
+# .font80[BS in The Argument That There is No Gender Wage Gap. Notes 1/2]
+
+
+- Original statement: 
+  - In English: the disproportionate domination of men in modern societies can be seen in the fact that gender causes a negative and substantial wage differential between men and women. 
+  - Using expectations and PO, and defining the treatment `\((D_i)\)` as one if the individual's gender is female and zero if men: `\(\mathop{\mathbb{E}}(lnY_i|D_i = 1)  -  \mathop{\mathbb{E}}(lnY_i|D_i = 0) = - 0.09 + \underbrace{\mathop{\mathbb{E}}(lnY_{i0} | D_i = 1) - \mathop{\mathbb{E}}(lnY_{i0} | D_i = 0)}_\text{Selection bias}\)` assuming `\(\text{Selection Bias} = 0\)` 
+  - Using regression: `\(lnY_i = \alpha -0.09D_i + e_i\)`. With the assumption that there is no OVB.
+
+
+---
+count:true
+# .font70[BS in The Argument That There is No Gender Wage Gap. Notes 2/2]
+.font70[
+- Commentator's critique: 
+    - In English: the cited gap does not compare indivuals of similar age, occupation, personality and interests. 
+    - In regression terms: the cited gap comes from a regressor that fails to controls for several variables leading to OVB. 
+    - For example, let's focus on the effect of excluding personality: 
+
+$$
+`\begin{aligned}
+\text{long: } \quad &amp;lnY_i  = \alpha^l + \beta^l D_i + \gamma P_i + e^l_i\\
+\text{aux: } \quad &amp;P_i  = \pi_0 + \pi_1 D_i + u_i\\
+\text{OVB: }  \quad    &amp;\beta^s - \beta^l  = \pi_1 \gamma
+\end{aligned}`
+$$
+- Following the commentators rationale (from the domain of psychology), that women tend to be more agreeable than men: `\(\pi_1&gt;0\)`
+- And another rationale (from the domain of economics) that jobs with higher agreeableness tend to have lower wages: `\(\gamma&lt;0\)`
+- Lead us to conclude that OVB is negative, which means that `\(\beta^s - \beta^l\)`. Given that `\(\beta^s&lt;0\)`, this means that the true causal difference is lower (closer to zero).
+
+]
+---
+# .font80[BS in The Argument That There is No Gender Wage Gap. Notes 3/3]
+.font80[
+- In addition to this point another likely point of BS has to do with the auxiliary regression in OVB for personality. 
+  - This point is that his statement regarding `\(\pi_1&gt;0\)` are probably well grounded on research given his field of expertise. `\(\gamma&lt;0\)` on the other hand requires expertise in personality and labor economics. And give that it is pretty hard to measure how personality traits affect earnings, we should be much more skeptical of the argument for `\(\gamma\)` (made with the same confidence as the first one, but probably reaching outside of field of expertise).
+
+- Why are we calling it BS and not just wrong? Or a lie?
+  - There is no reason to believe the commentator is lying. He does however, demonstrate a lack of interest towards the truth as explained above. He probably doesn't care about bad controls and how this might weakens his desired result (of no gender gap). This lack of interests about the truth, plus the fact that he is reaching out of his field of expertise are the two key characteristics that Frankfurt identify behind BS. 
+]
 
 
 
@@ -536,6 +581,9 @@ is the BS component.
 
 ---
 # Acknowledgments
+
+
+
 
 - MM
 
