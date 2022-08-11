@@ -235,6 +235,8 @@ We will do this in three steps:
  - Study 3 (IV): QOB and Schooling
  
  - Study 4 (RDD): Degree Completion and Earnings
+ 
+ - Note: the goal of these examples is to help you solidify concepts already reviewed. Use them to understand key concepts but don't get too frustrated if you don't understand some of the specifics of any of these examples.
   
    
 ---
@@ -252,14 +254,14 @@ We will do this in three steps:
 ---
 # Twin Differences: Regression 1/2
 
-Given that we are interested in variables at the familiy leve $(f)$ and at the twin level $(i)$, the long equation for this setting: 
+Given that we are interested in variables at the family level $(f)$ and at the twin level $(i)$, the long equation for this setting: 
 
 $$
 \begin{equation}
 ln Y_{if} =  \alpha^l + \rho^l S_{if} + \lambda A_{if} + e^{l}_{if}
 \end{equation}
 $$
-What this study assumes is that this other $(A_{if})$ are constant within a family (they don't vary between individual $i$ within family $f)$. Given this, we can look at the regression equation of each twin: 
+What this study assumes is that this other factors $(A_{if})$ are constant within a family (they don't vary between individual $i$ within family $f)$. Given this, we can look at the regression equation of each twin: 
 
 $$
 \begin{aligned}
@@ -297,7 +299,7 @@ $$
 
 - Twins tend to have similar schooling. Differences can emerge for (a) random reasons or (b) misreporting of years of education. 
 
-- Measurement error in the regressor of interest (treatment variable) leads to attenuation bais (appendix in Ch6). 
+- Measurement error in the regressor of interest (treatment variable) leads to attenuation bias (appendix in Ch6). 
 
 - To address this bias, the authors of the study suggest using an instrument that is unlikely to have the same bias: the years of education of one sibling as reported by the other sibling. 
 
@@ -309,7 +311,7 @@ $$
 - Is the sibling's report on the other sibling's education a good instrument (for the education of an individual)?
 - Relevant: yes, the report of the sibling is probably good at explaining the education of the individual. 
 - Independent: it definitively is not random, but the argument here is that it is independent to the measurement error. 
-- Exclusion: probably yes, as the report on education probably affects earnings throught education alone. 
+- Exclusion: probably yes, as the report on education probably affects earnings through education alone. 
 
 - The key idea here is that the reduce form and first stage still suffer from attenuation bias, but this bias cancels out when computing the LATE. 
 
@@ -331,16 +333,191 @@ background-position: 100% 50%
 ---
 # .font80[Study 2 (IV+DD): Compulsory Schooling in the Early 20th Century (US)]
 
-- In the first half of the 20th century, child labor was commo
+- In the first half of the 20th century, several state laws requiring compulsory education were established to prevent child labor. 
+- The requirements vary between 6th - 9th grades, and were implemented at different times across states. 
+- We will look at a study that combines two research design tools: 
+  - Uses the compulsory laws of each states as an instrument for the years of education, and
+  - Control for state and year of birth fixed effects, hence generating a DD estimate. 
+- This instruments are implemented as binary variables for each year of requirement (leaving 6th grade as a reference group)
+- Are this compulsory education laws a good instrument?
+
+
+---
+# .font80[Compulsory Schooling and Earnings: Assessing the Instrument(s)]
+
+- Compulsory laws seem to have an effect on overall years of educations: between 0.2 of a year to 0.4. 
+- Independence: are they as good as random? they are as long as change in compulsory laws are unrelated to potential earnings in each state. 
+  - In this study compulsory laws where more quickly and more strictly adopted in the northern states relative to southern states. State specific trends could invalidate independence. Additionally compulsory laws grew over time but so so did economic progress. 
+- Controlling for state and year fixed effect could address this. And turn our IV estimate into an ID+DD estimate. 
+- Similarly to the MLDA DD study, here they authors can also control for lack of parallel trends. 
+
+
+---
+background-image: url("Images/MMtbl63.png")
+background-size:  contain
+background-position: 100% 50%
+# Compulsory Schooling and Earnings: Results
+.font90[
+.pull-left[
+- First Stage , Reduced Form and Second Stage (2SLS) estimates
+- Three instruments. 
+- Column 1: all relevant with 9th grade the most relevant (think who are the compliers)
+- Column 3 suggests strong estimates
+- After controlling for state specific trends, FS and RF effects disappear. 
+- 2SLS are large but very noisy (denominator in LATE is close to zero)
+- After accounting for state trends, the instrument becomes irrelevant!
+]
+]
+
+---
+# Study 3 (IV): Quarter of Birth and Schooling 1/2
+- In the US, children must start kindergartner the year they turn 5.
+
+- School years starts in August/September. 
+
+- Most states require attendance to school at least until the children turns 16 (some states require 17 and  18).
+
+- This institutional rules introduce quasi-random variation in schooling. 
+
+---
+# Study 3 (IV): Quarter of Birth and Schooling 2/2
+
+- For example:
+  - Jae, born on January 1st, enters kindergartner at age 5 years and 8 months (5.7 years).
+  - Dante, born on December 1st, enters kindergartner at age 4 years and 9 months (4.8 years). 
+  - Let's assume that both want/have to drop out as early as possible: 
+    - Jae can leave school at the beginning of 10th grade (age 16).
+    - Dante can leave school after starting 11th grade (age 16). 
+    - Because of (random) birth date, Dante gets about one additional year of schooling. 
+- The study that uses this instrument uses census data, with only records quarter of birth (QOB), hence this is the instrument (instead of date of birth).
+
+---
+background-image: url("Images/MMfig61.png")
+background-size:  50%
+background-position: 100% 50%
+# Assessing the QOB Instrument
+
+.font90[
+.pull-left[
+- Relevant: Figure 6.1 suggest yes. 
+
+- Independent: Does the season of birth correlates with potential earnings? Surprisingly: maybe. Other studies have shown how maternal schooling peaks in the second quarter. This could introduce OVB in the IV analysis.  
+
+- Exclusion restriction: QOB only affects earnings through additional schooling. Might not work if systematically younger children would perform worse in the classroom. 
+]
+]
+
+---
+background-image: url("Images/MMtbl64.png")
+background-size:  50%
+background-position: 100% 0%
+# Results 1/2
+.pull-left[
+- First stage?
+
+- Reduce form?
+
+- LATE? 
+
+- Who are compliers? 
+]
+
+---
+background-image: url("Images/MMtbl64.png")
+background-size:  50%
+background-position: 100% 0%
+# Results 1/2
+.pull-left[
+- First stage: $\phi = 0.092$
+
+- Reduce form: $\rho = 0.0068$
+
+- LATE: $\lambda= \frac{0.0068}{0.092} = 0.074$
+
+- Who are compliers: Individuals who only stay in school if required by age, and that drop out when allowed by age. 
+]
+
+
+---
+background-image: url("Images/MMtbl65.png")
+background-size:  50%
+background-position: 100% 0%
+# Results 2/2
+.pull-left[
+
+- OLS estimate produces a return to schooling of 7.1% in this sample. 
+- Simple IV with a binary for fourth quarter yields a 7.5%. 
+- The estimated coefficient doesn't change much when adding year of birth binaries. 
+- The effect grows and becomes more precise after instrumenting the other quarters too (3 quarter binaries): 10.5%.
+]
+---
+# Study 4 (RDD): Degree Completion and Earnings 1/2
+
+- Throughout these studies we have been assuming that one additional year yields similar return independent of degree completion (same to gain a year from 10 to 11 than from 11 to 12). 
+
+- This assumes that there is no Degree/Sheepskin Effect (sheepskin was the original material of diplomas). 
+
+- To test the existence of Sheepskin effect in high school, this study compares individuals with and without high school.
+
+- To address selection bias/OVB it uses and RDD design for a "last chance" graduation exam from high school in Texas.
+---
+# Study 4 (RDD): Degree Completion and Earnings 2/2
+
+- Outcome: Annual earnings 7-11 years after high school. 
+
+- Treatment: Graduating high school. 
+
+- Instrument: binary variable that takes the value of 1 if score is above the passing cutoff, and 0 otherwise. 
+
+---
+background-image: url("Images/MMfig63.png")
+background-size:  contain
+background-position: 50% 50%
+# Results: First Stage
+
+---
+background-image: url("Images/MMfig64.png")
+background-size:  60%
+background-position: 100% 30%
+# Results: Reduce Form
+
+.left-thin[
+- No Sheepskin for High School, among compliers, in Texas, for some (unspecified) period in time. 
+
+- Notice that MM uses this evidence to implicitly support their (wildly more general) claim that there is not Sheepskin effect *anywhere*. 
+]
+
+---
+background-image: url("Images/Survivorship-bias.png")
+background-size: 40%
+background-position: 100% 50%
+# Final Thoughts on Earnings and Education: 
+
+.pull-left[
+- Why so much interest in education to understand income (growth and inequality)? 
+
+- One suggestion: economists are a highly educated population that have a tremendous appreciation for education (regardless of what our models might suggest). 
+]
+
+
+---
+background-image: url("Images/Survivorship-bias.png")
+background-size: 40%
+background-position: 100% 50%
+# Final Thoughts on Earnings and Education: 
+
+.left-wide[
+- Moreover economists come from highly educated families at a much higher proportion to that of [the overall population and of other graduate degrees](https://www.piie.com/research/piie-charts/us-economics-phds-are-less-socioeconomically-and-racially-diverse-other-major). 
+- Hence when looking at what are the important factor that determine income, maybe we are extrapolating for what has been important in our personal experience. 
+- Maybe bringing in economists from different educational backgrounds could change the focus away from schooling and “ability” and closer to other determinants of earnings. 
+]
+
 ---
 # Acknowledgments
-
-
-
 
 - MM
 
 
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 pagedown::chrome_print("26_last_p2.html", output = "26_last_p2.pdf")
 ```

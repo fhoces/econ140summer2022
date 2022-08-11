@@ -1,0 +1,270 @@
+
+\documentclass[answers]{exam}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{pdfpages}
+\usepackage{marvosym}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{soul}
+\usepackage{multirow}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{OutputFilter=LATEX.DLL}
+%TCIDATA{Version=5.00.0.2552}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{LastRevised=Wednesday, February 16, 2011 02:52:30}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+%TCIDATA{Language=American English}
+
+\topmargin=-1.8cm \textheight=23.8cm \oddsidemargin=-0.3cm
+\evensidemargin=-0.5cm \textwidth=17.1cm
+\newtheorem{ass}{Assumption}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}{Lemma}
+\newtheorem{conj}{Conjecture}
+
+\begin{document}
+
+
+\thispagestyle{empty}\baselineskip1.2\baselineskip\
+
+\noindent \textbf{Econ 140\newline
+Summer 2022 \newline
+Instructor: Fernando Hoces de la Guardia \newline
+GSIs: Elena Stacy \& Yige Wang
+}
+
+\vskip2ex
+
+\noindent \textbf{Final Exam}
+
+\vskip3ex
+
+\noindent \textbf{Thursday August 11, 2022}
+
+\vskip9ex
+
+
+%\vspace{2.5in}
+
+\noindent Student Name:
+
+\vskip5ex
+
+\noindent Student ID Number:
+\vskip9ex
+\noindent \textbf{Exam Instructions:}
+
+
+\begin{itemize}
+\item \textbf{You have 80 minutes to answer this exam} 
+
+\item \textbf{This exams has a total of 80 points (suggesting the length of time to spent in each question). Each question indicates the number of points, and indicates a maximum length for its answer} 
+
+\item \textbf{Most questions ask for short answers (from a couple of words, to one or two sentence maximum)} 
+\item \textbf{Explanation in black or blue ink is recommended as these often scan the best.} 
+\item \textbf{You must submit your solutions using the exam packet provided.} 
+\item \textbf{Do not write your solutions on pages that say ``Do not write solutions on this page"}. Answers written on these pages will not be graded. You may use these pages as scratch paper.
+\item \textbf{When time is called, STOP} writing, immediately \textbf{CLOSE} your exam packet and hold it up until it is collected.
+\item \textbf{Show your work}. Credit will only be awarded on the basis of what is written on the exam.
+\item \textbf{Sign the academic honesty pledge}. Cheating will be punished.
+\end{itemize}
+
+\newpage
+
+
+\vskip10ex
+
+\noindent \textbf{Affirm the academic honesty pledge below}. For those writing on a non-printed copy, please just write ``Academic Honesty Pledge as on exam'', and sign your name. \\\textbf{\underline{If you do not affirm this pledge, your exam will be marked invalid.}}
+
+
+\vskip12ex
+
+\noindent \textbf{0. ACADEMIC HONESTY PLEDGE }
+
+\noindent I confirm that I have abided by all academic honesty rules for UC Berkeley and Economics 140. I confirm that I did not see this exam before my official exam start time. I confirm that I have not shared and will not share this exam with anyone else. I confirm that I haven't copied from anybody else's exam.
+
+\vskip5ex
+
+Signature: \hrulefill
+
+
+
+\newpage
+
+%\noindent \textbf{1. Short Questions (15 points, 3 points per question.)}
+
+\vskip1ex
+\textbf{IV}
+\begin{enumerate}
+
+\item During class and section, we reviewed a total of 11 (!) studies that use instrumental variables (this includes those with a Fuzzy RDD design): KIPP, Domestic Violence, Twin and same sex births, Queens, Peers, College Admissions, twins and measurement error, compulsory laws, QOB, Sheepskin, City Shape, Robots \& Jobs. Choose any 3 studies from this list and complete the table below with the variable definition of each study. For the case of studies with multiple instruments and/or outcomes, choose only one. [7pts, 1pt per cell in columns 2-4] 
+
+$$
+\begin{array}{|c|c|c|c|}
+\hline (1) & (2) & (3) & (4)\\
+\text { Study } & \text { Main Outcome } & \text { Treatment } & \text { Instrument } \\
+\hline \text { OHP } & \begin{array}{l}
+\text { Mental Health } \\
+\text { index }
+\end{array} & \begin{array}{l}
+\text { 1: Received OHP } \\
+\text { 0: did not receive } \\
+\text { OHP }
+\end{array} & \begin{array}{l}
+\text { 1: winning lottery } \\
+\text { 0: losing lottery }
+\end{array} \\
+\hline & & & \\
+& & &\\ 
+& & &\\ 
+& & &\\
+& & &\\ 
+& & &\\
+\hline & & & \\
+& & &\\ 
+& & &\\ 
+& & &\\
+& & &\\ 
+& & &\\
+\hline & & & \\
+& & &\\
+& & &\\
+& & &\\
+& & &\\ 
+& & &\\
+\hline
+\end{array}
+$$
+
+\vspace{3cm}
+
+\newpage
+
+
+\item For the study of Family Size and Years of Education discussed in class, choose one instrument and discuss whether the three IV assumptions hold. (hint to help you remember which study is this: this is the study that addresses the potential “Quantity Quality” trade off, with some quasi-random variation related to the treatment variable) [6pts, 2 for each assumption].
+\vspace{5cm}
+
+
+
+\item For the study that uses quarter of birth as an instrument for the effect of education on wages. Describe the population of compliers.  [3pts, 2-3 sentences]
+\vspace{5cm}
+
+
+
+
+\item As we mentioned in class, an RCT with imperfect compliance can be improved using IV. Given the following tables with results from the OHP study, answer the following questions:  
+
+(Help 1: remember that when we discuss this study in RCTs the definition of treatment was different from when we discussed a similar study in the IV context. Help 2: the health insurance provided in this case was called Medicaid. Help 3: even if you can't match the specifics of this case to IV, notice that each questions allows you to still get partial credit by providing general definitions). [6pts, 2pts each]
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=7in]{Figures/final_table1.png}
+    %\caption{}
+    \label{}
+\end{figure}
+ \begin{enumerate}[label=\alph*)]
+    \item What is the estimated first stage effect ($\phi$) for the Portland sample? If you can’t find it, describe in words what the first stage is to get partial credit. 
+    \vspace{2cm}
+    \item What is the estimated reduced form for the effect on mental health? If you can’t find it, describe in words what the reduce form is to get partial credit.
+    \vspace{2cm}
+    \item Compute the LATE on mental health. If you can’t find it, describe in words what the estimated LATE is to get partial credit. 
+    \vspace{2cm}
+   \end{enumerate}
+
+\newpage
+
+\item Describe how to use subpopulations with few compliers to indirectly test for the exclusion restriction. Use as an example any study discussed in class and/or section [3pts, 4-5 sentences].
+\vspace{4cm}
+
+
+\textbf{Question 6 to 10 is on the RDD study on Peer Effects in Boston Exam Schools.} If you don’t remember this study, pick one RDD study that you do remember, different from the MLDA, and respond the same following questions to get partial credit.
+\item What was the outcome and treatment of interest? [4pts, 1-2 sentences]
+
+\vspace{4cm}
+\item Is this a Fuzzy or Sharp RDD? Why? [5pt, 1 Sentence]
+\vspace{4cm}
+\item Describe the running variable. Make sure to mention to whom this characteristic belongs and when it was measured [4pt, 1 sentence]
+
+\vspace{6cm}
+
+\newpage
+
+\textbf{DD}
+\item Write down the DD estimator as the difference between four averages [4pts, 1 equation]
+\vspace{4cm}
+\item Show how the DD estimator is the same as the coefficient $\delta_{DD}$ in the following regression (hint: here you can answer this using the notation used in class or with expectations) [4 pts, 3-5 lines]
+$$
+Y_{d t}=\alpha+\beta T R E A T_{d}+\gamma P O S T_{t}+\delta_{D D}\left(T R E A T_{d} \times P O S T_{t}\right)+e_{d t}
+$$
+\vspace{4cm}
+\clearpage
+Consider the Card and Krueger Minimum Wage Study. Recall --   
+
+(Important: if you have not seen this example before you still should be able to get all or most of the credit. If you are stuck in any particular question, skip it and complete it with another example from class later to get partial credit)
+
+\textbf{Abstract:} 
+On April 1, 1992, New Jersey's minimum wage rose from \$4.25 to \$5.05 per hour. To evaluate the impact of the law we surveyed 410 fast-food restaurants in New Jersey and eastern Pennsylvania before and after the rise. Comparisons of employment growth at stores in New Jersey and Pennsylvania (where the minimum wage was constant) provide simple estimates of the effect of the higher minimum wage.
+\\
+\textbf{Table 3: Highlighted section contains all the required information}
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=6in]{Figures/fig_mw.png}
+    %\caption{}
+    \label{}
+\end{figure}
+
+
+\item Draw a DD plot with two lines for the above study. One line for treatment, one line for control, with two periods each: pre-treatment and post treatment. Indicate where on the plot is the treatment effect. [4pts, 1 figure]
+\vspace{6cm}
+
+ 
+
+\clearpage
+\item Describe the main DD assumption in this context. [4tps, 1-2 sentences]
+\vspace{2cm}
+
+
+\item Assume that you have more data on the plot from (11), with more periods before the intervention. What would the plot look like if the main assumption \textbf{doesn't hold} (draw an exaggerated version, to remove any confusion)? [4pts, 1 figure]
+\vspace{8cm}
+
+
+\textbf{Previous material (combined with some of latest material)}
+Independence has been a core concept used throughout the course. In this question we
+ask you to demonstrate your knowledge about this core concept in several stages:
+\item Define the concept of independence in plain English [4pt, 1-2 sentences]
+\vspace{3cm}
+
+
+
+
+
+\item If an omitted variable is independent of the included variable, what would that imply for the auxiliary regression and for OVB overall? [4pt, 2-3 sentences/equations]
+\vspace{4cm}
+
+\newpage
+
+\item What does independence mean in the context of Instrumental Variables? Explain using the example of an instrument discussed in class or section. [4pt, 2-3 sentences]
+\vspace{4cm}
+
+
+\item How does lack of independence affect the standard errors in DD? [4pt, 1-2
+sentences]
+\vspace{3cm}
+
+\item For the case of the gender gap discussed in class.
+\begin{enumerate}
+\item Write down the equations for short regression that represents the interviewers point (``the gender pay gap in the UK is 9\%''), the long equations that represents the commentators point \textbf{using only one omitted variable} (``you break it down by personality (and others) and the gap disappears''), the auxiliary regression, and the OVB formula. [3pts]
+
+\vspace{5cm}
+\item Explain what is wrong with the commentators point. [3pts]
+\end{enumerate}
+
+
+\end{enumerate}
+\end{document}

@@ -1,0 +1,154 @@
+\item As we mentioned in class, and RCT with imperfect compliance can be improved using IV. Given the following tables with results from the OHP study. 
+(Help 1: remember that when we discuss this study in RCTs the definition of treatment was different from when we discussed a similar study in the IV context. Help 2: the health insurance provided in this case was called Medicaid. Help 3: even if you can't match the specifics of this case to IV, notices that each questions allows you to still get partial credit by providing general definitions). [8pts, 2pts each]
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=7in]{Figures/final_table1.png}
+    %\caption{}
+    \label{}
+\end{figure}
+ \begin{enumerate}[label=\alph*)]
+    \item What is the estimated first stage effect ($\phi$) for the Portland sample? If you can’t find it, describe in words what the first stage is to get partial credit. 
+    \vspace{2cm}
+    \item What is the estimated reduced form for the effect on mental health? If you can’t find it, describe in words what the reduce form is to get partial credit.
+    \vspace{2cm}
+    \item Compute the LATE on mental health. If you can’t find it, describe in words what the estimated LATE is to get partial credit. 
+    \vspace{2cm}
+    \item If we estimate the LATE using (a) and (b) using OLS and then compare to the same estimate using 2SLS. Which standard errors would be larger: the ones that correspond to lambda 2SLS or lambda OLS?
+    \vspace{2cm}
+   \end{enumerate}
+
+
+\newpage
+Consider the Card and Krueger Minimum Wage Study. Recall --   
+
+(Important: if you have not seen this example before you still should be able to get all or most of the credit. If you are stuck in any particular question, skip it and complete it with another example from class later to get partial credit)
+
+\textbf{Abstract:} 
+On April 1, 1992, New Jersey's minimum wage rose from \$4.25 to \$5.05 per hour. To evaluate the impact of the law we surveyed 410 fast-food restaurants in New Jersey and eastern Pennsylvania before and after the rise. Comparisons of employment growth at stores in New Jersey and Pennsylvania (where the minimum wage was constant) provide simple estimates of the effect of the higher minimum wage.
+\\
+\textbf{Table 3: Highlighted section contains all the required information}
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=6in]{Figures/fig_mw.png}
+    %\caption{}
+    \label{}
+\end{figure}
+
+\item Draw a DD plot with two lines for the above study. One line for treatment, one line for control, with two periods each: pre-treatment and post treatment. Indicate where on the plot is the treatment effect. [3pts, 1 figure]
+\vspace{6cm}
+
+\clearpage 
+\item For a toy data set with 8 observations: construct the TREAT variable, the POST variable, and the interaction between the two of them. [3pts, fill in the blanks]
+$$
+\begin{array}{|l|l|l|l|l|l|l|}
+\hline \text { State } & \text { Year } & \begin{array}{l}
+\text { restaurant } \\
+\text { id }
+\end{array} & \begin{array}{l}
+\text { Num. } \\
+\text { Worker }
+\end{array} & \text { TREAT } & \text { POST } & \text { TREATxPOST } \\
+\hline \text { NJ } & 1991 & 1 & 24 & & & \\
+\hline \text { NJ } & 1991 & 2 & 15 & & & \\
+\hline \text { PA } & 1991 & 3 & 23 & & & \\
+\hline \text { PA } & 1991 & 4 & 16 & & & \\
+\hline \text { NJ } & 1993 & 1 & 25 & & & \\
+\hline \text { NJ } & 1993 & 2 & 14 & & & \\
+\hline \text { PA } & 1993 & 3 & 22 & & & \\
+\hline \text { PA } & 1993 & 4 & 16 & & & \\
+\hline
+\end{array}
+$$
+
+\item Describe the main DD assumption in this context. [2tps, 2 sentences]
+\vspace{2cm}
+\item Assume that you have more data on the plot from (13), with more periods before the intervention. What would the plot look like if the main assumption doesn't hold (draw an exaggerated version, to remove any confusion)? [3pts, 1 figure]
+\vspace{6cm}
+\item Imagine that you have data on all 50 states with multiple observations over time. In this data set you can observe multiple changes in the minimum wage (in the US states can set their own minimum wage above the federal minimum) Construct the two-way fixed effect regression for this new DD estimate. If you can’t figure out the equation, describe in words what the variables should be. [3pts, 1-3 sentences/equations]
+\vspace{4cm}
+
+
+\clearpage
+
+\item How would you modify your two-way fixed effect regression to address a violation in the main DD assumption (15)? What do you need to be able to properly identify this effect? Write down the new fixed effect equations. [3pts, 2-3 sentences/equations]
+\vspace{4cm}
+
+\item This study had a total of 410 restaurants over 2 periods, for a total of 820 observations. Think of a second hypothetical study with the same number of observations but instead of a panel data it measured 820 independent units (restaurants) sampled at one point in time (also known as a cross-section). Assuming no selection or OVB bias, which study is more likely to reject the null hypothesis of no effect? [2pts, 1-2 sentences] 
+\vspace{4cm}
+
+
+\item How is independence achieved in the context or Sharp and Fuzzy RDD? [2pts, 2
+sentences (one for sharp, one for fuzzy)]
+\vspace{4cm}
+
+\item What role does independence play in addressing the problem of selection bias for the case of simple difference in groups, with constant effects (hint: this equation connects E(SDG) and causal effects plus selection bias) [1pt, 1-2 sentences/equations]
+\vspace{3cm}
+
+
+
+\textbf{Question 6 to 10 is on the RDD study on Peer Effects in Boston Exam Schools.} If you don’t remember this study, pick one RDD study that you do remember, different from the MLDA, and respond the same following questions to get partial credit.
+\item What was the outcome and treatment of interest? [2pts, 1-2 sentences]
+
+\item Using OVB (for example: assume that parental resources are omitted) explain how an OLS regression would generate biased causal estimates. [4pts, 3-4 sentences, must use equations]
+
+\vspace{4cm}
+\item Is this a Fuzzy or Sharp RDD? Why? [2pt, 1 Sentence]
+\vspace{4cm}
+\item Describe the running variable. Make sure to mention to whom this characteristic belongs and when it was measured [1pt, 1 sentence]
+\vspace{2cm}
+\item How should we interpret the 3 IV assumptions in this case? [6pts, 2pts each, 1-2 sentences each]
+\vspace{6cm}
+
+
+\textbf{DD}
+\item Write down the DD estimator as the difference between four averages [2pts, 1 equation]
+\vspace{2cm}
+\item Show how the DD estimator is the same as the coefficient delta in the following regression (hint: here you can answer this using the notation used in class or with expectations) [3 pts, 3-5 lines]
+$$
+Y_{d t}=\alpha+\beta T R E A T_{d}+\gamma P O S T_{t}+\delta_{D D}\left(T R E A T_{d} \times P O S T_{t}\right)+e_{d t}
+$$
+\vspace{2cm}
+
+\item Using OVB (for example: assume that parental resources are omitted) explain how an OLS regression would generate biased causal estimates. [4pts, 3-4 sentences, must use equations]
+
+
+\item As we mentioned in class, and RCT with imperfect compliance can be improved using IV. Given the following tables with results from the OHP study. 
+(Help 1: remember that when we discuss this study in RCTs the definition of treatment was different from when we discussed a similar study in the IV context. Help 2: the health insurance provided in this case was called Medicaid. Help 3: even if you can't match the specifics of this case to IV, notices that each questions allows you to still get partial credit by providing general definitions). [8pts, 2pts each]
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=7in]{Figures/final_table1.png}
+    %\caption{}
+    \label{}
+\end{figure}
+ \begin{enumerate}[label=\alph*)]
+    \item What is the estimated first stage effect ($\phi$) for the Portland sample? If you can’t find it, describe in words what the first stage is to get partial credit. 
+    \vspace{2cm}
+    \item What is the estimated reduced form for the effect on mental health? If you can’t find it, describe in words what the reduce form is to get partial credit.
+    \vspace{2cm}
+    \item Compute the LATE on mental health. If you can’t find it, describe in words what the estimated LATE is to get partial credit. 
+    \vspace{2cm}
+   \end{enumerate}
+
+\item Describe how to use subpopulations with few compliers to indirectly test for the exclusion restriction. Use as an example any study discussed in class and/or section [3pts, 4-5 sentences].
+\vspace{4cm}
+
+
+\textbf{Question 6 to 10 is on the RDD study on Peer Effects in Boston Exam Schools.} If you don’t remember this study, pick one RDD study that you do remember, different from the MLDA, and respond the same following questions to get partial credit.
+\item What was the outcome and treatment of interest? [2pts, 1-2 sentences]
+
+\vspace{4cm}
+\item Is this a Fuzzy or Sharp RDD? Why? [2pt, 1 Sentence]
+\vspace{4cm}
+\item Describe the running variable. Make sure to mention to whom this characteristic belongs and when it was measured [1pt, 1 sentence]
+\vspace{2cm}
+\item How should we interpret the 3 IV assumptions in this case? [6pts, 2pts each, 1-2 sentences each]
+\vspace{6cm}
+
+
+
+\item Given two random variables X and Y, define the concept of independence in
+terms of conditional probabilities. [1pt, 1-2 sentences/equations]
+\vspace{3cm}
+
+\item What role does independence play in distribution of the sample mean? [1pt, 1 sentence]
+\vspace{3cm}

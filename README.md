@@ -65,8 +65,8 @@ Traditionally this course has been taught with the perspective of turning studen
 |                       |                         |
 |-----------------------|-------------------------|
 |  - Selection Bias      | - Omitted variable bias |
-|  - Randomized Control Trials    | - Measurement error*     |
-|  - Potential outcomes   | - Collinearity* |
+|  - Randomized Control Trials    |      |
+|  - Potential outcomes   | - Collinearity |
 |  - Regression as conditional expectation  |  - External validity |
 |  - Regression coefficients |  - Instrumental variables |
 |  - Regression as conditional expectation |   - Regression discontinuity    |
@@ -106,7 +106,6 @@ There will be 4 problem sets. Each problem set will be posted on bCourses every 
  - Problem Set 1 - Friday July 1st - 5pm
  - Problem Set 2 - Friday July 15th - 5pm
  - Problem Set 3 - Friday July 29th - 5pm
- - Problem Set 4 - Friday August 12th - 5pm
 
 ## Final Exam
 All the materials covered in the lectures. Similar to the midterms, questions related to the material covered in the last lecture (before review) will be more conceptual and will not expect the student to prepare with any material other than their lecture notes (of the last lecture). 
@@ -170,8 +169,8 @@ The GSIs and the Instructors will work on developing a test bank associated with
 
 
 ## Week 8: August 8th - August 12th; Ch 6 of MM
-- M: Applying all the tools
-- T: Non-standard topics: (i) Aggregation of evidence, and/or (ii) Narrative/exploratory approaches to causal questions (e.g, Desmond, Case & Deaton, Goldin, Sandel). 
+- M: Applying all the tools I
+- T: Applying all the tools II
 - W: Review 
 - **Th: Final**
-- **Friday, August 12th, 5pm: Submit PS 4**
+
